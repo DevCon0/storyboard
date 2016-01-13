@@ -1,1 +1,4 @@
+.DS_Store
+client/lib/
+npm-debug.log*
 db

@@ -1,0 +1,24 @@
+{
+  "name": "StoryBoard",
+  "homepage": "https://github.com/DevCon0/storyboard",
+  "authors": [
+    "DevCon-0"
+  ],
+  "description": "Share a Story",
+  "main": "index.html",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "angular": "~1.4.8",
+    "angular-bootstrap": "~0.14.3",
+    "angular-ui-router": "~0.2.15"
+  }
+}
