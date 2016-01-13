@@ -1,0 +1,9 @@
+#!/bin/bash
+
+declare os="$(uname -a | awk '{print $1;}')";
+
+if [[ "${os}" == "Linux" ]]; then
+    ./server_linux;
+else
+    ./server_darwin;
+fi;
