@@ -26,12 +26,12 @@ func TestDatabase(t *testing.T) {
 	testUsers := []interface{}{
 		&User{
 			bson.NewObjectId(), bson.Now(),
-			"Bob", "Sue", "Bob", "Sue",
+			"Bobble", "Suepass", "Bob", "Sue",
 			[]string{},
 		},
 		&User{
 			bson.NewObjectId(), bson.Now(),
-			"Alice", "Sue", "Bob", "Sue",
+			"AliceRex", "Suepassaroo", "Alice", "Dino",
 			[]string{},
 		},
 	}
@@ -43,7 +43,7 @@ func TestDatabase(t *testing.T) {
 	t.Log("Testing database retrieval...")
 
 	result := []User{}
-	q := bson.M{"name": "Alice"}
+	q := bson.M{"firstname": "Alice"}
 	err = collection.Find(q).All(&result)
 	if err != nil {
 		t.Errorf("Failed to find test user in the database\n%v\n", err)
@@ -76,13 +76,17 @@ func TestBasicServer(t *testing.T) {
 	} else if res.StatusCode != 200 {
 		t.Errorf("Server returned status code %v\n", res.StatusCode)
 	}
+
+	t.Logf("Got OK response: %v\n", res.StatusCode)
+
 }
 
 func TestSignup(t *testing.T) {
 	t.Log("Testing signup")
 	url := "http://localhost:8020/api/users/signup"
 
-	var jsonStr = []byte(`{"Username":"Bob","Firstname": "Bob","Password": "Sue"}`)
+	var jsonStr = []byte(`{"username":"Bob","firstname": "Bob","password": "Sue"}`)
+
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -94,6 +98,29 @@ func TestSignup(t *testing.T) {
 		t.Errorf("Failed to signup Bob\n%v\n", err)
 	} else if res.StatusCode != 201 {
 		t.Errorf("Expected status code 201, got %v\n", res.StatusCode)
+	}
+
+	// check database for user Bob
+	t.Log("Testing database connection...")
+	session, err := initDb()
+	if err != nil {
+		t.Errorf("Failed to connect to the database\n%v\n", err)
+	}
+
+	defer session.Close()
+	collection := db.C("users")
+
+	result := User{}
+	q := bson.M{"username": "Bob"}
+	err = collection.Find(q).One(&result)
+	if err != nil {
+		t.Errorf("Failed to find test user in the database\n%v\n", err)
+	}
+	t.Logf("Bob was found in database\n")
+	// remove Bob after test
+	_, err = collection.RemoveAll(q)
+	if err != nil {
+		t.Errorf("Failed to remove test users from the database\n%v\n", err)
 	}
 
 }
