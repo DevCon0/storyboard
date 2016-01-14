@@ -76,7 +76,9 @@ func TestBasicServer(t *testing.T) {
 	} else if res.StatusCode != 200 {
 		t.Errorf("Server returned status code %v\n", res.StatusCode)
 	}
+
 	t.Logf("Got OK response: %v\n", res.StatusCode)
+
 }
 
 func TestSignup(t *testing.T) {
@@ -84,6 +86,7 @@ func TestSignup(t *testing.T) {
 	url := "http://localhost:8020/api/users/signup"
 
 	var jsonStr = []byte(`{"username":"Bob","firstname": "Bob","password": "Sue"}`)
+
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -119,4 +122,5 @@ func TestSignup(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to remove test users from the database\n%v\n", err)
 	}
+
 }
