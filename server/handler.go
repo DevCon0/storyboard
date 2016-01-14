@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 // Basic file handling.
@@ -27,7 +29,7 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func writeSampleJson(w http.ResponseWriter) {
-	profile := User{"Bob", "Sue", "Bob", "Sue", []string{}}
+	profile := User{bson.NewObjectId(), bson.Now(), "Bob", "Sue", "Bob", "Sue", []string{}}
 	js, err := json.Marshal(profile)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
