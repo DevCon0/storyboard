@@ -1,7 +1,15 @@
 package main
 
+import (
+	"time"
+
+	"gopkg.in/mgo.v2/bson"
+)
+
 // Create User Model
 type User struct {
+	Id        bson.ObjectId `bson:"_id,omitempty"`
+	CreatedAt time.Time
 	Username  string
 	Password  string
 	Firstname string
@@ -11,6 +19,8 @@ type User struct {
 
 // Story Model
 type Story struct {
+	Id        bson.ObjectId `bson:"_id,omitempty"`
+	CreatedAt time.Time
 	Title     string
 	UserId    string
 	Start1url string
