@@ -3,7 +3,9 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.auth',
                                    'storyBoard.navBar',
                                    'storyBoard.splash',
-                                   'storyBoard.storyStorageService'
+                                   'storyBoard.storyStorageService',
+                                   'storyBoard.authService',
+                                   'LocalStorageModule'
 ]);
 
 storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
@@ -16,7 +18,6 @@ storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
-          controller: 'navBarCtrl'
         },
         'content': {
           templateUrl: '/splash/splash.html',
@@ -29,7 +30,6 @@ storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
-          controller: 'navBarCtrl'
         },
         'content': {
           templateUrl: '/auth/signin.html',
@@ -42,7 +42,6 @@ storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
-          controller:'navCtrl'
         },
         'content': {
           templateUrl: '/auth/signup.html',

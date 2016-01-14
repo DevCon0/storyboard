@@ -26,6 +26,7 @@ func main() {
 	setRootDir()
 
 	http.HandleFunc("/", clientHandler)
+	http.HandleFunc("/api/users/", usersHandler)
 
 	port := "8020"
 	fmt.Printf("Listening on port %s\n", port)
