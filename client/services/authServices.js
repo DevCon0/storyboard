@@ -30,5 +30,16 @@ angular.module('storyBoard.authService', [])
     });
   };
 
+  auth.isAuth = function () {
+    return !!$window.localStorage.getItem('sessiontoken');
+  };
+
+  auth.signout = function () {
+    $window.localStorage.removeItem('sessiontoken');
+    localStorage.clear();
+    localStorageService.clearAll();
+    $location.path('/signin');
+  };
+
   return auth;
 })

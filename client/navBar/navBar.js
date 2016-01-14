@@ -1,5 +1,9 @@
 angular.module('storyBoard.navBar', [])
 
-.controller('navBarCtrl', function ($scope, $window){
-  //if logged in show drop down and hide sign in?
+.controller('navBarCtrl', function ($scope, $window, localStorageService,Auth){
+  
+  if (Auth.isAuth()) {
+    $scope.currentUserSignedIn = true;
+  }
+
 })
