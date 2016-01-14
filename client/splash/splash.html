@@ -1,17 +1,7 @@
 
-<h2>Stories</h2>
-<div class="container">
-    <div class="row">
-        <div class=".col-md-4">
-            <a href="https://s-media-cache-ak0.pinimg.com/236x/9c/a8/bb/9ca8bbdb0d9f2798401a559867050e74.jpg" class="thumbnail">
-        </div>
-        <div class=".col-md-4">
-            <a href="https://s-media-cache-ak0.pinimg.com/236x/9c/a8/bb/9ca8bbdb0d9f2798401a559867050e74.jpg" class="thumbnail">
-        </div>
-        <div class=".col-md-4">
-            <a href="https://s-media-cache-ak0.pinimg.com/236x/9c/a8/bb/9ca8bbdb0d9f2798401a559867050e74.jpg" class="thumbnail">
-        </div>
-
-
+<h2>Top Stories</h2>
+<div class="row">
+        <div ng-repeat="story in topStories"> 
+            <div class="col-md-4"><div class="frame"><a href="#"><img ng-src="{{story.url}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.text}}</p></span></a></div></div>
     </div>
 </div>

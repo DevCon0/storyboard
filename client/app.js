@@ -2,7 +2,8 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'ui.router',
                                    'storyBoard.auth',
                                    'storyBoard.navBar',
-                                   'storyBoard.splash'
+                                   'storyBoard.splash',
+                                   'storyBoard.storyStorageService'
 ]);
 
 storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
