@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"gopkg.in/mgo.v2/bson"
+	"gopkg.in/mgo.v2"
 	// "io/ioutil"
 	"net/http"
 	"os"
@@ -13,13 +13,15 @@ import (
 )
 
 var (
-	testing bool = true
 	rootDir string
 	slash   string = string(filepath.Separator)
+	db      *mgo.Database
 )
 
 func main() {
-	go setupDb()
+	session, err := initDb()
+	chkerr(err)
+	defer session.Close()
 
 	setRootDir()
 
@@ -32,39 +34,21 @@ func main() {
 	http.ListenAndServe(port, nil)
 }
 
-func setupDb() {
+func initDb() (*mgo.Session, error) {
 	// dbpath="db"; ! [ -d "${dbpath}" ] && mkdir -p "${dbpath}"; mongod --port 27018 --dbpath "${dbpath}" --wiredTigerJournalCompressor snappy --wiredTigerCollectionBlockCompressor snappy --cpu
 
 	url := "mongodb://devcon0:devcon0@ds037415.mongolab.com:37415/devcon0"
 	// url := "localhost:27018"
 
 	session, err := mgo.Dial(url)
-	chkerr(err)
-	defer session.Close()
+	if err != nil {
+		return session, err
+	}
 
 	session.SetMode(mgo.Monotonic, true)
-	db := session.DB("devcon0")
+	db = session.DB("devcon0")
 
-	// s, err := session.DatabaseNames()
-	// chkerr(err)
-	// fmt.Println(s)
-
-	c := db.C("testPeople")
-	err = c.Insert(
-		&Person{"Bob", 23},
-		&Person{"Alice", 46},
-	)
-	chkerr(err)
-
-	result := []Person{}
-	q := bson.M{"name": "Alice"}
-	// err = c.Find(bson.M{"name": "Alice"}).One(&result)
-	err = c.Find(q).All(&result)
-	chkerr(err)
-	fmt.Println(result)
-
-	err = c.RemoveAll(q)
-	chkerr(err)
+	return session, nil
 }
 
 // Find out where this go file exists on the file system.
@@ -112,20 +96,6 @@ func concat(slc ...string) string {
 // Convert a string into a slice.
 func slc(args ...string) []string {
 	return args
-}
-
-func test(a ...interface{}) {
-	if !testing {
-		return
-	}
-	fmt.Println(a...)
-}
-
-func testf(format string, a ...interface{}) {
-	if !testing {
-		return
-	}
-	fmt.Printf(format, a...)
 }
 
 // Pass to fmt.Println().
