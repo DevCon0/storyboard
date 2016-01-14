@@ -1,0 +1,21 @@
+#!/bin/bash
+
+(
+    (
+        echo "Building Windows binary..";
+        GOOS=windows go build
+    ) &&
+
+    (
+        echo "Building Mac binary...";
+        GOOS=darwin go build &&
+            mv -f server server_darwin
+    ) &&
+
+    (
+        echo "Building Linux binary...";
+        GOOS=linux go build &&
+            mv -f server server_linux
+    )
+) &&
+    echo "Success!"
