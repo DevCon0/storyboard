@@ -9,7 +9,7 @@ import (
 // Create User Model
 type User struct {
 	Id        bson.ObjectId `bson:"_id,omitempty"`
-	CreatedAt time.Time
+	CreatedAt time.Time     `bson:"created_at"`
 	Username  string
 	Password  string
 	Firstname string
@@ -20,7 +20,7 @@ type User struct {
 // Story Model
 type Story struct {
 	Id        bson.ObjectId `bson:"_id,omitempty"`
-	CreatedAt time.Time
+	CreatedAt time.Time     `bson:"created_at"`
 	Title     string
 	UserId    string
 	Start1url string
