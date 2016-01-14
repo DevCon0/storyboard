@@ -1,4 +1,5 @@
 #!/bin/bash
 
 #files=($(ls --hide='*_test.go' | grep .go)); gomon "${files[@]}"
-files=($(ls --hide='*_test.go' | grep .go)); go run "${files[@]}"
+# files=($(ls --hide='*_test.go' | grep .go)); go run "${files[@]}"
+files=($(ls | grep .go | sed -re 's/\b(.*?)_test.go\b//')); echo "${files[@]}"; go run "${files[@]}"
