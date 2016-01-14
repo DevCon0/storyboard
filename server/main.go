@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	// "io/ioutil"
 	"net/http"
@@ -31,11 +30,6 @@ func main() {
 
 	port = concat(":", port)
 	http.ListenAndServe(port, nil)
-}
-
-type Person struct {
-	Name string
-	Age  int
 }
 
 func setupDb() {
@@ -95,23 +89,6 @@ func setRootDir() {
 	}
 
 	fmt.Printf("rootDir: %q\n", rootDir)
-}
-
-// Basic file handling.
-func clientHandler(w http.ResponseWriter, r *http.Request) {
-	fileRequested := r.URL.Path[1:]
-
-	// "/" => "/index.html"
-	if fileRequested == "" {
-		fileRequested = concat(fileRequested, "index.html")
-	}
-
-	//    "/bower_components/mithril/mithril.min.js"
-	// => "/$PWD/client/bower_components/mithril/mithril.min.js"
-	title := concat(rootDir, slash, "client", slash, fileRequested)
-
-	fmt.Printf("Serving file:\n    %q\n", title)
-	http.ServeFile(w, r, title)
 }
 
 // Basic error handling.
