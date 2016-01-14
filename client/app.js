@@ -1,19 +1,52 @@
 var storyBoardApp = angular.module('storyBoardApp', [
                                    'ui.router',
-
+                                   'storyBoard.auth',
+                                   'storyBoard.navBar',
+                                   'storyBoard.splash'
 ]);
 
 storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
 
-  $urlRouterProvider.otherwise("/signin");
+  $urlRouterProvider.otherwise("/");
 
   $stateProvider
+    .state('home', {
+      url: "/",
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
+        },
+        'content': {
+          templateUrl: '/splash/splash.html',
+          controller: 'splashCtrl'
+        }
+      }
+       })
     .state('signin', {
       url: "/signin",
-      templateUrl: "auth/signin.html"
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
+        },
+        'content': {
+          templateUrl: '/auth/signin.html',
+          controller: 'authCtrl'
+        }
+      }
     })
     .state('signup', {
       url: "/signup",
-      templateUrl: "auth/signup.html"
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller:'navCtrl'
+        },
+        'content': {
+          templateUrl: '/auth/signup.html',
+          controller: 'authCtrl'
+        }
+      }
     })
 });

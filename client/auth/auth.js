@@ -1,3 +1,5 @@
-angular.module('storyBoardApp,auth', [])
+angular.module('storyBoard.auth', [])
 
-.controller('authController', function($rootScope, $scope, $state,)
+.controller('authCtrl', function($rootScope, $scope, $state){
+
+})
