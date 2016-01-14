@@ -1,0 +1,15 @@
+<div class="clear col-md-12"></div>
+<div id='signin'>
+    <div class='col-md-12'>
+        <div class="col-md-4 col-md-offset-4 loginbox">
+            <h2 class="sign-in">Sign In</h2>
+            <form name="signinForm" ng-submit='signin()'>
+                <input type='text' ng-model='user.username' placeholder='Username' class='form-control' name='name' required>
+                <input type="password" ng-model='user.password' placeholder='Password' class='form-control' name='password' required>
+                <div ng-show="showErr" class='message-error shadow'>{{err}}</div>
+                <button class="btn btn-primary">Sign In</button>
+                <div><a ui-sref="signup">Sign Up</a></div>
+            </form>
+        </div>
+    </div>
+</div>
