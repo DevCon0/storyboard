@@ -21,13 +21,13 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("Serving file:\n    %q\n", title)
 
-	writeSampleJson(w)
+	// writeSampleJson(w)
 
 	http.ServeFile(w, r, title)
 }
 
 func writeSampleJson(w http.ResponseWriter) {
-	profile := User{"Bob", 23}
+	profile := User{"Bob", "Sue", "Bob", "Sue", []string{}}
 	js, err := json.Marshal(profile)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

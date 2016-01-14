@@ -23,8 +23,8 @@ func TestDatabase(t *testing.T) {
 	collection := db.C("testUsers")
 
 	testUsers := []interface{}{
-		&User{"Bob", 23},
-		&User{"Alice", 46},
+		&User{"Bob", "Sue", "Bob", "Sue", []string{}},
+		&User{"Alice", "Sue", "Bob", "Sue", []string{}},
 	}
 	err = collection.Insert(testUsers...)
 	if err != nil {
@@ -45,6 +45,7 @@ func TestDatabase(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to find test users in the database\n%v\n", err)
 	}
+	fmt.Println("result:", result)
 
 	info, err := collection.RemoveAll(q)
 	if err != nil {
