@@ -28,7 +28,7 @@ angular.module('storyBoard.storyStorageService', [])
        title:'Louie Duck',
        creator: 'Donald Duck',
        rating: 1,
-       text: "Quack,Quack,Quack,Quack,Quack,Quack,Quack,Quack,Quack,Quack,Quack,Quack"
+       text: "Quack, Quack, Quack, Quack, Quack, Quack, Quack, Quack, Quack, Quack, Quack, Quack"
       }
     ]
 

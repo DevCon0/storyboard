@@ -69,17 +69,17 @@ img {
 }
 
 .frame a .caption h2 {
-  color: orange;
+  color: white;
   font-size: 32px;
 	margin-bottom: 20px;
 }
 
 .frame a .caption p {
-  color: white;
+  color: orange;
   display: none;
   line-height: 150%;
   transition: all 0.2s;  
-  width: 90%;
+  width: 100%;
 }
 
 .frame a:hover .caption p {
