@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#files=($(ls --hide='*_test.go' | grep .go)); gomon "${files[@]}"
+files=($(ls --hide='*_test.go' | grep .go)); go run "${files[@]}"
