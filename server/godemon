@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Watch all *.go files in the specified directory
+# Call the restart function when they are saved
+function monitor() {
+  inotifywait -q -m -r -e close_write -e moved_to --exclude '[^g][^o]$' $1 |
+  while read line; do
+    restart
+  done
+}
+
+# Terminate and rerun the main Go program
+function restart {
+  if [ "$(pgrep -f $PROCESS_NAME)" ]; then
+    killall -q -w -9 $PROCESS_NAME
+  fi
+  echo ">> Reloading..."
+  # go run $FILE_PATH $ARGS &
+  ./test-run &
+}
+
+# Make sure all background processes get terminated
+function close {
+  killall -q -w -9 inotifywait
+  exit 0
+}
+
+trap close INT
+echo "== godemon"
+echo ">> Watching directories, CTRL+C to stop"
+
+# FILE_PATH=$1
+# FILE_NAME=$(basename $FILE_PATH)
+# PROCESS_NAME=${FILE_NAME%%.*}
+
+# shift
+# ARGS=$@
+
+FILES=($(ls --hide='*_test.go' | grep .go))
+PROCESS_NAME='test-run'
+
+# Start the main Go program
+#go run $FILE_PATH $ARGS &
+./test-run &
+
+# Monitor all /src directories on the GOPATH
+OIFS="$IFS"
+IFS=':'
+for path in $GOPATH
+do
+  monitor $path/src &
+done
+IFS="$OIFS"
+
+# If the current working directory isn't on the GOPATH, monitor it too
+if [[ $PWD != "$GOPATH/"* ]]
+then
+  monitor $PWD
+fi
+
+wait
