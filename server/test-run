@@ -1,5 +1,12 @@
 #!/bin/bash
 
+declare os="$(uname -a | awk '{print $1;}')";
+
 #files=($(ls --hide='*_test.go' | grep .go)); gomon "${files[@]}"
-# files=($(ls --hide='*_test.go' | grep .go)); go run "${files[@]}"
-files=($(ls | grep .go | sed -re 's/\b(.*?)_test.go\b//')); echo "${files[@]}"; go run "${files[@]}"
+if [[ os == "Linux" ]]; then
+    files=($(ls --hide='*_test.go' | grep .go));
+else 
+    files=(handler.go main.go schema.go)
+done;
+
+go run "${files[@]}"
