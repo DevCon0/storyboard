@@ -1,0 +1,11 @@
+#!/bin/bash
+declare Dependencies=(
+    "gopkg.in/mgo.v2"
+    "gopkg.in/mgo.v2/bson"
+    "golang.org/x/crypto/bcrypt"
+)
+
+declare dep;
+for dep in "${Dependencies[@]}"; do
+    go get -u "${dep}";
+done;
