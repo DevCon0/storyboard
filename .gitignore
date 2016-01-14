@@ -2,3 +2,4 @@
 client/lib/
 npm-debug.log*
 db
+*.exe
