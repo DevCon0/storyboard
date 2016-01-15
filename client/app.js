@@ -3,6 +3,8 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.auth',
                                    'storyBoard.navBar',
                                    'storyBoard.splash',
+                                   'storyBoard.singleStory',
+                                   'storyBoard.storyStateMachineService',
                                    'storyBoard.storyStorageService',
                                    'storyBoard.authService',
                                    'LocalStorageModule',
@@ -67,6 +69,19 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
         }
       }
     })
+    .state('singleStory', {
+      url: '/singleStory',
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
+        },
+        'content': {
+          templateUrl: '/singleStory/singleStory.html',
+          controller: 'singleStoryCtrl'
+        }
+      }
+    })
     .state('createStory', {
       url: "/createStory",
       views: {
@@ -80,6 +95,5 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
         }
       }
     })
-
-
 });
+
