@@ -1,21 +1,40 @@
 #!/bin/bash
 
+declare basepwd;
+basepwd="$(basename "${PWD}")";
+
+declare dir="";
+if [[ "${basepwd}" == "server" ]]; then
+    dir="src";
+elif [[ "${basepwd}" == "storyboard" ]]; then
+    dir="server/src";
+elif [[ "${basepwd}" == "src" ]]; then
+    dir="";
+else
+    echo "Change directory to either 'storyboard' or 'storyboard/server'"
+    exit 1;
+fi;
+
+[ "${dir}" ] &&
+    pushd "${dir}" >/dev/null;
+
 (
     (
         echo "Building Windows binary..";
-        GOOS=windows go build
+        GOOS=windows go build &&
+            mv -f src.exe ../bin/server.exe
     ) &&
 
     (
         echo "Building Mac binary...";
         GOOS=darwin go build &&
-            mv -f server server_darwin
+            mv -f src ../bin/server_darwin
     ) &&
 
     (
         echo "Building Linux binary...";
         GOOS=linux go build &&
-            mv -f server server_linux
+            mv -f src ../bin/server_linux
     )
 ) &&
     echo "Success!"

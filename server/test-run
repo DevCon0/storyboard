@@ -1,4 +1,32 @@
 #!/bin/bash
 
+declare basepwd;
+basepwd="$(basename "${PWD}")";
+
+declare dir="";
+if [[ "${basepwd}" == "server" ]]; then
+    dir="src";
+elif [[ "${basepwd}" == "storyboard" ]]; then
+    dir="server/src";
+elif [[ "${basepwd}" == "src" ]]; then
+    dir="";
+else
+    echo "Change directory to either 'storyboard' or 'storyboard/server'"
+    exit 1;
+fi;
+
+[ "${dir}" ] &&
+    pushd "${dir}" >/dev/null;
+
+declare os="$(uname -a | awk '{print $1;}')";
+
 #files=($(ls --hide='*_test.go' | grep .go)); gomon "${files[@]}"
-files=($(ls --hide='*_test.go' | grep .go)); go run "${files[@]}"
+if [[ os == "Linux" ]]; then
+    # files=($(ls --hide='*_test.go' | grep .go));
+    files=($(find . -name '*.go' \( ! -name '*_test.go' \)));
+else 
+    # files=(handler.go main.go schema.go)
+    files=($(find . -name '*.go' \( ! -name '*_test.go' \)));
+fi;
+
+go run "${files[@]}"
