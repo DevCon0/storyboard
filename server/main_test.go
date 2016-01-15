@@ -117,7 +117,60 @@ func TestSignup(t *testing.T) {
 		t.Errorf("Failed to find test user in the database\n%v\n", err)
 	}
 	t.Logf("Bob was found in database\n")
-	// remove Bob after test
+
+}
+
+func TestSignin(t *testing.T) {
+	t.Log("Testing signin")
+	url := "http://localhost:8020/api/users/signin"
+
+	jsonStr := []byte(`{"username":"Bob","password": "Sue"}`)
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+	req.Header.Set("X-Custom-Header", "signinvalue")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to signin Bob\n%v\n", err)
+	} else if res.StatusCode != 200 {
+		t.Errorf("Expected status code 200, got %v\n", res.StatusCode)
+	} else {
+		t.Log("Bob totally signed in!!!")
+	}
+
+	jsonStr = []byte(`{"username":"Bob","password": "George"}`)
+
+	req, err = http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+	req.Header.Set("X-Custom-Header", "signinvalue")
+	req.Header.Set("Content-Type", "application/json")
+
+	client = &http.Client{}
+	res, err = client.Do(req)
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("Failed to signin Bob\n%v\n", err)
+	} else if res.StatusCode != 401 {
+		t.Errorf("Expected status code 401, got %v\n", res.StatusCode)
+	} else {
+		t.Logf("Bad password, sign in response status: %v\n", res.StatusCode)
+	}
+
+	// check database for user Bob
+	t.Log("Testing database connection...")
+	session, err := initDb()
+	if err != nil {
+		t.Errorf("Failed to connect to the database\n%v\n", err)
+	}
+
+	defer session.Close()
+	collection := db.C("users")
+
+	q := bson.M{"username": "Bob"}
+
+	// remove Bob after earlier tests
 	_, err = collection.RemoveAll(q)
 	if err != nil {
 		t.Errorf("Failed to remove test users from the database\n%v\n", err)
