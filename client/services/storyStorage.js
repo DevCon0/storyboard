@@ -52,6 +52,18 @@ angular.module('storyBoard.storyStorageService', [])
      });
   };
 
+  storyStorage.getStory = function (id) {
+    console.log('getStory called with', id);
+    return $http({
+      method: 'GET',
+      url: '/story',
+      data: id
+    })
+     .then(function (resp) {
+       console.log('ran getStory, got response: ', resp);
+     });
+  };
+
 
   return storyStorage;
 })
