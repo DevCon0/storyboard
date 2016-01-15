@@ -8,6 +8,9 @@ if [[ "${basepwd}" == "server" ]]; then
     dir="bin";
 elif [[ "${basepwd}" == "storyboard" ]]; then
     dir="server/bin";
+elif [[ "${basepwd}" == "app" ]]; then
+    # For Heroku.
+    dir="server/bin";
 elif [[ "${basepwd}" == "bin" ]]; then
     dir="";
 else
