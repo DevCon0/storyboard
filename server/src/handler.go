@@ -7,8 +7,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dgrijalva/jwt-go"
+
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
+)
+
+var (
+	tokenSecret []byte = []byte("Chuck Norris")
 )
 
 // Basic file handling.
@@ -64,13 +70,6 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 // 	Lastname  string
 // }
 
-type UserRes struct {
-	Username  string
-	Password  string
-	Firstname string
-	Lastname  string
-}
-
 func signup(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("Signup up...")
 
@@ -115,10 +114,19 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Signed up!"))
 }
 
+type UserDataResponse struct {
+	Id        bson.ObjectId `bson:"_id,omitempty"`
+	Username  string
+	Firstname string
+	Lastname  string
+	Stories   []string
+	Token     string
+}
+
 func signin(w http.ResponseWriter, r *http.Request) {
 	// collection := db.C("testUsers")
 
-	fmt.Println("Signing in...")
+	// fmt.Println("Signing in...")
 	decoder := json.NewDecoder(r.Body)
 	user := User{}
 	err := decoder.Decode(&user)
@@ -126,7 +134,10 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Error building user for signin %v\n", err)
 	}
+	chkerr(err)
+	// fmt.Printf("%#v\n", user)
 	attemptedPassword := []byte(user.Password)
+	fmt.Printf("Signing in %v...\n", user.Username)
 
 	// Grab the  user from the database
 	q := bson.M{"username": user.Username}
@@ -140,6 +151,8 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 	// chkerr(err)
 	fmt.Printf("%#v\n", user)
+	chkerr(err)
+	// fmt.Printf("%#v\n", user)
 
 	// Compare the password.
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), attemptedPassword)
@@ -147,14 +160,40 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-	js, err := json.Marshal(user)
+
+	userData := UserDataResponse{
+		Id:        user.Id,
+		Username:  user.Username,
+		Firstname: user.Firstname,
+		Lastname:  user.Lastname,
+		Stories:   user.Stories,
+		Token:     user.genToken(),
+	}
+	fmt.Printf("userData:\n%#v\n\n", userData)
+
+	js, err := json.Marshal(userData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
+}
 
+func (u *User) genToken() string {
+	// Create the token
+	token := jwt.New(jwt.SigningMethodHS256)
+	// Set some claims
+	token.Claims["user"] = u
+	token.Claims["iat"] = time.Now().Unix()
+	// token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	// Sign and get the complete encoded token as a string
+	tokenString, err := token.SignedString(tokenSecret)
+	if err != nil {
+		fmt.Println("Failed to create token")
+		fmt.Println(err)
+	}
+	return tokenString
 }
 
 // func writeSampleJson(w http.ResponseWriter) {
