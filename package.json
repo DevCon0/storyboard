@@ -1,0 +1,11 @@
+{
+  "name": "storyboard",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "server/serve"
+  },
+  "license": "MIT",
+  "dependencies": {
+  }
+}
