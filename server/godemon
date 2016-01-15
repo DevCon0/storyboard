@@ -21,6 +21,7 @@ function restart {
 
 # Make sure all background processes get terminated
 function close {
+  echo "Stopping godemon..."
   killall -q -w -9 inotifywait
   exit 0
 }
