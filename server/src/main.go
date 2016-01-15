@@ -28,7 +28,10 @@ func main() {
 	http.HandleFunc("/", clientHandler)
 	http.HandleFunc("/api/users/", usersHandler)
 
-	port := "8020"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8020"
+	}
 	fmt.Printf("Listening on port %s\n", port)
 
 	port = concat(":", port)
