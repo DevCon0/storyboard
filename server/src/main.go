@@ -28,7 +28,7 @@ func main() {
 	http.HandleFunc("/", clientHandler)
 	http.HandleFunc("/api/users/", usersHandler)
 
-	port := os.Getenv("PORT")
+	port := os.Getenv("SERVER_PORT")
 	if port == "" {
 		port = "8020"
 	}
