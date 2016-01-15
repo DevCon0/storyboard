@@ -1,11 +1,14 @@
 #!/bin/bash
 
+declare basepwd;
+basepwd="$(basename "${PWD}")";
+
 declare dir="";
-if [[ "${PWD}" == "server" ]]; then
+if [[ "${basepwd}" == "server" ]]; then
     dir="src";
-else if [[ "${PWD}" == "storyboard" ]]; then
+elif [[ "${basepwd}" == "storyboard" ]]; then
     dir="server/src";
-else if [[ "${PWD}" == "src" ]]; then
+elif [[ "${basepwd}" == "src" ]]; then
     dir="";
 else
     echo "Change directory to either 'storyboard' or 'storyboard/server'"

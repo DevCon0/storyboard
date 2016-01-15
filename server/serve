@@ -1,11 +1,14 @@
 #!/bin/bash
 
+declare basepwd;
+basepwd="$(basename "${PWD}")";
+
 declare dir="";
-if [[ "${PWD}" == "server" ]]; then
+if [[ "${basepwd}" == "server" ]]; then
     dir="bin";
-else if [[ "${PWD}" == "storyboard" ]]; then
+elif [[ "${basepwd}" == "storyboard" ]]; then
     dir="server/bin";
-else if [[ "${PWD}" == "bin" ]]; then
+elif [[ "${basepwd}" == "bin" ]]; then
     dir="";
 else
     echo "Change directory to either 'storyboard' or 'storyboard/server'"
@@ -13,7 +16,7 @@ else
 fi;
 
 [ "${dir}" ] &&
-    pushd "${dir}" >/dev/null;
+    pushd "${dir}";
 
 declare os="$(uname -a | awk '{print $1;}')";
 
