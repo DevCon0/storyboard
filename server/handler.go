@@ -118,12 +118,35 @@ func signup(w http.ResponseWriter, r *http.Request) {
 func signin(w http.ResponseWriter, r *http.Request) {
 	// collection := db.C("testUsers")
 
-	fmt.Println("Signup in...")
+	fmt.Println("Signing in...")
 	decoder := json.NewDecoder(r.Body)
 	user := User{}
 	err := decoder.Decode(&user)
 	chkerr(err)
 	fmt.Printf("%#v\n", user)
+	attemptedPassword := []byte(user.Password)
+
+	// Grab the  user from the database
+	q := bson.M{"username": user.Username}
+	collection := db.C("users")
+	err = collection.Find(q).One(&user)
+	chkerr(err)
+	fmt.Printf("%#v\n", user)
+
+	// Compare the password.
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), attemptedPassword)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+	js, err := json.Marshal(user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+
 }
 
 // func writeSampleJson(w http.ResponseWriter) {
