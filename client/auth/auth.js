@@ -27,7 +27,7 @@ angular.module('storyBoard.auth', [])
         localStorageService.set('user', $scope.user);
       })
       .catch(function (error) {
-        $scope.err = error.statusText;
+        $scope.err = 'Invalid Username/Password';
         $scope.showErr = true;
         console.log('incoming error',error);
       });
