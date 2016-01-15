@@ -1,0 +1,12 @@
+{
+  "name": "storyboard",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "bower install"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bower": "^1.7.2"
+  }
+}
