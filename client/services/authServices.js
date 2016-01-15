@@ -14,7 +14,7 @@ angular.module('storyBoard.authService', [])
       //localStorageService.setItem('sessiontoken', resp.data.token);
       //For now just hand back hardcoded session ID:
       localStorageService.set('sessiontoken', 123456789);
-      localStorageService.set('username', resp.data.username);
+      localStorageService.set('username', resp.data.Username);
       $location.path('/');
     });
   };
