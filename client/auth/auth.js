@@ -8,13 +8,13 @@ angular.module('storyBoard.auth', [])
     Auth.signup($scope.user)
       .then(function () {
         localStorageService.set('user', $scope.user);
-        sessionStorage.setItem('username', $scope.user.username);
+        localStorageService.set('username', $scope.user.username);
         $location.path('/');
       })
     .catch(function (error) {
-      $scope.err = error.data.message;
+      $scope.err = error.statusText;
       $scope.showErr = true;
-      console.log(error);
+      console.log('incoming error', error);
     });
 
 
@@ -25,20 +25,14 @@ angular.module('storyBoard.auth', [])
     Auth.signin($scope.user)
       .then(function () {
         localStorageService.set('user', $scope.user);
-        if (Auth.isAuth()) {
-          sessionStorage.setItem('username', $scope.user.username);
-          $location.path('/');
-        }
       })
       .catch(function (error) {
-        $scope.err = error.data.message;
+        $scope.err = 'Invalid Username/Password';
         $scope.showErr = true;
-        console.log(error.data.message);
+        console.log('incoming error',error);
       });
   };
 
-  $window.localStorage.removeItem('sessiontoken');
-  localStorage.clear();
   localStorageService.clearAll();
 
 })

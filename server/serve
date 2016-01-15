@@ -10,6 +10,7 @@ elif [[ "${basepwd}" == "storyboard" ]]; then
     dir="server/bin";
 elif [[ "${basepwd}" == "app" ]]; then
     # For Heroku.
+    [ -d "client/lib" ] || bower install;
     dir="server/bin";
 elif [[ "${basepwd}" == "bin" ]]; then
     dir="";
