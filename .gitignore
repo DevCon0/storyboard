@@ -4,4 +4,3 @@ npm-debug.log*
 db
 server/src/server
 server/src/src
-Godeps/_workspace
