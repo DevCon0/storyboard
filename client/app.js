@@ -3,6 +3,8 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.auth',
                                    'storyBoard.navBar',
                                    'storyBoard.splash',
+                                   'storyBoard.singleStory',
+                                   'storyBoard.storyStateMachineService',
                                    'storyBoard.storyStorageService',
                                    'storyBoard.authService',
                                    'LocalStorageModule',

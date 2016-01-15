@@ -6,6 +6,9 @@ angular.module('storyBoard.storyStateMachineService', [])
   storyStateMachine.setStory = function(story){
     this.story = story;
 
+    var youtubeAlreadyLoaded =
+      $window.onYouTubeIframeAPIReady !== undefined;
+
     $window.onYouTubeIframeAPIReady = function(){
       var VIDEO_HEIGHT = 200;
       var VIDEO_WIDTH = 356;
@@ -32,6 +35,10 @@ angular.module('storyBoard.storyStateMachineService', [])
           );
       }
     };
+
+    if(youtubeAlreadyLoaded){
+      $window.onYouTubeIframeAPIReady();
+    }
   };
 
   storyStateMachine.playerStateListener = function(event){
