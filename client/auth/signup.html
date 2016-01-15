@@ -7,7 +7,7 @@
             <p style="color:red" ng-show='signupForm.username.$error.minlength' class='help-block'>Username is too short.</p>
             <input type="password" placeholder='Password' name='password' class='form-control my-margin-quarter-em fade-in-three-quarter-sec shadow' ng-model='user.password' ng-minlength="3">
             <p style="color:red" ng-show='signupForm.password.$error.minlength && signupForm.password.$dirty' class='help-block'>Password is too short.</p>
-            <div ng-show="showErr" class='message-error shadow'>{{err}}</div>
+            <div ng-show="showErr" class='message-error'>{{err}}</div>
             <button class="btn btn-primary fade-in-1-and-three-quarter-sec sign-in-up-button-text my-margin-half-em shadow">Sign Up</button>
         </form>
         <a href="#/signin" class='account fade-in-1-and-three-quarter-sec loginlink'>Sign In</a>
