@@ -25,6 +25,21 @@ function close {
   exit 0
 }
 
+declare dir="";
+if [[ "${PWD}" == "server" ]]; then
+    dir="src";
+else if [[ "${PWD}" == "storyboard" ]]; then
+    dir="server/src";
+else if [[ "${PWD}" == "src" ]]; then
+    dir="";
+else
+    echo "Change directory to either 'storyboard' or 'storyboard/server'"
+    exit 1;
+fi;
+
+[ "${dir}" ] &&
+    pushd "${dir}" >/dev/null;
+
 trap close INT
 echo "== godemon"
 echo ">> Watching directories, CTRL+C to stop"
