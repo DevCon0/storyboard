@@ -1,6 +1,6 @@
 angular.module('storyBoard.authService', [])
 
-.factory('Auth', function ($http, $location, $window, localStorageService) {
+.factory('Auth', function ($http, $location, $window, localStorageService, $state) {
   var auth = {};
   auth.signin = function (user) {
     return $http({
@@ -38,7 +38,7 @@ angular.module('storyBoard.authService', [])
     $window.localStorage.removeItem('sessiontoken');
     localStorage.clear();
     localStorageService.clearAll();
-    $location.path('/signin');
+    $location.path('/');
   };
 
   return auth;

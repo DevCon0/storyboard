@@ -5,10 +5,11 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.splash',
                                    'storyBoard.storyStorageService',
                                    'storyBoard.authService',
-                                   'LocalStorageModule'
+                                   'LocalStorageModule',
+                                   'storyBoard.dashboard'
 ]);
 
-storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
+storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
 
   $urlRouterProvider.otherwise("/");
 
@@ -18,18 +19,20 @@ storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
         },
         'content': {
           templateUrl: '/splash/splash.html',
           controller: 'splashCtrl'
         }
       }
-       })
+    })
     .state('signin', {
       url: "/signin",
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
         },
         'content': {
           templateUrl: '/auth/signin.html',
@@ -42,6 +45,7 @@ storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
         },
         'content': {
           templateUrl: '/auth/signup.html',
@@ -49,4 +53,17 @@ storyBoardApp.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     })
+      .state('dashboard', {
+        url: "/dashboard",
+        views: {
+          'navBar': {
+            templateUrl: '/navBar/navBar.html',
+            controller: 'navBarCtrl'
+          },
+          'content': {
+            templateUrl: '/dashboard/dashboard.html',
+            controller: 'dashboardCtrl'
+          }
+        }
+      })
 });
