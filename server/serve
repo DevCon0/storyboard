@@ -16,7 +16,7 @@ else
 fi;
 
 [ "${dir}" ] &&
-    pushd "${dir}";
+    pushd "${dir}" >/dev/null;
 
 declare os="$(uname -a | awk '{print $1;}')";
 
