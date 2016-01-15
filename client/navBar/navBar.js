@@ -1,6 +1,6 @@
 angular.module('storyBoard.navBar', [])
 
-.controller('navBarCtrl', function ($scope, $window, localStorageService, Auth) {
+.controller('navBarCtrl', function ($scope, $window, Auth) {
   console.log($scope);
 
   if (Auth.isAuth()) {

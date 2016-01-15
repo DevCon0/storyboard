@@ -36,8 +36,6 @@ angular.module('storyBoard.authService', [])
 
   auth.signout = function () {
     $window.localStorage.removeItem('sessiontoken');
-    localStorage.clear();
-    localStorageService.clearAll();
     $location.path('/');
   };
 
