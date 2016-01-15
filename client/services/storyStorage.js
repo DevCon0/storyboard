@@ -12,7 +12,7 @@ angular.module('storyBoard.storyStorageService', [])
     // Won't that be fun
     return [
       {
-        url: 'http://images6.fanpop.com/image/photos/37600000/Huey-Duck-mickey-and-friends-37665348-260-388.gif',
+        url: 'http://www.comicbookreligion.com/img/h/u/Huey_Duck.jpg',
         title: 'Huey Duck',
         creator:'David Milco',
         rating: 5,
