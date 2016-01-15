@@ -53,17 +53,51 @@ angular.module('storyBoard.storyStorageService', [])
   };
 
   storyStorage.getStory = function (id) {
-    console.log('getStory called with', id);
-    return $http({
-      method: 'GET',
-      url: '/story',
-      data: id
-    })
-     .then(function (resp) {
-       console.log('ran getStory, got response: ', resp);
-     });
-  };
+    //TODO - Remove when you want to go to the server.
+    var testing = true;
+    if(testing){
+      var story = {
+        FRAME1: 0,
+        FRAME2: 1,
+        FRAME3: 2,
+        frames: [
+          {
+            player: null,
+            playerDiv: 'player1',
+            videoId: '8lXdyD2Yzls',
+            start: 0,
+            end: 2
+          },
+          {
+            player: null,
+            playerDiv: 'player2',
+            videoId: '3GJOVPjhXMY',
+            start: 9,
+            end: 14
+          },
+          {
+            player: null,
+            playerDiv: 'player3',
+            videoId: '-5x5OXfe9KY',
+            start: 3,
+            end: 7
+          }
+        ]
+      }
 
+      return story;
+    } else {
+      console.log('getStory called with', id);
+      return $http({
+        method: 'GET',
+        url: '/story',
+        data: id
+      })
+       .then(function (resp) {
+         console.log('ran getStory, got response: ', resp);
+       });
+    }
+  };
 
   return storyStorage;
 })

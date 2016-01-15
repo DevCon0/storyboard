@@ -53,17 +53,30 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
         }
       }
     })
-      .state('dashboard', {
-        url: "/dashboard",
-        views: {
-          'navBar': {
-            templateUrl: '/navBar/navBar.html',
-            controller: 'navBarCtrl'
-          },
-          'content': {
-            templateUrl: '/dashboard/dashboard.html',
-            controller: 'dashboardCtrl'
-          }
+    .state('dashboard', {
+      url: "/dashboard",
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
+        },
+        'content': {
+          templateUrl: '/dashboard/dashboard.html',
+          controller: 'dashboardCtrl'
         }
-      })
+      }
+    })
+    .state('singleStory', {
+      url: '/singleStory',
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
+        },
+        'content': {
+          templateUrl: '/singleStory/singleStory.html',
+          controller: 'singleStoryCtrl'
+        }
+      }
+    });
 });
