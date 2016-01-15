@@ -10,8 +10,11 @@ angular.module('storyBoard.authService', [])
     })
     .then(function (resp) {
       console.log('ran sign in with resp: ', resp);
-      localStorageService.setItem('sessiontoken', resp.data.token);
-      localStorageService.setItem('username', resp.data.username);
+      //Will add back once the token system is in place
+      //localStorageService.setItem('sessiontoken', resp.data.token);
+      //For now just hand back hardcoded session ID:
+      localStorageService.set('sessiontoken', 123456789);
+      localStorageService.set('username', resp.data.username);
       $location.path('/');
     });
   };
@@ -23,17 +26,21 @@ angular.module('storyBoard.authService', [])
       data: user
     })
     .then(function (resp) {
-      localStorageService.setItem('sessiontoken', resp.data.token);
+      //Will add back once the token system is in place
+      //localStorageService.setItem('sessiontoken', resp.data.token);
+      //For now just hand back hardcoded session ID:
+      localStorageService.set('sessiontoken', 123456789);
+      localStorageService.set('username', resp.data.username);
       $location.path('/')
     });
   };
 
   auth.isAuth = function () {
-    return !!localStorageService.getItem('sessiontoken');
+    return !!localStorageService.get('sessiontoken');
   };
 
   auth.signout = function () {
-    localStorageService.removeItem('sessiontoken');
+    localStorageService.clearAll();
     $location.path('/');
   };
 

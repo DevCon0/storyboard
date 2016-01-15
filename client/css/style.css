@@ -1,31 +1,39 @@
 body { 
-    padding-top: 65px; 
-    background-color: #bbbbbb;
-    margin-left:20px;
+  padding-top: 65px; 
+  background-color: #bbbbbb; 
 }
 
 img {
-    width:300px;
-    height:auto;
-     margin:auto;
-     border:solid;
+  width:300px;
+  height:auto;
+  margin:auto;
+  border:solid;
 }
 
-.navbar{
-    background-color:darkslategray;
+.navbar {
+  background-color:darkslategray;
+}
+
+.splashcontent {
+  background-color:white;
+}
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .frame {
   float: left;
   height: 250px;
- 	overflow: hidden;
+  overflow: hidden;
   position: relative;
   width: 300px;
 }
 
 .frame a {
   display: block;
-	height: 100%;
+  height: 100%;
   width: 100%;
 }
 
@@ -48,8 +56,8 @@ img {
 }*/
 
 .frame a .caption {
-	background-color: rgba(0, 0, 0, 0.7);
-	display: block;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: block;
   overflow: hidden;
   padding: 10px;
   position: absolute;
@@ -57,21 +65,21 @@ img {
   right: 0;
   bottom: 0;
   top: 180px;
-	transition-property: top;
+  transition-property: top;
   transition-duration: 0.2s;  
   width: 100%;  
   z-index: 10;
 }
 
 .frame a:hover .caption {
-	top: 0;
+  top: 0;
   transition: all 2s;
 }
 
 .frame a .caption h2 {
   color: white;
   font-size: 32px;
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .frame a .caption p {
