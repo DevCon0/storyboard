@@ -2,6 +2,5 @@
 client/lib/
 npm-debug.log*
 db
-*.exe
 server/src/server
 server/src/src
