@@ -7,5 +7,6 @@
   },
   "license": "MIT",
   "dependencies": {
+    "bower": "^1.7.2"
   }
 }
