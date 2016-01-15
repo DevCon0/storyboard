@@ -1,7 +1,11 @@
 
-<h2>Top Stories</h2>
+<h2>Top Stories Today</h2>
 <div class="row">
-        <div ng-repeat="story in topStories"> 
-            <div class="col-md-4"><div class="frame"><a href="#"><img ng-src="{{story.url}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.text}}</p></span></a></div></div>
+    <div ng-repeat="story in topStories">
+        <div class="col-md-3">
+            <div class="frame">
+                <a href="#"><img ng-src="{{story.url}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.text}}</p><p>-{{story.creator}}</p></span></a>
+            </div>
+        </div>
     </div>
 </div>
