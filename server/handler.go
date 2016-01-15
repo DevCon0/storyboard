@@ -72,7 +72,7 @@ type UserRes struct {
 }
 
 func signup(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Signup up...")
+	// fmt.Println("Signup up...")
 
 	// Get JSON object.
 	decoder := json.NewDecoder(r.Body)
@@ -80,7 +80,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&user)
 	chkerr(err)
 	// fmt.Printf("%#v\n", user)
-	fmt.Printf("  %v\n", user.Username)
+	fmt.Printf("Signing up %v...\n", user.Username)
 
 	// Prepare to insert in the database.
 	user.Id = bson.NewObjectId()
@@ -126,14 +126,14 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%#v\n", user)
 }
 
-func writeSampleJson(w http.ResponseWriter) {
-	profile := User{bson.NewObjectId(), bson.Now(), "Bob", "Sue", "Bob", "Sue", []string{}}
-	js, err := json.Marshal(profile)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+// func writeSampleJson(w http.ResponseWriter) {
+// profile := User{bson.NewObjectId(), bson.Now(), "Bob", "Sue", "Bob", "Sue", []string{}}
+// js, err := json.Marshal(profile)
+// if err != nil {
+// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+// 	return
+// }
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
-}
+// w.Header().Set("Content-Type", "application/json")
+// w.Write(js)
+// }
