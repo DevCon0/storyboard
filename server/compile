@@ -1,5 +1,20 @@
 #!/bin/bash
 
+declare dir="";
+if [[ "${PWD}" == "server" ]]; then
+    dir="src";
+else if [[ "${PWD}" == "storyboard" ]]; then
+    dir="server/src";
+else if [[ "${PWD}" == "src" ]]; then
+    dir="";
+else
+    echo "Change directory to either 'storyboard' or 'storyboard/server'"
+    exit 1;
+fi;
+
+[ "${dir}" ] &&
+    pushd "${dir}" >/dev/null;
+
 (
     (
         echo "Building Windows binary..";
