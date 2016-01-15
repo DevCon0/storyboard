@@ -122,15 +122,23 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	user := User{}
 	err := decoder.Decode(&user)
-	chkerr(err)
-	fmt.Printf("%#v\n", user)
+	// chkerr(err)
+	if err != nil {
+		fmt.Printf("Error building user for signin %v\n", err)
+	}
 	attemptedPassword := []byte(user.Password)
 
 	// Grab the  user from the database
 	q := bson.M{"username": user.Username}
 	collection := db.C("users")
 	err = collection.Find(q).One(&user)
-	chkerr(err)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	// chkerr(err)
 	fmt.Printf("%#v\n", user)
 
 	// Compare the password.
