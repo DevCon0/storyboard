@@ -1,5 +1,20 @@
 #!/bin/bash
 
+declare dir="";
+if [[ "${PWD}" == "server" ]]; then
+    dir="bin";
+else if [[ "${PWD}" == "storyboard" ]]; then
+    dir="server/bin";
+else if [[ "${PWD}" == "bin" ]]; then
+    dir="";
+else
+    echo "Change directory to either 'storyboard' or 'storyboard/server'"
+    exit 1;
+fi;
+
+[ "${dir}" ] &&
+    pushd "${dir}" >/dev/null;
+
 declare os="$(uname -a | awk '{print $1;}')";
 
 if [[ "${os}" == "Linux" ]]; then
