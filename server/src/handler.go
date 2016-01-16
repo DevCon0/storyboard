@@ -41,3 +41,26 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("No idea what this is: %v\n", location)
 	}
 }
+
+func storyHandler(w http.ResponseWriter, r *http.Request) {
+	baseLocation := "/api/stories/"
+	routeAndId := strings.TrimPrefix(r.URL.Path, baseLocation)
+	split := strings.Split(routeAndId, "/")
+	location := split[0]
+	id := concat(split[1:]...)
+
+	fmt.Println("stories location", location)
+	fmt.Println("id", id)
+
+	switch location {
+
+	case "story":
+		handleStory(w, r, id)
+
+	case "library":
+		library(w, r, id)
+
+	default:
+		fmt.Printf("Unknown stories api location: %v\n", location)
+	}
+}
