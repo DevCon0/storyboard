@@ -1,5 +1,49 @@
 #!/bin/bash
 
+# Set console color.
+# Optionally, run a command afterwards, and once the command returns,
+#   reset the console color to normal.
+_c() {
+    local -A Codes=( 
+        ["black"]="0" 
+        ["red"]="1" 
+        ["green"]="2" 
+        ["yellow"]="3" 
+        ["blue"]="4" 
+        ["magenta"]="5" 
+        ["cyan"]="6" 
+        ["white"]="7" 
+    );
+
+    local k c;
+    for k in "${!Codes[@]}"; do
+        [ "${k}" = "${1}" ] &&
+            c="${Codes[$k]}";
+    done;
+
+    [ -n "${c}" ] &&
+        tput setaf "${c}";
+    
+    [ -z "${*:2}" ] &&
+        return;
+
+    eval "${@:2}";
+    tput sgr0;
+}
+
+# Set the console color to bold.
+# Optionally, pass any arguments to function '_c'.
+_C() {
+    tput bold;
+    [ -n "$*" ] &&
+        _c "$@";
+}
+
+# Reset console color to normal.
+_u() {
+    tput sgr0;
+}
+
 # Watch all *.go files in the specified directory
 # Call the restart function when they are saved
 function monitor() {
@@ -14,21 +58,21 @@ function restart {
   if [ "$(pgrep -f $PROCESS_NAME)" ]; then
     killall -q -w -9 $PROCESS_NAME
   fi
-  echo ">> Reloading..."
+  _c green echo "[godemon] Reloading..."
   # go run $FILE_PATH $ARGS &
   ./test-run &
 }
 
 # Make sure all background processes get terminated
 function close {
-  echo "Stopping godemon..."
+  _c cyan echo '[godemon] Stopping...'
   killall -q -w -9 inotifywait
   exit 0
 }
 
-trap close INT
-echo "== godemon"
-echo ">> Watching directories, CTRL+C to stop"
+trap close SIGINT
+_C cyan echo "[godemon]"
+_c cyan echo "[godemon] Watching directories, CTRL+C to stop"
 
 # FILE_PATH=$1
 # FILE_NAME=$(basename $FILE_PATH)
@@ -39,6 +83,24 @@ echo ">> Watching directories, CTRL+C to stop"
 
 FILES=($(ls --hide='*_test.go' | grep .go))
 PROCESS_NAME='test-run'
+
+declare basepwd;
+basepwd="$(basename "${PWD}")";
+
+declare dir="";
+if [[ "${basepwd}" == "server" ]]; then
+    dir="";
+elif [[ "${basepwd}" == "storyboard" ]]; then
+    dir="server";
+elif [[ "${basepwd}" == "src" ]]; then
+    dir="..";
+else
+    echo "Change directory to either 'storyboard' or 'storyboard/server'"
+    exit 1;
+fi;
+
+[ "${dir}" ] &&
+    pushd "${dir}" >/dev/null;
 
 # Start the main Go program
 #go run $FILE_PATH $ARGS &

@@ -26,6 +26,8 @@ declare os="$(uname -a | awk '{print $1;}')";
 
 if [[ "${os}" == "Linux" ]]; then
     ./server_linux;
-else
+elif [[ "${os}" == "Darwin" ]]; then
     ./server_darwin;
+else
+    ./server.exe;
 fi;

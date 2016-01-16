@@ -3,13 +3,6 @@ body {
   background-color: #bbbbbb; 
 }
 
-img {
-  width:300px;
-  height:auto;
-  margin:auto;
-  border:solid;
-}
-
 .navbar {
   background-color:darkslategray;
 }
@@ -27,39 +20,33 @@ img {
   margin-right: 0px;
 }
 
-.frame {
+.topStoryframe {
   float: left;
   height: 250px;
   overflow: hidden;
   position: relative;
   width: 300px;
+  box-shadow: 10px 10px 5px #888888 ;
+  margin: 15px;
 }
 
-.frame a {
+.topStoryframe a {
   display: block;
   height: 100%;
   width: 100%;
 }
 
-/*.frame img {
-  display: block;
-  height: auto;
-  position: absolute;
-  top: -125%;
-  left: -50%;
-	width: auto;
-  z-index: 0;
+.topStoryframe img {
+  width:300px;
+  height:auto;
+  margin:auto;
+  border:solid;
+  border-width: 5px;
+  border-color:black;
+  border-radius:5px;
 }
 
-.frame:nth-child(2) img {
-  top: -90%;
-  left: -70%;
-}
-.frame:nth-child(3) img {
-  top: -90%;
-}*/
-
-.frame a .caption {
+.topStoryframe a .caption {
   background-color: rgba(0, 0, 0, 0.7);
   display: block;
   overflow: hidden;
@@ -73,20 +60,26 @@ img {
   transition-duration: 0.2s;  
   width: 100%;  
   z-index: 10;
+  border-top: hidden;
+  border-bottom: solid;
+  border-color: black;
+  border-width: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
-.frame a:hover .caption {
+.topStoryframe a:hover .caption {
   top: 0;
   transition: all 2s;
 }
 
-.frame a .caption h2 {
+.topStoryframe a .caption h2 {
   color: white;
   font-size: 32px;
   margin-bottom: 20px;
 }
 
-.frame a .caption p {
+.topStoryframe a .caption p {
   color: orange;
   display: none;
   line-height: 150%;
@@ -94,7 +87,79 @@ img {
   width: 100%;
 }
 
-.frame a:hover .caption p {
+.topStoryframe a:hover .caption p {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.libraryStoryFrame {
+  float: left;
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+  width: 300px;
+  box-shadow: 10px 10px 5px #888888 ;
+  margin: 15px;
+}
+
+.libraryStoryFrame a {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.libraryStoryFrame img {
+  width:300px;
+  height:auto;
+  margin:auto;
+  border:solid;
+  border-width: 5px;
+  border-color:black;
+  border-radius:5px;
+}
+
+.libraryStoryFrame a .caption {
+  background-color: rgba(0, 0, 0, 0.7);
+  display: block;
+  overflow: hidden;
+  padding: 10px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 180px;
+  transition-property: top;
+  transition-duration: 0.2s;  
+  width: 100%;  
+  z-index: 10;
+  border-top: hidden;
+  border-bottom: solid;
+  border-color: black;
+  border-width: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.libraryStoryFrame a:hover .caption {
+  top: 0;
+  transition: all 2s;
+}
+
+.libraryStoryFrame a .caption h2 {
+  color: white;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.libraryStoryFrame a .caption p {
+  color: orange;
+  display: none;
+  line-height: 150%;
+  transition: all 0.2s;  
+  width: 100%;
+}
+
+.libraryStoryFrame a:hover .caption p {
   display: block;
   margin-bottom: 20px;
 }

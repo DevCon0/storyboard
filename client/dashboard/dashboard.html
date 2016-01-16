@@ -1,7 +1,23 @@
-<h1>Welcome {{user.username}}</h1>
+<div class="row">
+    <div class="col-md-2 col-md-offset-1">
+        <h1>Welcome {{username}}</h1>
+    </div>
+</div>
 
 <div class='row'>
-    <div class="col-md-6">
-        <h2 class="bannertitle">Created Stories: {{ }}</h2>
-     </div>
+    <div class="col-md-6 col-md-offset-1">
+        <h2 class="bannertitle">Created Stories:</h2>
+    </div>
 </div>
+</br>
+<div class="row">
+    <div class="col-md-1"></div>
+    <div ng-repeat="story in userLibrary">
+        <div class="col-md-2">
+            <div class="libraryStoryFrame">
+                <a href="/#/singleStory"><img ng-src="{{story.url}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.text}}</p><p>-{{story.creator}}</p></span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
