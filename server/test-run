@@ -24,8 +24,9 @@ declare os="$(uname -a | awk '{print $1;}')";
 if [[ os == "Linux" ]]; then
     # files=($(ls --hide='*_test.go' | grep .go));
     files=($(find . -name '*.go' \( ! -name '*_test.go' \)));
-else 
-    # files=(handler.go main.go schema.go)
+elif [[ "${os}" == "Darwin" ]]; then
+    files=($(find . -name '*.go' \( ! -name '*_test.go' \)));
+else
     files=($(find . -name '*.go' \( ! -name '*_test.go' \)));
 fi;
 
