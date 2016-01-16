@@ -1,1 +1,69 @@
-<h1>{{user}}, welcome to the create Story page!</h1>
+<h1>{{user}}, welcome to the create story page!</h1>
+<div class="row">
+  <div class="creationFrameDiv col-md-2 col-md-offset-1">
+    <form ng-submit="createFrame(1)">
+      <div class="form-group">
+        <label for="youtubeUrl1">Youtube URL</label>
+        <input type="url" ng-model="frame1YoutubeUrl" class="form-control" id="youtubeUrl1" placeholder="https://www.youtube.com">
+      </div>
+      <div class="form-group">
+        <label for="startTime1">Start Time (sec)</label>
+        <input type="text" ng-model="frame1StartTime" class="form-control" id="startTime1" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label for="endTime1">End Time (sec)</label>
+        <input type="text" ng-model="frame1EndTime" class="form-control" id="endTime1" placeholder="0">
+      </div>
+      <button type="submit" class="btn btn-default">Preview Frame</button>
+    </form>
+    <div class="col-md-12 clean"></div>
+    <div id="frame1Preview" class="col-md-12"></div>
+  </div>
+  <div class="creationFrameDiv col-md-2 col-md-offset-1">
+    <form ng-submit="createFrame(2)">
+      <div class="form-group">
+        <label for="youtubeUrl2">Youtube URL</label>
+        <input type="url" ng-model="frame2YoutubeUrl" class="form-control" id="youtubeUrl2" placeholder="https://www.youtube.com">
+      </div>
+      <div class="form-group">
+        <label for="startTime2">Start Time (sec)</label>
+        <input type="text" ng-model="frame2StartTime" class="form-control" id="startTime2" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label for="endTime2">End Time (sec)</label>
+        <input type="text" ng-model="frame2EndTime" class="form-control" id="endTime2" placeholder="0">
+      </div>
+      <button type="submit" class="btn btn-default">Preview Frame</button>
+    </form>
+    <div class="col-md-12 clean"></div>
+    <div id="frame2Preview" class="col-md-12"></div>
+  </div>
+  <div class="creationFrameDiv col-md-2 col-md-offset-1">
+    <form ng-submit="createFrame(3)">
+      <div class="form-group">
+        <label for="youtubeUrl3">Youtube URL</label>
+        <input type="url" ng-model="frame3YoutubeUrl" class="form-control" id="youtubeUrl3" placeholder="https://www.youtube.com">
+      </div>
+      <div class="form-group">
+        <label for="startTime3">Start Time (sec)</label>
+        <input type="text" ng-model="frame3StartTime" class="form-control" id="startTime3" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label for="endTime3">End Time (sec)</label>
+        <input type="text" ng-model="frame3EndTime" class="form-control" id="endTime3" placeholder="0">
+      </div>
+      <button type="submit" class="btn btn-default">Preview Frame</button>
+    </form>
+    <div class="col-md-12 clean"></div>
+    <div id="frame3Preview" class="col-md-12"></div>
+  </div>
+  <div class="row clean">
+  </div>
+  <div class="row clean">
+  </div>
+  <div class="row">
+    <div class="col-md-1 col-md-offset-1" ng-show="checkRequiredFields()">
+      <button type="button" class="btn btn-success" ng-click="saveStory()">Save your story</button>
+    </div>
+  </div>
+</div>

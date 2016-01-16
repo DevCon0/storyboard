@@ -3,6 +3,10 @@ body {
   background-color: #bbbbbb; 
 }
 
+.clean {
+  margin: 10px;
+}
+
 .navbar {
   background-color:darkslategray;
 }
@@ -162,4 +166,9 @@ body {
 .libraryStoryFrame a:hover .caption p {
   display: block;
   margin-bottom: 20px;
+}
+
+.creationFrameDiv {
+  border: 2px solid black;
+  padding: 8px;
 }
