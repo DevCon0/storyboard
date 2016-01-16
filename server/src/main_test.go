@@ -25,14 +25,22 @@ func TestDatabase(t *testing.T) {
 
 	testUsers := []interface{}{
 		&User{
-			bson.NewObjectId(), bson.Now(),
-			"Bobble", "Suepass", "Bob", "Sue",
-			[]string{},
+			Id:        bson.NewObjectId(),
+			CreatedAt: bson.Now(),
+			Username:  "Bobble",
+			Password:  "Suepass",
+			Firstname: "Bob",
+			Lastname:  "Sue",
+			Stories:   []string{},
 		},
 		&User{
-			bson.NewObjectId(), bson.Now(),
-			"AliceRex", "Suepassaroo", "Alice", "Dino",
-			[]string{},
+			Id:        bson.NewObjectId(),
+			CreatedAt: bson.Now(),
+			Username:  "AliceRex",
+			Password:  "Suepassaroo",
+			Firstname: "Alice",
+			Lastname:  "Dino",
+			Stories:   []string{},
 		},
 	}
 	err = collection.Insert(testUsers...)
@@ -67,22 +75,22 @@ func TestDatabase(t *testing.T) {
 }
 
 func TestBasicServer(t *testing.T) {
-	t.Log("Testing basic server capabilities")
+	t.Log("Testing basic server capabilities...")
 	url := "http://localhost:8020/"
 	res, err := http.Get(url)
-	defer res.Body.Close()
 	if err != nil {
 		t.Errorf("Failed to get information from the server\n%v\n", err)
 	} else if res.StatusCode != 200 {
 		t.Errorf("Server returned status code %v\n", res.StatusCode)
 	}
+	defer res.Body.Close()
 
 	t.Logf("Got OK response: %v\n", res.StatusCode)
 
 }
 
 func TestSignup(t *testing.T) {
-	t.Log("Testing signup")
+	t.Log("Testing signup...")
 	url := "http://localhost:8020/api/users/signup"
 
 	var jsonStr = []byte(`{"username":"Bob","firstname": "Bob","password": "Sue"}`)
@@ -93,12 +101,12 @@ func TestSignup(t *testing.T) {
 
 	client := &http.Client{}
 	res, err := client.Do(req)
-	defer res.Body.Close()
 	if err != nil {
 		t.Errorf("Failed to signup Bob\n%v\n", err)
 	} else if res.StatusCode != 201 {
 		t.Errorf("Expected status code 201, got %v\n", res.StatusCode)
 	}
+	defer res.Body.Close()
 
 	// check database for user Bob
 	t.Log("Testing database connection...")
@@ -132,7 +140,6 @@ func TestSignin(t *testing.T) {
 
 	client := &http.Client{}
 	res, err := client.Do(req)
-	defer res.Body.Close()
 	if err != nil {
 		t.Errorf("Failed to signin Bob\n%v\n", err)
 	} else if res.StatusCode != 200 {
@@ -140,6 +147,7 @@ func TestSignin(t *testing.T) {
 	} else {
 		t.Log("Bob totally signed in!!!")
 	}
+	defer res.Body.Close()
 
 	jsonStr = []byte(`{"username":"Bob","password": "George"}`)
 
@@ -175,5 +183,4 @@ func TestSignin(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to remove test users from the database\n%v\n", err)
 	}
-
 }
