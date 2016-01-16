@@ -100,7 +100,7 @@ angular.module('storyBoard.storyStorageService', [])
     //console.log('getUserLibrary called with', username);
     //return $http({
     //  method: 'POST',
-    //  url: '/library',
+    //  url: '/api/stories/getlibrary',
     //  data: username
     //})
     // .then(function (resp) {
