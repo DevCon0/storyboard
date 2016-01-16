@@ -1,15 +1,17 @@
 var storyBoardApp = angular.module('storyBoardApp', [
                                    'ui.router',
+                                   'LocalStorageModule',
                                    'storyBoard.auth',
                                    'storyBoard.navBar',
                                    'storyBoard.splash',
                                    'storyBoard.singleStory',
+                                   'storyBoard.dashboard',
+                                   'storyBoard.createStory',
+                                   'storyBoard.profile',
+                                   'storyBoard.userServices',
                                    'storyBoard.storyStateMachineService',
                                    'storyBoard.storyStorageService',
                                    'storyBoard.authService',
-                                   'LocalStorageModule',
-                                   'storyBoard.dashboard',
-                                   'storyBoard.createStory'
 ]);
 
 storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
@@ -92,6 +94,19 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
         'content': {
           templateUrl: '/createStory/createStory.html',
           controller: 'createStoryCtrl'
+        }
+      }
+    })
+    .state('profile', {
+      url: "/profile",
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
+        },
+        'content': {
+          templateUrl: '/profile/profile.html',
+          controller: 'profileCtrl'
         }
       }
     })
