@@ -116,9 +116,6 @@ angular.module('storyBoard.storyStorageService', [])
     // });
   };
 
-<<<<<<< HEAD
-  storyStorage.getStory = function (title) {
-=======
   storyStorage.saveStory = function (story) {
     //console.log('saveStory called with', story);
     //return $http({
@@ -132,7 +129,6 @@ angular.module('storyBoard.storyStorageService', [])
   }
 
   storyStorage.getStory = function (id) {
->>>>>>> refs/remotes/origin/master
     //TODO - Remove when you want to go to the server.
     var testing = false;
     if(testing){
@@ -170,7 +166,7 @@ angular.module('storyBoard.storyStorageService', [])
       console.log('getStory called with', title);
       return $http({
         method: 'GET',
-        url: '/api/stories/' + id,
+        url: '/api/stories/story/' + id,
         data: id
       })
        .then(function (resp) {
