@@ -27,6 +27,7 @@ func main() {
 
 	http.HandleFunc("/", clientHandler)
 	http.HandleFunc("/api/users/", usersHandler)
+	http.HandleFunc("/api/stories/", storyHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {

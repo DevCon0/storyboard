@@ -3,13 +3,6 @@ body {
   background-color: #bbbbbb; 
 }
 
-img {
-  width:300px;
-  height:auto;
-  margin:auto;
-  border:solid;
-}
-
 .clean {
   margin: 10px;
 }
@@ -31,39 +24,105 @@ img {
   margin-right: 0px;
 }
 
-.frame {
+.topStoryframe {
   float: left;
-  height: 250px;
+  height: 300px;
   overflow: hidden;
   position: relative;
-  width: 300px;
+  width: 350px;
+  box-shadow: 10px 10px 5px #888888 ;
+  margin: 15px;
 }
 
-.frame a {
+.topStoryframe a {
   display: block;
   height: 100%;
   width: 100%;
 }
 
-/*.frame img {
+.topStoryframe img {
+  width:350px;
+  height:auto;
+  margin:auto;
+  border:solid;
+  border-width: 5px;
+  border-color:black;
+  border-radius:5px;
+}
+
+.topStoryframe a .caption {
+  background-color: rgba(0, 0, 0, 0.7);
   display: block;
-  height: auto;
+  overflow: hidden;
+  padding: 10px;
   position: absolute;
-  top: -125%;
-  left: -50%;
-	width: auto;
-  z-index: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 200px;
+  transition-property: top;
+  transition-duration: 0.2s;  
+  width: 100%;  
+  z-index: 10;
+  border-top: hidden;
+  border-bottom: solid;
+  border-color: black;
+  border-width: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
-.frame:nth-child(2) img {
-  top: -90%;
-  left: -70%;
+.topStoryframe a:hover .caption {
+  top: 0;
+  transition: all 2s;
 }
-.frame:nth-child(3) img {
-  top: -90%;
-}*/
 
-.frame a .caption {
+.topStoryframe a .caption h2 {
+  color: white;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.topStoryframe a .caption p {
+  color: orange;
+  display: none;
+  line-height: 150%;
+  transition: all 0.2s;  
+  width: 100%;
+}
+
+.topStoryframe a:hover .caption p {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.libraryStoryFrame {
+  float: left;
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+  width: 250px;
+  box-shadow: 10px 10px 5px #888888 ;
+  margin: 15px;
+}
+
+.libraryStoryFrame a {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.libraryStoryFrame img {
+  width:100%;
+  height:auto;
+  margin:auto;
+  border:solid;
+  border-width: 5px;
+  border-color:black;
+  border-radius:5px;
+}
+
+.libraryStoryFrame a .caption {
   background-color: rgba(0, 0, 0, 0.7);
   display: block;
   overflow: hidden;
@@ -77,20 +136,26 @@ img {
   transition-duration: 0.2s;  
   width: 100%;  
   z-index: 10;
+  border-top: hidden;
+  border-bottom: solid;
+  border-color: black;
+  border-width: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
-.frame a:hover .caption {
+.libraryStoryFrame a:hover .caption {
   top: 0;
   transition: all 2s;
 }
 
-.frame a .caption h2 {
+.libraryStoryFrame a .caption h2 {
   color: white;
   font-size: 32px;
   margin-bottom: 20px;
 }
 
-.frame a .caption p {
+.libraryStoryFrame a .caption p {
   color: orange;
   display: none;
   line-height: 150%;
@@ -98,7 +163,7 @@ img {
   width: 100%;
 }
 
-.frame a:hover .caption p {
+.libraryStoryFrame a:hover .caption p {
   display: block;
   margin-bottom: 20px;
 }
