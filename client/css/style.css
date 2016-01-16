@@ -10,6 +10,10 @@ img {
   border:solid;
 }
 
+.clean {
+  margin: 10px;
+}
+
 .navbar {
   background-color:darkslategray;
 }
@@ -97,4 +101,9 @@ img {
 .frame a:hover .caption p {
   display: block;
   margin-bottom: 20px;
+}
+
+.creationFrameDiv {
+  border: 2px solid black;
+  padding: 8px;
 }

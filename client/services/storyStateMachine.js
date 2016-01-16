@@ -5,39 +5,30 @@ angular.module('storyBoard.storyStateMachineService', [])
 
   storyStateMachine.setStory = function(story){
     this.story = story;
-
-    var youtubeAlreadyLoaded =
-      $window.onYouTubeIframeAPIReady !== undefined;
-
-    $window.onYouTubeIframeAPIReady = function(){
-      var VIDEO_HEIGHT = 200;
-      var VIDEO_WIDTH = 356;
-      var storyFrames = story.frames;
-      for(var i = 0; i < storyFrames.length; i++){
-        storyFrames[i].player =
-          new YT.Player(
-            storyFrames[i].playerDiv,
-            {
-              height: VIDEO_HEIGHT,
-              width: VIDEO_WIDTH,
-              videoId: storyFrames[i].videoId,
-              playerVars: {
-                controls: 0,
-                showinfo: 0,
-                start: storyFrames[i].start,
-                end: storyFrames[i].end
-              },
-              events: {
-                'onReady': storyStateMachine.onPlayerReady.bind(storyStateMachine),
-                'onStateChange': storyStateMachine.playerStateListener.bind(storyStateMachine)
-              }
+    while( ! window.youtubeApiLoadedAndReady){}
+    var VIDEO_HEIGHT = 200;
+    var VIDEO_WIDTH = 356;
+    var storyFrames = story.frames;
+    for(var i = 0; i < storyFrames.length; i++){
+      storyFrames[i].player =
+        new YT.Player(
+          storyFrames[i].playerDiv,
+          {
+            height: VIDEO_HEIGHT,
+            width: VIDEO_WIDTH,
+            videoId: storyFrames[i].videoId,
+            playerVars: {
+              controls: 0,
+              showinfo: 0,
+              start: storyFrames[i].start,
+              end: storyFrames[i].end
+            },
+            events: {
+              'onReady': storyStateMachine.onPlayerReady.bind(storyStateMachine),
+              'onStateChange': storyStateMachine.playerStateListener.bind(storyStateMachine)
             }
-          );
-      }
-    };
-
-    if(youtubeAlreadyLoaded){
-      $window.onYouTubeIframeAPIReady();
+          }
+        );
     }
   };
 
