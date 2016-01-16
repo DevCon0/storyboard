@@ -96,6 +96,14 @@ angular.module('storyBoard.storyStorageService', [])
         text: "Best of the bunch, seriously!!!"
       },
 
+            {
+              url: 'http://vignette2.wikia.nocookie.net/kingdomheartsfanon/images/3/31/13_Webby_Vanderquack.jpg/revision/latest?cb=20130915214600',
+              title: 'Webby',
+              creator: 'Clap Trap',
+              rating: 3,
+              text: "Best of the bunch, seriously!!!"
+            },
+
     ]
     //console.log('getUserLibrary called with', username);
     //return $http({

@@ -22,10 +22,10 @@ body {
 
 .topStoryframe {
   float: left;
-  height: 250px;
+  height: 300px;
   overflow: hidden;
   position: relative;
-  width: 300px;
+  width: 350px;
   box-shadow: 10px 10px 5px #888888 ;
   margin: 15px;
 }
@@ -37,7 +37,7 @@ body {
 }
 
 .topStoryframe img {
-  width:300px;
+  width:350px;
   height:auto;
   margin:auto;
   border:solid;
@@ -97,7 +97,7 @@ body {
   height: 250px;
   overflow: hidden;
   position: relative;
-  width: 300px;
+  width: 250px;
   box-shadow: 10px 10px 5px #888888 ;
   margin: 15px;
 }
@@ -109,7 +109,7 @@ body {
 }
 
 .libraryStoryFrame img {
-  width:300px;
+  width:100%;
   height:auto;
   margin:auto;
   border:solid;
