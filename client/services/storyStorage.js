@@ -10,7 +10,7 @@ angular.module('storyBoard.storyStorageService', [])
     //console.log('getTopThree called);
     //return $http({
     //  method: 'GET',
-    //  url: '/topthree',
+    //  url: '/api/stories/topthree',
     // 
     //})
     // .then(function (resp) {
@@ -107,18 +107,30 @@ angular.module('storyBoard.storyStorageService', [])
     ]
     //console.log('getUserLibrary called with', username);
     //return $http({
-    //  method: 'POST',
-    //  url: '/api/stories/getlibrary',
-    //  data: username
+    //  method: 'GET',
+    //  url: '/api/stories/getlibrary/'+username,
+    //  
     //})
     // .then(function (resp) {
     //   console.log('ran getUserLibrary, got response: ', resp);
     // });
   };
 
+  storyStorage.saveStory = function (story) {
+    //console.log('saveStory called with', story);
+    //return $http({
+    //  method: 'POST',
+    //  url: '/api/stories/',
+    //  data: story
+    //})
+    // .then(function (resp) {
+    //   console.log('ran saveStory, got response: ', resp);
+    // });
+  }
+
   storyStorage.getStory = function (id) {
     //TODO - Remove when you want to go to the server.
-    var testing = true;
+    var testing = false;
     if(testing){
       var story = {
         FRAME1: 0,
@@ -154,7 +166,7 @@ angular.module('storyBoard.storyStorageService', [])
       console.log('getStory called with', id);
       return $http({
         method: 'GET',
-        url: '/story',
+        url: '/api/stories/' + id,
         data: id
       })
        .then(function (resp) {
