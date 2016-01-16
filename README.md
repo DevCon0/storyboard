@@ -24,6 +24,7 @@ The tech stack is MongoDB, Angular, and Go.
 
 #Release Notes
 alpha v0.0.1
+
 1/15/2016
 
 A user can access our site via a web URL (heroku hosted).
