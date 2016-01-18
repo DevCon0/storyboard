@@ -18,6 +18,24 @@ angular.module('storyBoard.createStory', [])
   $scope.frame3StartTime = null;
   $scope.frame3EndTime = null;
 
+  $scope.prepopulateInputs = function(){
+    //TODO: remove once done with development
+    $scope.storyTitle = "Testing Title";
+    $scope.storyDescription ="Testing description";
+
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=yViIi3gie2c";
+    $scope.frame1StartTime = "32";
+    $scope.frame1EndTime = "37";
+
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=PLLQK9la6Go";
+    $scope.frame2StartTime = "174";
+    $scope.frame2EndTime = "179";
+
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=COvnHv42T-A";
+    $scope.frame3StartTime = "104";
+    $scope.frame3EndTime = "106";
+  }
+
   $scope.checkRequiredFields = function(){
     var allFieldsReady =
       $scope.storyTitle       &&
