@@ -130,7 +130,7 @@ angular.module('storyBoard.storyStorageService', [])
 
   storyStorage.getStory = function (id) {
     //TODO - Remove when you want to go to the server.
-    var testing = false;
+    var testing = true;
     if(testing){
       var story = {
         FRAME1: 0,
