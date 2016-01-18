@@ -1,8 +1,22 @@
-<h1>{{user}}, welcome to the create story page!</h1>
+<h1>{{user}}, create your own story!</h1>
+<div class="row">
+  <form>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label for="storyTitleInput">Story Title</label>
+        <input type="text" ng-model="storyTitle" class="form-control" placeholder="My Story" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label for="storyDescriptionInput">Story Description</label>
+        <input type="text" ng-model="storyDescription" class="form-control" placeholder="Once upon a time..." maxlength="255">
+      </div>
+    </div>
+  </form>
+</div>
 <div class="row">
   <div class="creationFrameDiv col-md-2 col-md-offset-1">
     <h2>Act I</h2>
-    <form ng-submit="createFrame(1)">
+    <form ng-submit="previewFrame(1)">
       <div class="form-group">
         <label for="youtubeUrl1">Youtube URL</label>
         <input type="url" ng-model="frame1YoutubeUrl" class="form-control" id="youtubeUrl1" placeholder="https://www.youtube.com">
@@ -22,7 +36,7 @@
   </div>
   <div class="creationFrameDiv col-md-2 col-md-offset-1">
     <h2>Act II</h2>
-    <form ng-submit="createFrame(2)">
+    <form ng-submit="previewFrame(2)">
       <div class="form-group">
         <label for="youtubeUrl2">Youtube URL</label>
         <input type="url" ng-model="frame2YoutubeUrl" class="form-control" id="youtubeUrl2" placeholder="https://www.youtube.com">
@@ -42,7 +56,7 @@
   </div>
   <div class="creationFrameDiv col-md-2 col-md-offset-1">
     <h2>Act III</h2>
-    <form ng-submit="createFrame(3)">
+    <form ng-submit="previewFrame(3)">
       <div class="form-group">
         <label for="youtubeUrl3">Youtube URL</label>
         <input type="url" ng-model="frame3YoutubeUrl" class="form-control" id="youtubeUrl3" placeholder="https://www.youtube.com">

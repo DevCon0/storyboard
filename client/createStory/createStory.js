@@ -3,6 +3,9 @@ angular.module('storyBoard.createStory', [])
 .controller('createStoryCtrl', function ($scope, $state, localStorageService, $window) {
   $scope.user = localStorageService.get('username');
 
+  $scope.storyTitle = null;
+  $scope.storyDescription =null;
+
   $scope.frame1YoutubeUrl = null;
   $scope.frame1StartTime = null;
   $scope.frame1EndTime = null;
@@ -17,6 +20,8 @@ angular.module('storyBoard.createStory', [])
 
   $scope.checkRequiredFields = function(){
     var allFieldsReady =
+      $scope.storyTitle       &&
+      $scope.storyDescription &&
       $scope.frame1YoutubeUrl &&
       $scope.frame1StartTime  &&
       $scope.frame1EndTime    &&
@@ -68,7 +73,7 @@ angular.module('storyBoard.createStory', [])
     frame3: null
   };
 
-  $scope.createFrame = function(frameId){
+  $scope.previewFrame = function(frameId){
     var frameYoutubeUrl = null;
     var frameStartTime = null;
     var frameEndTime = null
