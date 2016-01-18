@@ -8,8 +8,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var ()
-
 func TestDatabase(t *testing.T) {
 	t.Log("Testing database connection...")
 	session, err := initDb()
@@ -29,8 +27,7 @@ func TestDatabase(t *testing.T) {
 			CreatedAt: bson.Now(),
 			Username:  "Bobble",
 			Password:  "Suepass",
-			Firstname: "Bob",
-			Lastname:  "Sue",
+			Fullname:  "Bob Sue",
 			Stories:   []string{},
 		},
 		&User{
@@ -38,8 +35,7 @@ func TestDatabase(t *testing.T) {
 			CreatedAt: bson.Now(),
 			Username:  "AliceRex",
 			Password:  "Suepassaroo",
-			Firstname: "Alice",
-			Lastname:  "Dino",
+			Fullname:  "Alice Dino",
 			Stories:   []string{},
 		},
 	}
@@ -105,7 +101,11 @@ func TestSignup(t *testing.T) {
 	t.Log("Testing signup...")
 	url := "http://localhost:8020/api/users/signup"
 
-	jsonStr := `{"username":"Bob","firstname": "Bob","password": "Sue"}`
+	jsonStr := `{
+		"username":"BobTheTester",
+		"fullname": "Bob",
+		"password": "Sue"
+	}`
 
 	res, err := jsonPost(url, jsonStr)
 	if err != nil {
@@ -135,7 +135,6 @@ func TestSignup(t *testing.T) {
 		t.Errorf("Failed to find test user in the database\n%v\n", err)
 	}
 	t.Logf("Bob was found in database\n")
-
 }
 
 func TestSignin(t *testing.T) {
@@ -143,7 +142,7 @@ func TestSignin(t *testing.T) {
 	url := "http://localhost:8020/api/users/signin"
 
 	jsonStr := `{
-		"username":"Bob",
+		"username":"BobTheTester",
 		"password": "Sue"
 	}`
 
@@ -161,7 +160,7 @@ func TestSignin(t *testing.T) {
 	res.Body.Close()
 
 	jsonStr = `{
-		"username":"Bob",
+		"username":"BobTheTester",
 		"password": "George"
 	}`
 
@@ -177,24 +176,6 @@ func TestSignin(t *testing.T) {
 		t.Logf("Bad password, sign in response status: %v\n", res.StatusCode)
 	}
 	res.Body.Close()
-
-	// check database for user Bob
-	t.Log("Testing database connection...")
-	session, err := initDb()
-	if err != nil {
-		t.Errorf("Failed to connect to the database\n%v\n", err)
-	}
-
-	defer session.Close()
-	collection := db.C("users")
-
-	q := bson.M{"username": "Bob"}
-
-	// remove Bob after earlier tests
-	_, err = collection.RemoveAll(q)
-	if err != nil {
-		t.Errorf("Failed to remove test users from the database\n%v\n", err)
-	}
 }
 
 func TestStoryCreation(t *testing.T) {
@@ -202,8 +183,8 @@ func TestStoryCreation(t *testing.T) {
 
 	url := "http://localhost:8020/api/stories/story"
 	jsonStr := `{
-    "title": "Milco is Cool",
-    "userid": "56992f7da1c16b6dd9674833",
+    "title": "When Bob meets Alice",
+    "username": "BobTheTester",
     "frame1": 0,
     "frame2": 1,
     "frame3": 2,
@@ -252,8 +233,8 @@ func TestStoryCreation(t *testing.T) {
 	t.Log("Testing story creation with missing properties...")
 
 	jsonStr = `{
-	    "title": "Milco is Cool",
-	    "userid": "56992f7da1c16b6dd9674833",
+	    "title": "When Bob meets Alice",
+	    "username": "BobTheTester",
 	    "frame1": 0,
 	    "frame2": 1,
 	    "frame3": 2
@@ -278,9 +259,13 @@ func TestStoryCreation(t *testing.T) {
 		)
 	}
 	res.Body.Close()
+}
 
-	// check database for user Bob
-	t.Log("Testing database connection...")
+func TestStoryFetch(t *testing.T) {
+	t.Log("Testing single story fetching...")
+
+	// Find the story which was created by the test.
+	t.Log("Connecting to the database...")
 	session, err := initDb()
 	if err != nil {
 		t.Errorf(
@@ -293,10 +278,9 @@ func TestStoryCreation(t *testing.T) {
 	defer session.Close()
 	collection := db.C("stories")
 
-	// Remove the story which was created by the test.
 	t.Log("Finding test stories from the database...")
 	result := []Story{}
-	q := bson.M{"userid": "56992f7da1c16b6dd9674833"}
+	q := bson.M{"username": "BobTheTester"}
 	err = collection.Find(q).All(&result)
 	if err != nil {
 		t.Errorf(
@@ -306,11 +290,13 @@ func TestStoryCreation(t *testing.T) {
 	}
 
 	// t.Logf("%#v\n", result)
+	// t.Logf("%#v\n", result[0])
 
 	if len(result) <= 0 {
 		t.Errorf(
 			"Failed to find test story in the database\n",
 		)
+		return
 	}
 
 	lastResult := result[0]
@@ -319,15 +305,84 @@ func TestStoryCreation(t *testing.T) {
 			lastResult = r
 		}
 	}
+	id := lastResult.Id
+	t.Log(id)
+	t.Log(id.Hex())
 
+	url := concat("http://localhost:8020/api/stories/story/", id.Hex())
+	t.Log(url)
+
+	expectedStatus := http.StatusOK
+	res, err := http.Get(url)
+	if err != nil {
+		t.Errorf(
+			"Failed to send request to %v\n%v\n",
+			url, err,
+		)
+	} else if res.StatusCode != expectedStatus {
+		t.Errorf(
+			"Expected status code %v, got %v\n",
+			expectedStatus, res.StatusCode,
+		)
+	} else {
+		t.Logf("Response received from %v\n", url)
+	}
+
+	// story := Story{}
+	// decoder := json.NewDecoder(res.Body)
+	// err = decoder.Decode(&story)
+	// if err != nil {
+	// 	fmt.Printf("Failed to decode JSON object in the request\n%v\n", err)
+	// }
+	// t.Logf("%#v\n", story)
+	// t.Logf("%#v\n", story.Id.Hex())
+
+	res.Body.Close()
+
+	// // Remove the story which was created by the test.
+	// t.Log("Removing test stories from the database...")
+	// // t.Log("lastResult.Id", lastResult.Id)
+	// q = bson.M{"_id": id}
+	// err = collection.Remove(q)
+	// if err != nil {
+	// 	t.Errorf(
+	// 		"Failed to remove test story from the database\n%v\n",
+	// 		err,
+	// 	)
+	// }
+}
+
+func TestCleanup(t *testing.T) {
+	t.Log("Cleaning up test collections in database...")
+	// check database for user Bob
+	t.Log("Testing database connection...")
+	session, err := initDb()
+	if err != nil {
+		t.Errorf("Failed to connect to the database\n%v\n", err)
+	}
+
+	defer session.Close()
+
+	// Remove the story which was created by the test.
 	t.Log("Removing test stories from the database...")
 	// t.Log("lastResult.Id", lastResult.Id)
-	q = bson.M{"_id": lastResult.Id}
-	err = collection.Remove(q)
+	collection := db.C("stories")
+	q := bson.M{"username": "BobTheTester"}
+	_, err = collection.RemoveAll(q)
 	if err != nil {
 		t.Errorf(
 			"Failed to remove test story from the database\n%v\n",
 			err,
 		)
+	}
+
+	t.Log("Killing BobTheTester...")
+	collection = db.C("users")
+	q = bson.M{"username": "BobTheTester"}
+
+	// Remove BobTheTester from the database.
+	_, err = collection.RemoveAll(q)
+	if err != nil {
+		t.Errorf("Failed to remove test users from the database\n%v\n", err)
 	}
 }
