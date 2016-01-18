@@ -55,10 +55,16 @@ function monitor() {
 
 # Terminate and rerun the main Go program
 function restart {
-  if [ "$(pgrep -f $PROCESS_NAME)" ]; then
-    killall -q -w -9 $PROCESS_NAME
-  fi
-  _c green echo "[godemon] Reloading..."
+  # if [ "$(pgrep -f $PROCESS_NAME)" ]; then
+  #   killall -q -w -9 $PROCESS_NAME
+  # fi
+  local p;
+  for p in "${PROCESS_NAMES[@]}"; do
+    # pkill -f "${p}";
+    killall -q -w -9 "${p}"
+  done;
+
+  _c cyan echo "[godemon] Reloading...";
   # go run $FILE_PATH $ARGS &
   ./test-run &
 }
@@ -80,9 +86,28 @@ _c cyan echo "[godemon] Watching directories, CTRL+C to stop"
 
 # shift
 # ARGS=$@
+declare basepwd;
+basepwd="$(basename "${PWD}")";
 
-FILES=($(ls --hide='*_test.go' | grep .go))
+declare dir="";
+if [[ "${basepwd}" == "server" ]]; then
+    dir="src";
+elif [[ "${basepwd}" == "storyboard" ]]; then
+    dir="server/src";
+elif [[ "${basepwd}" == "src" ]]; then
+    dir="";
+else
+    echo "Change directory to either 'storyboard' or 'storyboard/server'"
+    exit 1;
+fi;
+
+[ "${dir}" ] &&
+    pushd "${dir}" >/dev/null;
+
+FILES=( $(find . -name '*.go' \( ! -name '*_test.go' \) -printf '%f\n') );
+GORUN_PROCESS_NAME="${FILES[0]%.go*}"
 PROCESS_NAME='test-run'
+PROCESS_NAMES=("${PROCESS_NAME}" "${GORUN_PROCESS_NAME}")
 
 declare basepwd;
 basepwd="$(basename "${PWD}")";
