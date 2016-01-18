@@ -48,8 +48,7 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 	location := split[0]
 	id := concat(split[1:]...)
 
-	fmt.Println("stories location", location)
-	fmt.Println("id", id)
+	fmt.Println("storyHandler location", location)
 
 	switch location {
 
