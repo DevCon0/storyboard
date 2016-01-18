@@ -47,11 +47,6 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	user.Id = bson.NewObjectId()
 	user.CreatedAt = time.Now()
 
-	// Set default values.
-	if user.Lastname == "" {
-		user.Lastname = "StoryTeller"
-	}
-
 	// Encrypt the password.
 	password := []byte(user.Password)
 	newPassword, err := bcrypt.GenerateFromPassword(password, 10)
