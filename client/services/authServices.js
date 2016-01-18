@@ -10,8 +10,8 @@ angular.module('storyBoard.authService', [])
     })
     .then(function (resp) {
       console.log('ran sign in with resp: ', resp);
-      localStorageService.set('sessiontoken', resp.data.Token);
-      localStorageService.set('username', resp.data.Username);
+      localStorageService.set('sessiontoken', resp.data.token);
+      localStorageService.set('username', resp.data.username);
       $location.path('/');
     });
   };
@@ -23,7 +23,7 @@ angular.module('storyBoard.authService', [])
       data: user
     })
     .then(function (resp) {
-      localStorageService.set('sessiontoken', resp.data.Token);
+      localStorageService.set('sessiontoken', resp.data.token);
       localStorageService.set('username', resp.data.username);
       $location.path('/')
     });
