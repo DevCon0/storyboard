@@ -1,6 +1,6 @@
 angular.module('storyBoard.createStory', [])
 
-.controller('createStoryCtrl', function ($scope, $state, localStorageService, $window, StoryStateMachine, StoryStorage) {
+.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window) {
   $scope.user = localStorageService.get('username');
 
   $scope.storyTitle = null;
@@ -17,6 +17,24 @@ angular.module('storyBoard.createStory', [])
   $scope.frame3YoutubeUrl = null;
   $scope.frame3StartTime = null;
   $scope.frame3EndTime = null;
+
+  $scope.prepopulateInputs = function(){
+    //TODO: remove once done with development
+    $scope.storyTitle = "Testing Title";
+    $scope.storyDescription ="Testing description";
+
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=yViIi3gie2c";
+    $scope.frame1StartTime = "32";
+    $scope.frame1EndTime = "37";
+
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=PLLQK9la6Go";
+    $scope.frame2StartTime = "174";
+    $scope.frame2EndTime = "179";
+
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=COvnHv42T-A";
+    $scope.frame3StartTime = "104";
+    $scope.frame3EndTime = "106";
+  }
 
   $scope.checkRequiredFields = function(){
     var allFieldsReady =
@@ -36,6 +54,10 @@ angular.module('storyBoard.createStory', [])
 
   $scope.saveStory = function(){
     var story = {
+      title: $scope.storyTitle,
+      description: $scope.storyDescription,
+      username: $scope.user,
+      author: "hardcoded author name",
       FRAME1: 0,
       FRAME2: 1,
       FRAME3: 2,
@@ -44,28 +66,30 @@ angular.module('storyBoard.createStory', [])
           player: null,
           playerDiv: 'player1',
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
-          start: $scope.frame1StartTime,
-          end: $scope.frame1EndTime
+          start: parseInt($scope.frame1StartTime),
+          end: parseInt($scope.frame1EndTime)
         },
         {
           player: null,
           playerDiv: 'player2',
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
-          start: $scope.frame2StartTime,
-          end: $scope.frame2EndTime
+          start: parseInt($scope.frame2StartTime),
+          end: parseInt($scope.frame2EndTime)
         },
         {
           player: null,
           playerDiv: 'player3',
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
-          start: $scope.frame3StartTime,
-          end: $scope.frame3EndTime
+          start: parseInt($scope.frame3StartTime),
+          end: parseInt($scope.frame3EndTime)
         }
       ]
     }
-    //alert("Milco, you need to connect this to the server");
-    //$state.go('dashboard');
-    StoryStorage.saveStory(story);
+
+    StoryStorage.saveStory(story)
+    .then(function(data){
+      $state.go('dashboard');
+    });
   }
 
   $scope.previewStory = function () {
