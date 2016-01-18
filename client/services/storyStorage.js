@@ -166,12 +166,9 @@ angular.module('storyBoard.storyStorageService', [])
       console.log('getStory called with', id);
       return $http({
         method: 'GET',
-        url: '/api/stories/' + id,
+        url: '/api/stories/story/' + id,
         data: id
       })
-       .then(function (resp) {
-         console.log('ran getStory, got response: ', resp);
-       });
     }
   };
 
