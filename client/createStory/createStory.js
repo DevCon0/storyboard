@@ -1,6 +1,6 @@
 angular.module('storyBoard.createStory', [])
 
-.controller('createStoryCtrl', function ($scope, $state, StoryStorage, localStorageService, $window) {
+.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window) {
   $scope.user = localStorageService.get('username');
 
   $scope.storyTitle = null;
@@ -67,10 +67,46 @@ angular.module('storyBoard.createStory', [])
         }
       ]
     }
+
     StoryStorage.saveStory(story)
     .then(function(data){
       $state.go('dashboard');
     });
+  }
+
+  $scope.previewStory = function () {
+    var story = {
+      FRAME1: 0,
+      FRAME2: 1,
+      FRAME3: 2,
+      frames: [
+        {
+          player: null,
+          playerDiv: 'player1',
+          videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
+          start: $scope.frame1StartTime,
+          end: $scope.frame1EndTime
+        },
+        {
+          player: null,
+          playerDiv: 'player2',
+          videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
+          start: $scope.frame2StartTime,
+          end: $scope.frame2EndTime
+        },
+        {
+          player: null,
+          playerDiv: 'player3',
+          videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
+          start: $scope.frame3StartTime,
+          end: $scope.frame3EndTime
+        }
+      ]
+    }
+    localStorageService.remove('previewStory');
+    localStorageService.set('previewStory', story);
+    $scope.previewStory = localStorageService.get('previewStory');
+    StoryStateMachine.setStory(story);
   }
 
   var framePlayers = {
