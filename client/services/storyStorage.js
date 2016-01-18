@@ -117,15 +117,15 @@ angular.module('storyBoard.storyStorageService', [])
   };
 
   storyStorage.saveStory = function (story) {
-    //console.log('saveStory called with', story);
-    //return $http({
-    //  method: 'POST',
-    //  url: '/api/stories/',
-    //  data: story
-    //})
-    // .then(function (resp) {
-    //   console.log('ran saveStory, got response: ', resp);
-    // });
+    console.log('saveStory called with', story);
+    return $http({
+      method: 'POST',
+      url: '/api/stories/story',
+      data: story
+    })
+     .then(function (resp) {
+       console.log('ran saveStory, got response: ', resp);
+     });
   }
 
   storyStorage.getStory = function (id) {
