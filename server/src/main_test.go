@@ -8,8 +8,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var ()
-
 func TestDatabase(t *testing.T) {
 	t.Log("Testing database connection...")
 	session, err := initDb()
@@ -29,8 +27,7 @@ func TestDatabase(t *testing.T) {
 			CreatedAt: bson.Now(),
 			Username:  "Bobble",
 			Password:  "Suepass",
-			Firstname: "Bob",
-			Lastname:  "Sue",
+			Fullname:  "Bob Sue",
 			Stories:   []string{},
 		},
 		&User{
@@ -38,8 +35,7 @@ func TestDatabase(t *testing.T) {
 			CreatedAt: bson.Now(),
 			Username:  "AliceRex",
 			Password:  "Suepassaroo",
-			Firstname: "Alice",
-			Lastname:  "Dino",
+			Fullname:  "Alice Dino",
 			Stories:   []string{},
 		},
 	}
@@ -202,8 +198,8 @@ func TestStoryCreation(t *testing.T) {
 
 	url := "http://localhost:8020/api/stories/story"
 	jsonStr := `{
-    "title": "Milco is Cool",
-    "userid": "56992f7da1c16b6dd9674833",
+    "title": "When Bob meets Alice",
+    "username": "BobTheTester",
     "frame1": 0,
     "frame2": 1,
     "frame3": 2,
@@ -252,8 +248,8 @@ func TestStoryCreation(t *testing.T) {
 	t.Log("Testing story creation with missing properties...")
 
 	jsonStr = `{
-	    "title": "Milco is Cool",
-	    "userid": "56992f7da1c16b6dd9674833",
+	    "title": "When Bob meets Alice",
+	    "username": "BobTheTester",
 	    "frame1": 0,
 	    "frame2": 1,
 	    "frame3": 2
@@ -278,9 +274,13 @@ func TestStoryCreation(t *testing.T) {
 		)
 	}
 	res.Body.Close()
+}
 
-	// check database for user Bob
-	t.Log("Testing database connection...")
+func TestStoryFetch(t *testing.T) {
+	t.Log("Testing single story fetching...")
+
+	// Find the story which was created by the test.
+	t.Log("Connecting to the database...")
 	session, err := initDb()
 	if err != nil {
 		t.Errorf(
@@ -293,10 +293,9 @@ func TestStoryCreation(t *testing.T) {
 	defer session.Close()
 	collection := db.C("stories")
 
-	// Remove the story which was created by the test.
 	t.Log("Finding test stories from the database...")
 	result := []Story{}
-	q := bson.M{"userid": "56992f7da1c16b6dd9674833"}
+	q := bson.M{"username": "BobTheTester"}
 	err = collection.Find(q).All(&result)
 	if err != nil {
 		t.Errorf(
@@ -306,11 +305,13 @@ func TestStoryCreation(t *testing.T) {
 	}
 
 	// t.Logf("%#v\n", result)
+	// t.Logf("%#v\n", result[0])
 
 	if len(result) <= 0 {
 		t.Errorf(
 			"Failed to find test story in the database\n",
 		)
+		return
 	}
 
 	lastResult := result[0]
@@ -319,10 +320,33 @@ func TestStoryCreation(t *testing.T) {
 			lastResult = r
 		}
 	}
+	id := lastResult.Id
+	t.Log(id.Hex())
 
+	url := concat("http://localhost:8020/api/stories/story/", id.Hex())
+	t.Log(url)
+
+	expectedStatus := http.StatusOK
+	res, err := http.Get(url)
+	if err != nil {
+		t.Errorf(
+			"Failed to send request to %v\n%v\n",
+			url, err,
+		)
+	} else if res.StatusCode != expectedStatus {
+		t.Errorf(
+			"Expected status code %v, got %v\n",
+			expectedStatus, res.StatusCode,
+		)
+	} else {
+		t.Logf("Response received from %v\n", url)
+	}
+	res.Body.Close()
+
+	// Remove the story which was created by the test.
 	t.Log("Removing test stories from the database...")
 	// t.Log("lastResult.Id", lastResult.Id)
-	q = bson.M{"_id": lastResult.Id}
+	q = bson.M{"_id": id}
 	err = collection.Remove(q)
 	if err != nil {
 		t.Errorf(
