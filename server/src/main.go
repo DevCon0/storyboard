@@ -13,9 +13,11 @@ import (
 )
 
 var (
-	rootDir string
-	slash   string = string(filepath.Separator)
-	db      *mgo.Database
+	rootDir           string
+	slash             string = string(filepath.Separator)
+	db                *mgo.Database
+	usersCollection   *mgo.Collection
+	storiesCollection *mgo.Collection
 )
 
 func main() {
@@ -52,6 +54,8 @@ func initDb() (*mgo.Session, error) {
 
 	session.SetMode(mgo.Monotonic, true)
 	db = session.DB("devcon0")
+	usersCollection = db.C("users")
+	storiesCollection = db.C("stories")
 
 	return session, nil
 }
