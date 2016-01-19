@@ -8,6 +8,9 @@ angular.module('storyBoard.dashboard', [])
 
   $scope.username = localStorageService.get('username');
 
-  $scope.userLibrary = StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'));
+  StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))
+  .then(function(library){
+    $scope.userLibrary = library;
+  });
 
-})
+});
