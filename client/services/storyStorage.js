@@ -8,17 +8,23 @@ angular.module('storyBoard.storyStorageService', [])
       method: 'GET',
       url: 'api/stories/showcase'
     })
+    .then(function (resp) {
+      console.log('resp from getShowcase', resp);
+    })
   }
 
 
   storyStorage.getUserLibrary = function (token) {
-    console.log('Getuser Library run with username', token);
+    console.log('Getuser Library run with token', token);
     return $http({
       method: 'GET',
       url: '/api/stories/library/',
       headers: {
         'token': token
       }      
+    })
+    .then(function (resp) {
+      console.log('resp from getuserLibrary', resp);
     })
   };
 

@@ -58,6 +58,9 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 	case "library":
 		library(w, r, id)
 
+	case "showcase":
+		showCase(w, r)
+
 	default:
 		fmt.Printf("Unknown stories api location: %v\n", location)
 	}

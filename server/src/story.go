@@ -128,3 +128,27 @@ func library(w http.ResponseWriter, r *http.Request, userId string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
 }
+
+func showCase(w http.ResponseWriter, r *http.Request) {
+	stories := []Story{}
+
+	err := storiesCollection.Find(
+		bson.M{},
+	).All(&stories)
+
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	resData := stories[0:3]
+
+	js, err := json.Marshal(resData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+}
