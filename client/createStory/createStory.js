@@ -4,7 +4,8 @@ angular.module('storyBoard.createStory', [])
   $scope.user = localStorageService.get('username');
 
   $scope.storyTitle = null;
-  $scope.storyDescription =null;
+  $scope.storyDescription = null;
+  $scope.storyThumbnailUrl = null;
 
   $scope.frame1YoutubeUrl = null;
   $scope.frame1StartTime = null;
@@ -21,7 +22,8 @@ angular.module('storyBoard.createStory', [])
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
     $scope.storyTitle = "Testing Title";
-    $scope.storyDescription ="Testing description";
+    $scope.storyDescription = "Testing description";
+    $scope.storyThumbnailUrl = "http://vignette1.wikia.nocookie.net/mlp/images/2/23/Grumpy_cat_'good'.jpg"
 
     $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=yViIi3gie2c";
     $scope.frame1StartTime = "32";
@@ -38,16 +40,17 @@ angular.module('storyBoard.createStory', [])
 
   $scope.checkRequiredFields = function(){
     var allFieldsReady =
-      $scope.storyTitle       &&
-      $scope.storyDescription &&
-      $scope.frame1YoutubeUrl &&
-      $scope.frame1StartTime  &&
-      $scope.frame1EndTime    &&
-      $scope.frame2YoutubeUrl &&
-      $scope.frame2StartTime  &&
-      $scope.frame2EndTime    &&
-      $scope.frame3YoutubeUrl &&
-      $scope.frame3StartTime  &&
+      $scope.storyTitle        &&
+      $scope.storyDescription  &&
+      $scope.storyThumbnailUrl &&
+      $scope.frame1YoutubeUrl  &&
+      $scope.frame1StartTime   &&
+      $scope.frame1EndTime     &&
+      $scope.frame2YoutubeUrl  &&
+      $scope.frame2StartTime   &&
+      $scope.frame2EndTime     &&
+      $scope.frame3YoutubeUrl  &&
+      $scope.frame3StartTime   &&
       $scope.frame3EndTime;
     return allFieldsReady;
   }
@@ -56,6 +59,7 @@ angular.module('storyBoard.createStory', [])
     var story = {
       title: $scope.storyTitle,
       description: $scope.storyDescription,
+      thumbnail: $scope.storyThumbnailUrl,
       username: $scope.user,
       author: "hardcoded author name",
       FRAME1: 0,
