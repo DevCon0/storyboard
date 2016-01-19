@@ -83,7 +83,7 @@ func saveStory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collection.Update(
+	err = collection.Update(
 		bson.M{"username": user.Username},
 		bson.M{"$push": bson.M{"stories": story.Id.Hex()}},
 	)
