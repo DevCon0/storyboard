@@ -32,6 +32,13 @@ angular.module('storyBoard.storyStateMachineService', [])
     }
   };
 
+  storyStateMachine.endStory = function(){
+    var storyFrames = this.story.frames;
+    storyFrames.forEach(function(storyFrame){
+      storyFrame.player.destroy();
+    });
+  }
+
   storyStateMachine.playerStateListener = function(event){
     var state = null;
     switch(event.data){
