@@ -1,6 +1,6 @@
 angular.module('storyBoard.dashboard', [])
 
-.controller('dashboardCtrl', function ($scope, StoryStorage, localStorageService, Auth) {
+.controller('dashboardCtrl', function ($scope, $state, StoryStorage, localStorageService, Auth) {
 
   if ( ! (Auth.isAuth()) ) {
     $state.go('signin')
@@ -8,6 +8,9 @@ angular.module('storyBoard.dashboard', [])
 
   $scope.username = localStorageService.get('username');
 
-  $scope.userLibrary = StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'));
+  StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))
+  .then(function(library){
+    $scope.userLibrary = library;
+  });
 
-})
+});
