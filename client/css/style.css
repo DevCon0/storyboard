@@ -23,7 +23,18 @@ body {
 @media (min-width: 992px) {
   .modal-lg {
     width: 1120px;
+    background-color:black;
   }
+}
+
+.preview-modal-footer{
+    border: none;
+}
+
+.preview-modal-header {
+    border: none;
+    background-color: black;
+    color: white;
 }
 
 
