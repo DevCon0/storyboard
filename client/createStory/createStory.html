@@ -1,20 +1,28 @@
 <h1>{{user}}, create your own story!<span><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">Pre-populate inputs</button></span></h1>
 <div class="row">
-  <form>
-    <div class="col-md-3">
-      <div class="form-group">
-        <label for="storyTitleInput">Story Title</label>
-        <input type="text" ng-model="storyTitle" class="form-control" placeholder="My Story" maxlength="50">
-      </div>
-      <div class="form-group">
-        <label for="storyDescriptionInput">Story Description</label>
-        <input type="text" ng-model="storyDescription" class="form-control" placeholder="Once upon a time..." maxlength="255">
-      </div>
+  <div class="col-md-3">
+    <form>
+        <div class="form-group">
+          <label for="storyTitleInput">Story Title</label>
+          <input type="text" ng-model="storyTitle" class="form-control" placeholder="My Story" maxlength="50">
+        </div>
+        <div class="form-group">
+          <label for="storyDescriptionInput">Story Description</label>
+          <input type="text" ng-model="storyDescription" class="form-control" placeholder="Once upon a time..." maxlength="255">
+        </div>
+        <div class="form-group">
+          <label for="storyThumbnailUrlInput">Story Thumbnail URL</label>
+          <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
+        </div>
+        <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
+    </form>
+    <div class="row clean"></div>
+    <div ng-show="checkRequiredFields()">
+      <button type="button" class="btn btn-success" ng-click="previewStory()" data-toggle="modal" data-target="#myModal">Preview Story</button>
+      <button type="button" class="btn btn-success saveButton" ng-click="saveStory()">Save your story</button>
     </div>
-  </form>
-</div>
-<div class="row">
-  <div class="creationFrameDiv col-md-2 col-md-offset-1">
+  </div>
+  <div class="creationFrameDiv col-md-2">
     <h2>Act I</h2>
     <form ng-submit="previewFrame(1)">
       <div class="form-group">
@@ -29,12 +37,12 @@
         <label for="endTime1">End Time (sec)</label>
         <input type="text" ng-model="frame1EndTime" class="form-control" id="endTime1" placeholder="0">
       </div>
-      <button type="submit" class="btn btn-default">Preview Frame</button>
+      <button type="submit" class="btn btn-success">Preview Act</button>
     </form>
     <div class="col-md-12 clean"></div>
     <div id="frame1Preview" class="col-md-12"></div>
   </div>
-  <div class="creationFrameDiv col-md-2 col-md-offset-1">
+  <div class="creationFrameDiv col-md-2">
     <h2>Act II</h2>
     <form ng-submit="previewFrame(2)">
       <div class="form-group">
@@ -49,12 +57,12 @@
         <label for="endTime2">End Time (sec)</label>
         <input type="text" ng-model="frame2EndTime" class="form-control" id="endTime2" placeholder="0">
       </div>
-      <button type="submit" class="btn btn-default">Preview Frame</button>
+      <button type="submit" class="btn btn-success">Preview Act</button>
     </form>
     <div class="col-md-12 clean"></div>
     <div id="frame2Preview" class="col-md-12"></div>
   </div>
-  <div class="creationFrameDiv col-md-2 col-md-offset-1">
+  <div class="creationFrameDiv col-md-2">
     <h2>Act III</h2>
     <form ng-submit="previewFrame(3)">
       <div class="form-group">
@@ -69,39 +77,30 @@
         <label for="endTime3">End Time (sec)</label>
         <input type="text" ng-model="frame3EndTime" class="form-control" id="endTime3" placeholder="0">
       </div>
-      <button type="submit" class="btn btn-default">Preview Frame</button>
+      <button type="submit" class="btn btn-success">Preview Act</button>
     </form>
     <div class="col-md-12 clean"></div>
     <div id="frame3Preview" class="col-md-12"></div>
   </div>
-  <div class="row clean">
-  </div>
-  <div class="row clean">
-  </div>
-  <div class="row">
-    <div class="col-md-4 col-md-offset-1" ng-show="checkRequiredFields()">
-      <button type="button" class="btn btn-success" ng-click="previewStory()" data-toggle="modal" data-target="#myModal">Preview</button>
-      <button type="button" class="btn btn-success saveButton" ng-click="saveStory()">Save your story</button>
-    </div>
-  </div>
-    <div id="myModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-lg">
+</div>
 
-            <!-- Modal Content-->
-            <div class="modal-content">
-                <div class="modal-header preview-modal-header">
-                    <h1>Preview</h1>
-                    <div id="player1"></div>
-                    <div id="player2"></div>
-                    <div id="player3"></div>
-                    <div class="modal-footer preview-modal-footer">
-                        <button type="button" class="btn btn-success" ng-click="saveStory()">Save your story</button>
-                        <button type="button" class="btn btn-danger" ng-click="destoryFrames()" data-dismiss="modal">Close</button>
-                    </div>
+<div id="myModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header preview-modal-header">
+                <h1>Preview</h1>
+                <div id="player1"></div>
+                <div id="player2"></div>
+                <div id="player3"></div>
+                <div class="modal-footer preview-modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="saveStory()">Save your story</button>
+                    <button type="button" class="btn btn-danger" ng-click="destoryFrames()" data-dismiss="modal">Close</button>
                 </div>
-                <!-- End Modal Content-->
             </div>
         </div>
+        <!-- End Modal Content-->
     </div>
-
 </div>
+
+

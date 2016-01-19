@@ -6,6 +6,7 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.splash',
                                    'storyBoard.singleStory',
                                    'storyBoard.dashboard',
+                                   'storyBoard.onUrlErrorDirective',
                                    'storyBoard.createStory',
                                    'storyBoard.profile',
                                    'storyBoard.userServices',

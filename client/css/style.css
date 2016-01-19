@@ -187,7 +187,15 @@ body {
   margin-bottom: 20px;
 }
 
+.create-previewThumbnail {
+  width: 100px;
+  height: 100px;
+}
+
 .creationFrameDiv {
+  margin-left: 10px;
+  margin-right: 10px;
   border: 2px solid black;
   padding: 8px;
 }
+
