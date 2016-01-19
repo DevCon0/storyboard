@@ -4,6 +4,6 @@ angular.module('storyBoard.dashboard', [])
   console.log('dashboard controller initilized');
   $scope.username = localStorageService.get('username');
 
-  $scope.userLibrary = StoryStorage.getUserLibrary($scope.username);
+  $scope.userLibrary = StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'));
 
 })
