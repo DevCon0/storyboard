@@ -1,6 +1,11 @@
 angular.module('storyBoard.createStory', [])
 
-.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window) {
+.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window, Auth) {
+
+  if ( ! (Auth.isAuth()) ) {
+    $state.go('signin')
+  }
+
   $scope.user = localStorageService.get('username');
 
   $scope.storyTitle = null;
