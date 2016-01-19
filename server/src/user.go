@@ -81,6 +81,8 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Signed up!"))
 
+	fmt.Printf("Signed up %v\n", user.Username)
+
 	return nil, http.StatusCreated
 }
 
@@ -108,7 +110,7 @@ func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 		return err, status
 	}
 
-	fmt.Printf("user:\n%#v\n\n", user)
+	// fmt.Printf("user:\n%#v\n\n", user)
 
 	// Stringify the response object.
 	js, err := json.Marshal(user)
@@ -121,6 +123,8 @@ func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Send the response object to the client.
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
+
+	fmt.Printf("Signed in %v\n", user.Username)
 
 	return nil, http.StatusOK
 }
@@ -264,7 +268,7 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	// Add the signed token to the User struct.
 	u.Token = tokenString
-	fmt.Printf("tokenString:\n%v\n", tokenString)
+	// fmt.Printf("tokenString:\n%v\n", tokenString)
 
 	// Update the token in the database.
 	if err = usersCollection.Update(
