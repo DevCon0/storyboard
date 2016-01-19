@@ -1,7 +1,10 @@
 angular.module('storyBoard.createStory', [])
 
-.controller('createStoryCtrl', function ($scope, $state, localStorageService, $window) {
+.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window) {
   $scope.user = localStorageService.get('username');
+
+  $scope.storyTitle = null;
+  $scope.storyDescription =null;
 
   $scope.frame1YoutubeUrl = null;
   $scope.frame1StartTime = null;
@@ -15,8 +18,28 @@ angular.module('storyBoard.createStory', [])
   $scope.frame3StartTime = null;
   $scope.frame3EndTime = null;
 
+  $scope.prepopulateInputs = function(){
+    //TODO: remove once done with development
+    $scope.storyTitle = "Testing Title";
+    $scope.storyDescription ="Testing description";
+
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=yViIi3gie2c";
+    $scope.frame1StartTime = "32";
+    $scope.frame1EndTime = "37";
+
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=PLLQK9la6Go";
+    $scope.frame2StartTime = "174";
+    $scope.frame2EndTime = "179";
+
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=COvnHv42T-A";
+    $scope.frame3StartTime = "104";
+    $scope.frame3EndTime = "106";
+  }
+
   $scope.checkRequiredFields = function(){
     var allFieldsReady =
+      $scope.storyTitle       &&
+      $scope.storyDescription &&
       $scope.frame1YoutubeUrl &&
       $scope.frame1StartTime  &&
       $scope.frame1EndTime    &&
@@ -30,6 +53,46 @@ angular.module('storyBoard.createStory', [])
   }
 
   $scope.saveStory = function(){
+    var story = {
+      title: $scope.storyTitle,
+      description: $scope.storyDescription,
+      username: $scope.user,
+      author: "hardcoded author name",
+      FRAME1: 0,
+      FRAME2: 1,
+      FRAME3: 2,
+      frames: [
+        {
+          player: null,
+          playerDiv: 'player1',
+          videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
+          start: parseInt($scope.frame1StartTime),
+          end: parseInt($scope.frame1EndTime)
+        },
+        {
+          player: null,
+          playerDiv: 'player2',
+          videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
+          start: parseInt($scope.frame2StartTime),
+          end: parseInt($scope.frame2EndTime)
+        },
+        {
+          player: null,
+          playerDiv: 'player3',
+          videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
+          start: parseInt($scope.frame3StartTime),
+          end: parseInt($scope.frame3EndTime)
+        }
+      ]
+    }
+
+    StoryStorage.saveStory(story)
+    .then(function(data){
+      $state.go('dashboard');
+    });
+  }
+
+  $scope.previewStory = function () {
     var story = {
       FRAME1: 0,
       FRAME2: 1,
@@ -58,8 +121,11 @@ angular.module('storyBoard.createStory', [])
         }
       ]
     }
-    alert("Milco, you need to connect this to the server");
-    $state.go('dashboard');
+    StoryStateMachine.setStory(story);
+  }
+
+  $scope.destoryFrames = function(){
+    StoryStateMachine.endStory();
   }
 
   var framePlayers = {
@@ -68,7 +134,7 @@ angular.module('storyBoard.createStory', [])
     frame3: null
   };
 
-  $scope.createFrame = function(frameId){
+  $scope.previewFrame = function(frameId){
     var frameYoutubeUrl = null;
     var frameStartTime = null;
     var frameEndTime = null

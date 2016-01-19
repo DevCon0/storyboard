@@ -1,7 +1,22 @@
-<h1>{{user}}, welcome to the create story page!</h1>
+<h1>{{user}}, create your own story!<span><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">Pre-populate inputs</button></span></h1>
+<div class="row">
+  <form>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label for="storyTitleInput">Story Title</label>
+        <input type="text" ng-model="storyTitle" class="form-control" placeholder="My Story" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label for="storyDescriptionInput">Story Description</label>
+        <input type="text" ng-model="storyDescription" class="form-control" placeholder="Once upon a time..." maxlength="255">
+      </div>
+    </div>
+  </form>
+</div>
 <div class="row">
   <div class="creationFrameDiv col-md-2 col-md-offset-1">
-    <form ng-submit="createFrame(1)">
+    <h2>Act I</h2>
+    <form ng-submit="previewFrame(1)">
       <div class="form-group">
         <label for="youtubeUrl1">Youtube URL</label>
         <input type="url" ng-model="frame1YoutubeUrl" class="form-control" id="youtubeUrl1" placeholder="https://www.youtube.com">
@@ -20,7 +35,8 @@
     <div id="frame1Preview" class="col-md-12"></div>
   </div>
   <div class="creationFrameDiv col-md-2 col-md-offset-1">
-    <form ng-submit="createFrame(2)">
+    <h2>Act II</h2>
+    <form ng-submit="previewFrame(2)">
       <div class="form-group">
         <label for="youtubeUrl2">Youtube URL</label>
         <input type="url" ng-model="frame2YoutubeUrl" class="form-control" id="youtubeUrl2" placeholder="https://www.youtube.com">
@@ -39,7 +55,8 @@
     <div id="frame2Preview" class="col-md-12"></div>
   </div>
   <div class="creationFrameDiv col-md-2 col-md-offset-1">
-    <form ng-submit="createFrame(3)">
+    <h2>Act III</h2>
+    <form ng-submit="previewFrame(3)">
       <div class="form-group">
         <label for="youtubeUrl3">Youtube URL</label>
         <input type="url" ng-model="frame3YoutubeUrl" class="form-control" id="youtubeUrl3" placeholder="https://www.youtube.com">
@@ -62,8 +79,31 @@
   <div class="row clean">
   </div>
   <div class="row">
-    <div class="col-md-1 col-md-offset-1" ng-show="checkRequiredFields()">
-      <button type="button" class="btn btn-success" ng-click="saveStory()">Save your story</button>
+    <div class="col-md-4 col-md-offset-1" ng-show="checkRequiredFields()">
+      <button type="button" class="btn btn-success" ng-click="previewStory()" data-toggle="modal" data-target="#myModal">Preview</button>
+      <button type="button" class="btn btn-success saveButton" ng-click="saveStory()">Save your story</button>
     </div>
   </div>
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal Content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h1>Preview</h1>
+                    <div id="player1"></div>
+                    <div id="player2"></div>
+                    <div id="player3"></div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" ng-click="saveStory()">Save your story</button>
+                        <button type="button" class="btn btn-default" ng-click="destoryFrames()" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <!-- End Modal Content-->
+            </div>
+        </div>
+    </div>
+
 </div>

@@ -27,16 +27,15 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handle requests to "/api/users/..."
 func usersHandler(w http.ResponseWriter, r *http.Request) {
-	baseLocation := "api/users/"
-	fullLocation := r.URL.Path[1:]
-
-	location := strings.TrimPrefix(fullLocation, baseLocation)
+	location := strings.Split(r.URL.Path, "/")[3]
 
 	switch location {
 	case "signup":
 		signup(w, r)
 	case "signin":
 		signin(w, r)
+	case "profile":
+		loadProfile(w, r)
 	default:
 		fmt.Printf("No idea what this is: %v\n", location)
 	}
@@ -49,8 +48,7 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 	location := split[0]
 	id := concat(split[1:]...)
 
-	fmt.Println("stories location", location)
-	fmt.Println("id", id)
+	fmt.Println("storyHandler location", location)
 
 	switch location {
 

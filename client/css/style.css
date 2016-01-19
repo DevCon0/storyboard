@@ -19,6 +19,14 @@ body {
     color:red;
 }
 
+
+@media (min-width: 992px) {
+  .modal-lg {
+    width: 1120px;
+  }
+}
+
+
 .row {
   margin-left: 0px;
   margin-right: 0px;
