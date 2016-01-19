@@ -33,7 +33,7 @@ angular.module('storyBoard.authService', [])
     return !!localStorageService.get('sessiontoken');
   };
 
-  auth.signout = function () {
+  auth.signout = function (token) {
     localStorageService.clearAll();
     return $http({
       method: 'POST',

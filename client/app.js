@@ -73,7 +73,7 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
       }
     })
     .state('singleStory', {
-      url: '/singleStory',
+      url: '/singleStory/{storyId}',
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
