@@ -121,10 +121,11 @@ angular.module('storyBoard.createStory', [])
         }
       ]
     }
-    localStorageService.remove('previewStory');
-    localStorageService.set('previewStory', story);
-    $scope.previewStory = localStorageService.get('previewStory');
     StoryStateMachine.setStory(story);
+  }
+
+  $scope.destoryFrames = function(){
+    StoryStateMachine.endStory();
   }
 
   var framePlayers = {
