@@ -18,25 +18,25 @@ var (
 
 // Return a bool indicating whether the request method is correct.
 // If it is not, send an error response.
-func verifyMethod(wanted string, w http.ResponseWriter, r *http.Request) bool {
+func verifyMethod(wanted string, w http.ResponseWriter, r *http.Request) (error, int) {
 	if r.Method != wanted {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return false
+		return fmt.Errorf("Method Not Allowed\n"),
+			http.StatusMethodNotAllowed
 	}
-	return true
+	return nil, http.StatusOK
 }
 
 // Add a user to the database.
-func signup(w http.ResponseWriter, r *http.Request) {
+func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Make sure the request method is a POST request.
-	if ok := verifyMethod("POST", w, r); !ok {
-		return
+	if err, status := verifyMethod("POST", w, r); err != nil {
+		return err, status
 	}
 
 	// Create a User struct from the request body.
-	user, ok := parseBody(w, r)
-	if !ok {
-		return
+	user, err, status := parseBody(w, r)
+	if err != nil {
+		return err, status
 	}
 
 	// Make sure required fields are filled out.
@@ -85,27 +85,27 @@ func signup(w http.ResponseWriter, r *http.Request) {
 }
 
 // Verify password, create user token, update database, send token back
-func signin(w http.ResponseWriter, r *http.Request) {
+func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Make sure the request method is a POST request.
-	if ok := verifyMethod("POST", w, r); !ok {
-		return
+	if err, status := verifyMethod("POST", w, r); err != nil {
+		return err, status
 	}
 
 	// Create a User struct from the request body.
-	user, ok := parseBody(w, r)
-	if !ok {
-		return
+	user, err, status := parseBody(w, r)
+	if err != nil {
+		return err, status
 	}
 
 	fmt.Printf("Signing in %v...\n", user.Username)
 
-	if ok = user.verifyPassword(w, r); !ok {
-		return
+	if err, status = user.verifyPassword(w, r); err != nil {
+		return err, status
 	}
 
 	// Make a response object to send to the client.
-	if ok = user.genToken(w, r); !ok {
-		return
+	if err, status = user.genToken(w, r); err != nil {
+		return err, status
 	}
 
 	fmt.Printf("user:\n%#v\n\n", user)
@@ -126,7 +126,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 }
 
 // find owner of current token, and remove on signout
-func signout(w http.ResponseWriter, r *http.Request) {
+func signout(w http.ResponseWriter, r *http.Request) (error, int) {
 	token := r.Header.Get("token")
 
 	if token == "" {
@@ -162,12 +162,9 @@ func signout(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get user information from the response body and headers.
-func parseBody(w http.ResponseWriter, r *http.Request) (User, bool) {
+func parseBody(w http.ResponseWriter, r *http.Request) (User, error, int) {
 	// Declare a variable for the user to sign in.
 	user := User{}
-
-	u, p, _ := r.BasicAuth()
-	fmt.Printf("username: %#v\npassword: %#v\n\n", u, p)
 
 	// Parse/decode JSON object in the request body.
 	// If the JSON object could not be parsed,
@@ -176,21 +173,21 @@ func parseBody(w http.ResponseWriter, r *http.Request) (User, bool) {
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&user); err != nil {
 		fmt.Printf("Failed to decode JSON object in the request\n%v\n", err)
-		return fmt.Errof("Invalid JSON object\n"),
+		return user, fmt.Errorf("Invalid JSON object\n"),
 			http.StatusBadRequest
 	}
 
 	// Get the token from the header.
 	user.Token = r.Header.Get("token")
 
-	fmt.Printf("user: %#v\n\n", user)
+	// fmt.Printf("user: %#v\n\n", user)
 
-	return user, true
+	return user, nil, http.StatusOK
 }
 
 // Return a bool whether a user's token is valid.
 // If not, send an http error.
-func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) bool {
+func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Parse the token with the tokenSecret.
 	token, err := jwt.Parse(u.Token, func(token *jwt.Token) (interface{}, error) {
 		return tokenSecret, nil
@@ -201,52 +198,46 @@ func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) bool {
 		}
 		return fmt.Errorf("Invalid Token\n"),
 			http.StatusUnauthorized
-		return false
 	}
 
-	return true
+	return nil, http.StatusOK
 }
 
 // Return a bool whether the password submitted for a user is correct.
-func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) bool {
+func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Make sure required fields are filled out.
 	if len(u.Password) <= 0 {
 		return fmt.Errorf("Password required"),
 			http.StatusMethodNotAllowed
-		return false
 	}
 	if len(u.Username) <= 0 {
-		return fmt.Errorf("Username required"), http.StatusMethodNotAllowed
-		return false
+		return fmt.Errorf("Username required"),
+			http.StatusMethodNotAllowed
 	}
 
 	// Remember user sent password
 	attemptedPassword := []byte(u.Password)
 
 	// Grab the user from the database
-	collection := db.C("users")
-	q := bson.M{"username": u.Username}
-	err := collection.Find(q).One(&u)
+	err := usersCollection.Find(bson.M{"username": u.Username}).One(&u)
 	if err != nil {
 		fmt.Printf("Failed to retrieve %v from the database\n", u.Username)
-		fmt.Println(err)
 		return fmt.Errorf("Invalid username"),
 			http.StatusUnauthorized
-		return false
 	}
 
 	// Compare the password.
 	realPassword := []byte(u.Password)
+
 	err = bcrypt.CompareHashAndPassword(realPassword, attemptedPassword)
 	if err != nil {
 		fmt.Printf("%v sent the wrong password\n", u.Username)
 		return fmt.Errorf("Invalid password"),
 			http.StatusUnauthorized
-		return false
 	}
 
 	// Return true if no errors occurred.
-	return true
+	return nil, http.StatusOK
 }
 
 // Create a token for a user,
@@ -254,7 +245,7 @@ func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) bool {
 //   update the token in the database,
 //   remove the password from the *User struct.
 // Return a bool indicating whether an error occurred.
-func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
+func (u *User) genToken(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Create a new, empty token.
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -269,7 +260,6 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
 		fmt.Printf("Failed to create token\n%v\n", err)
 		return fmt.Errorf("Internal Server Error"),
 			http.StatusInternalServerError
-		return false
 	}
 
 	// Add the signed token to the User struct.
@@ -284,13 +274,12 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
 		fmt.Printf("Failed to update token in the database\n%v\n", err)
 		return fmt.Errorf("Internal Server Error"),
 			http.StatusInternalServerError
-		return false
 	}
 
 	// Erase the password from the User struct for enhanced security.
 	u.Password = ""
 
-	return true
+	return nil, http.StatusOK
 }
 
 // Yeah, this is basically just a test dummy

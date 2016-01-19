@@ -124,8 +124,8 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 //   Find the user's stories by using the token in the request header.
 func library(w http.ResponseWriter, r *http.Request, userId string) (error, int) {
 	// Make sure that this is a GET request.
-	if ok := verifyMethod("GET", w, r); !ok {
-		return nil, http.StatusOK
+	if err, status := verifyMethod("GET", w, r); err != nil {
+		return err, status
 	}
 
 	// Get user info from the token in the header.
