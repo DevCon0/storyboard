@@ -8,7 +8,7 @@
   <div ng-repeat="story in userLibrary">
     <div class="col-md-3">
       <div class="libraryStoryFrame">
-        <a href="/#/singleStory"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>
+        <a href="/#/singleStory/{{story.storyId}}"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>
       </div>
     </div>
   </div>

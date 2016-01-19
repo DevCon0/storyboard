@@ -4,7 +4,7 @@ angular.module('storyBoard.splash', [])
   StoryStorage.getShowcase()
   .then(function(resp){
     $scope.showcase = resp;
-  })
+  });
   console.log($scope.showcase);
 
 })
