@@ -9,7 +9,8 @@ angular.module('storyBoard.storyStorageService', [])
       url: 'api/stories/showcase'
     })
     .then(function (resp) {
-      console.log('resp from getShowcase', resp);
+      console.log('resp from getShowcase', resp.data);
+      return resp.data;
     })
   }
 
