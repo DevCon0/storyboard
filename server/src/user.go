@@ -140,6 +140,34 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
+// find owner of current token, and remove on signout
+func signout(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("token")
+
+	// find user with current token
+	user := User{}
+	collection := db.C("users")
+	q := bson.M{"token": token}
+	err := collection.Find(q).One(&user)
+	if err != nil {
+		fmt.Printf("User token: %v\n", err)
+		return
+	}
+
+	err = collection.Update(
+		bson.M{"token": user.Token},
+		bson.M{"$set": bson.M{"token": ""}},
+	)
+	if err != nil {
+		fmt.Printf("Can not set token to blank %v\n", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Succesful Signout"))
+
+}
+
 // Get user information from the response body and headers.
 func parseBody(w http.ResponseWriter, r *http.Request) (User, bool) {
 	// Declare a variable for the user to sign in.

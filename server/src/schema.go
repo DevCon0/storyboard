@@ -38,4 +38,5 @@ type Frame struct {
 	VideoId   string   `json:"videoId"`
 	Start     int      `json:"start"`
 	End       int      `json:"end"`
+	Thumbnail string   `json:"thumbnail"`
 }

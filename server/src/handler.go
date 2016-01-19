@@ -34,10 +34,12 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 		signup(w, r)
 	case "signin":
 		signin(w, r)
+	case "signout":
+		signout(w, r)
 	case "profile":
 		loadProfile(w, r)
 	default:
-		fmt.Printf("No idea what this is: %v\n", location)
+		fmt.Printf("Endpoint not defined: %v\n", location)
 	}
 }
 
