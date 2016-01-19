@@ -144,6 +144,11 @@ func signin(w http.ResponseWriter, r *http.Request) {
 func signout(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("token")
 
+	if token == "" {
+		http.Error(w, "Empty Token in Header", http.StatusBadRequest)
+		return
+	}
+
 	// find user with current token
 	user := User{}
 	collection := db.C("users")
@@ -151,6 +156,7 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	err := collection.Find(q).One(&user)
 	if err != nil {
 		fmt.Printf("User token: %v\n", err)
+		http.Error(w, "Bad Token in Header", http.StatusBadRequest)
 		return
 	}
 
@@ -160,6 +166,7 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		fmt.Printf("Can not set token to blank %v\n", err)
+		http.Error(w, "Can't write Token to DB", http.StatusInternalServerError)
 		return
 	}
 
