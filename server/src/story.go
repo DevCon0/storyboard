@@ -50,8 +50,12 @@ func saveStory(w http.ResponseWriter, r *http.Request) {
 	story := Story{}
 	err := decoder.Decode(&story)
 
+	fmt.Printf("story from request: %v\n", story)
+
 	if err != nil {
 		fmt.Printf("Problem decoding story object: %v\n", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	story.Id = bson.NewObjectId()
@@ -62,6 +66,31 @@ func saveStory(w http.ResponseWriter, r *http.Request) {
 	err = collection.Insert(&story)
 	if err != nil {
 		fmt.Printf("Error adding story to Mongo: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	user := User{}
+	user.Token = r.Header.Get("token")
+
+	q := bson.M{"token": user.Token}
+
+	collection = db.C("users")
+	err = collection.Find(q).One(&user)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	err = collection.Update(
+		bson.M{"username": user.Username},
+		bson.M{"$push": bson.M{"stories": story.Id.Hex()}},
+	)
+	if err != nil {
+		fmt.Printf("Error adding story to user stories array : %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	js, err := json.Marshal(story)
@@ -69,23 +98,33 @@ func saveStory(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	// Save storyId to current users' array of stories
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	w.Write(js)
-	// w.WriteHeader(http.StatusCreated)
-	// w.Write([]byte("Story saved!"))
-	// Save storyId to current users' array of stories
+
 }
 
 func library(w http.ResponseWriter, r *http.Request, userId string) {
-	// // Return based on user
+	user := User{}
+	user.Token = r.Header.Get("token")
 
-	// if err != nil {
-	//   fmt.Printf("Problem grabbing user object: %v\n", err)
-	// }
+	q := bson.M{"token": user.Token}
 
-	// Fetch username story array
-	// Fetch all stories in that array
-	// return array of json story objects for the dashboard
+	collection := db.C("users")
+	err := collection.Find(q).One(&user)
 
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	js, err := json.Marshal(user.Stories)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
