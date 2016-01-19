@@ -23,6 +23,7 @@ type Story struct {
 	CreatedAt   time.Time     `json:"createdAt" bson:"created_at"`
 	Title       string        `json:"title"`
 	Description string        `json:"description"`
+	Thumbnail   string        `json:"thumbnail"`
 	Username    string        `json:"username"`
 	Author      string        `json:"author"`
 	Frames      []Frame       `json:"frames"`
@@ -38,5 +39,4 @@ type Frame struct {
 	VideoId   string   `json:"videoId"`
 	Start     int      `json:"start"`
 	End       int      `json:"end"`
-	Thumbnail string   `json:"thumbnail"`
 }
