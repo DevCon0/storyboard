@@ -35,7 +35,16 @@ angular.module('storyBoard.authService', [])
 
   auth.signout = function () {
     localStorageService.clearAll();
-    $location.path('/');
+    return $http({
+      method: 'POST',
+      url: '/api/users/signout/',
+      headers: {
+        'token': token
+      }
+    })
+    .then(function () {
+      $location.path('/');
+    })
   };
 
   return auth;
