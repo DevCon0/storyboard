@@ -116,11 +116,14 @@ angular.module('storyBoard.storyStorageService', [])
     // });
   };
 
-  storyStorage.saveStory = function (story) {
+  storyStorage.saveStory = function (story,token) {
     console.log('saveStory called with', story);
     return $http({
      method: 'POST',
      url: '/api/stories/story',
+     headers: {
+       'token': token
+     },
      data: story
     })
     .then(function (resp) {
