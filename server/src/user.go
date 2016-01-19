@@ -41,11 +41,12 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 	// Make sure required fields are filled out.
 	if len(user.Password) <= 0 {
-		http.Error(w, "Password required", http.StatusMethodNotAllowed)
-		return
+		return fmt.Errorf("Password required\n"),
+			http.StatusMethodNotAllowed
 	}
 	if len(user.Username) <= 0 {
-		http.Error(w, "Username required", http.StatusMethodNotAllowed)
+		return fmt.Errorf("Username required"),
+			http.StatusMethodNotAllowed
 		return
 	}
 
@@ -62,12 +63,11 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	newPassword, err := bcrypt.GenerateFromPassword(password, 10)
 	if err != nil {
 		fmt.Printf("bcrypt encryption failed for some reason\n")
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("Internal Server Error"),
+			http.StatusInternalServerError
 	}
 
-	// Overwrite the exposed password with the encrypted password
-	//   within the user struct.
+	// Overwrite exposed password with encrypted password
 	user.Password = string(newPassword)
 
 	// Add the new user to the database.
@@ -75,18 +75,15 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	err = collection.Insert(&user)
 	if err != nil {
 		fmt.Printf("Database insertion failed for user:\n%#v\n", user)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("Internal Server Error"),
+			http.StatusInternalServerError
 	}
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Signed up!"))
 }
 
-// Verify the submitted password for a user,
-//   create a token for the user,
-//   update the token in the database,
-//   and send the token back to the client.
+// Verify password, create user token, update database, send token back
 func signin(w http.ResponseWriter, r *http.Request) {
 	// Make sure the request method is a POST request.
 	if ok := verifyMethod("POST", w, r); !ok {
@@ -99,7 +96,6 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// fmt.Printf("%#v\n", user)
 	fmt.Printf("Signing in %v...\n", user.Username)
 
 	if ok = user.verifyPassword(w, r); !ok {
@@ -112,27 +108,13 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("user:\n%#v\n\n", user)
-	// 'user' example:
-	// main.User{
-	// 	Id:"V\x99^K\f;v\x12aj\x87.",
-	// 	CreatedAt:time.Time{
-	//   		sec:63588488523,
-	//   		nsec:738000000,
-	//   		loc:(*time.Location)(0x991c00)
-	//   	},
-	// 	Username:"meme",
-	// 	Password:"",
-	// 	Fullname:"",
-	// 	Stories:[]string{},
-	// 	Token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE0NTMxNTgyNjQsInVzZXIiOnsidXNlcklkIjoiNTY5OTVlNGIwYzNiNzYxMjYxNmE4NzJlIiwiY3JlYXRlZEF0IjoiMjAxNi0wMS0xNVQxNTowMjowMy43MzgtMDY6MDAiLCJ1c2VybmFtZSI6Im1lbWUiLCJwYXNzd29yZCI6IiQyYSQxMCRPTWVKZ1owOVN0d2t2WkQ2My9TeWdlbGJDOTlLdUJVd1Y1Mk45My9yVE83eC5VVExEdVl4LiIsImZ1bGxuYW1lIjoiIiwic3RvcmllcyI6W10sInRva2VuIjoiIn19.ISBygDI3ZGoIwyMwrYhEwYGJZrKtBmfzKAQhNmKlZYE"
-	// }
 
 	// Stringify the response object.
 	js, err := json.Marshal(user)
 	if err != nil {
 		fmt.Printf("Failed to convert response data to JSON:\n%#v\n", user)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("Internal Server Error"),
+			http.StatusInternalServerError
 	}
 
 	// Send the response object to the client.
@@ -145,8 +127,8 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("token")
 
 	if token == "" {
-		http.Error(w, "Empty Token in Header", http.StatusBadRequest)
-		return
+		return fmt.Errorf("Empty Token in Header"),
+			http.StatusBadRequest
 	}
 
 	// find user with current token
@@ -156,8 +138,8 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	err := collection.Find(q).One(&user)
 	if err != nil {
 		fmt.Printf("User token: %v\n", err)
-		http.Error(w, "Bad Token in Header", http.StatusBadRequest)
-		return
+		return fmt.Errorf("Bad Token in Header"),
+			http.StatusBadRequest
 	}
 
 	err = collection.Update(
@@ -166,8 +148,8 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		fmt.Printf("Can not set token to blank %v\n", err)
-		http.Error(w, "Can't write Token to DB", http.StatusInternalServerError)
-		return
+		return fmt.Errorf("Can't write Token to DB"),
+			http.StatusInternalServerError
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -183,14 +165,15 @@ func parseBody(w http.ResponseWriter, r *http.Request) (User, bool) {
 	u, p, _ := r.BasicAuth()
 	fmt.Printf("username: %#v\npassword: %#v\n\n", u, p)
 
-	// Parse/decode the JSON object in the request body.
+	// Parse/decode JSON object in the request body.
 	// If the JSON object could not be parsed,
 	//   the problem most likely is a mismatch
 	//   between the User type and the JSON object.
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&user); err != nil {
 		fmt.Printf("Failed to decode JSON object in the request\n%v\n", err)
-		http.Error(w, "Invalid JSON object", http.StatusBadRequest)
+		return fmt.Errof("Invalid JSON object"),
+			http.StatusBadRequest
 		return user, false
 	}
 
@@ -213,7 +196,8 @@ func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) bool {
 		if err != nil {
 			fmt.Printf("What? %v\n", err)
 		}
-		http.Error(w, "Invalid Token", http.StatusUnauthorized)
+		return fmt.Errorf("Invalid Token"),
+			http.StatusUnauthorized
 		return false
 	}
 
@@ -224,16 +208,16 @@ func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) bool {
 func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) bool {
 	// Make sure required fields are filled out.
 	if len(u.Password) <= 0 {
-		http.Error(w, "Password required", http.StatusMethodNotAllowed)
+		return fmt.Errorf("Password required"),
+			http.StatusMethodNotAllowed
 		return false
 	}
 	if len(u.Username) <= 0 {
-		http.Error(w, "Username required", http.StatusMethodNotAllowed)
+		return fmt.Errorf("Username required"), http.StatusMethodNotAllowed
 		return false
 	}
 
-	// Remember the password sent in the request.
-	// It will be overwritten when querying the database.
+	// Remember user sent password
 	attemptedPassword := []byte(u.Password)
 
 	// Grab the user from the database
@@ -243,7 +227,8 @@ func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) bool {
 	if err != nil {
 		fmt.Printf("Failed to retrieve %v from the database\n", u.Username)
 		fmt.Println(err)
-		http.Error(w, "Invalid username", http.StatusUnauthorized)
+		return fmt.Errorf("Invalid username"),
+			http.StatusUnauthorized
 		return false
 	}
 
@@ -252,7 +237,8 @@ func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) bool {
 	err = bcrypt.CompareHashAndPassword(realPassword, attemptedPassword)
 	if err != nil {
 		fmt.Printf("%v sent the wrong password\n", u.Username)
-		http.Error(w, "Invalid password", http.StatusUnauthorized)
+		return fmt.Errorf("Invalid password"),
+			http.StatusUnauthorized
 		return false
 	}
 
@@ -278,7 +264,8 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
 	tokenString, err := token.SignedString(tokenSecret)
 	if err != nil {
 		fmt.Printf("Failed to create token\n%v\n", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return fmt.Errorf("Internal Server Error"),
+			http.StatusInternalServerError
 		return false
 	}
 
@@ -292,7 +279,8 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
 		bson.M{"$set": bson.M{"token": u.Token}},
 	); err != nil {
 		fmt.Printf("Failed to update token in the database\n%v\n", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return fmt.Errorf("Internal Server Error"),
+			http.StatusInternalServerError
 		return false
 	}
 

@@ -27,19 +27,27 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handle requests to "/api/users/..."
 func usersHandler(w http.ResponseWriter, r *http.Request) {
-	location := strings.Split(r.URL.Path, "/")[3]
+	err, status := func() (error, int) {
+		location := strings.Split(r.URL.Path, "/")[3]
 
-	switch location {
-	case "signup":
-		signup(w, r)
-	case "signin":
-		signin(w, r)
-	case "signout":
-		signout(w, r)
-	case "profile":
-		loadProfile(w, r)
-	default:
-		fmt.Printf("Endpoint not defined: %v\n", location)
+		switch location {
+		case "signup":
+			return signup(w, r)
+		case "signin":
+			return signin(w, r)
+		case "signout":
+			return signout(w, r)
+		case "profile":
+			return loadProfile(w, r)
+		default:
+			err := fmt.Errorf("Endpoint not defined: %v\n", location)
+			return err, http.StatusInternalServerError
+		}
+	}
+	if err != nil {
+		fmt.Printf("UserHandler error: %v\n", err)
+		http.Error(w, err.Error(), status)
+		return
 	}
 }
 
