@@ -45,9 +45,8 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			http.StatusMethodNotAllowed
 	}
 	if len(user.Username) <= 0 {
-		return fmt.Errorf("Username required"),
+		return fmt.Errorf("Username required\n"),
 			http.StatusMethodNotAllowed
-		return
 	}
 
 	// fmt.Printf("%#v\n", user)
@@ -63,7 +62,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	newPassword, err := bcrypt.GenerateFromPassword(password, 10)
 	if err != nil {
 		fmt.Printf("bcrypt encryption failed for some reason\n")
-		return fmt.Errorf("Internal Server Error"),
+		return fmt.Errorf("Internal Server Error\n"),
 			http.StatusInternalServerError
 	}
 
@@ -75,12 +74,14 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	err = collection.Insert(&user)
 	if err != nil {
 		fmt.Printf("Database insertion failed for user:\n%#v\n", user)
-		return fmt.Errorf("Internal Server Error"),
+		return fmt.Errorf("Internal Server Error\n"),
 			http.StatusInternalServerError
 	}
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Signed up!"))
+
+	return nil, http.StatusCreated
 }
 
 // Verify password, create user token, update database, send token back
@@ -113,13 +114,15 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	js, err := json.Marshal(user)
 	if err != nil {
 		fmt.Printf("Failed to convert response data to JSON:\n%#v\n", user)
-		return fmt.Errorf("Internal Server Error"),
+		return fmt.Errorf("Internal Server Error\n"),
 			http.StatusInternalServerError
 	}
 
 	// Send the response object to the client.
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
+
+	return nil, http.StatusOK
 }
 
 // find owner of current token, and remove on signout
@@ -127,7 +130,7 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("token")
 
 	if token == "" {
-		return fmt.Errorf("Empty Token in Header"),
+		return fmt.Errorf("Empty Token in Header\n"),
 			http.StatusBadRequest
 	}
 
@@ -138,7 +141,7 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	err := collection.Find(q).One(&user)
 	if err != nil {
 		fmt.Printf("User token: %v\n", err)
-		return fmt.Errorf("Bad Token in Header"),
+		return fmt.Errorf("Bad Token in Header\n"),
 			http.StatusBadRequest
 	}
 
@@ -148,13 +151,14 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		fmt.Printf("Can not set token to blank %v\n", err)
-		return fmt.Errorf("Can't write Token to DB"),
+		return fmt.Errorf("Can't write Token to DB\n"),
 			http.StatusInternalServerError
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Succesful Signout"))
 
+	return nil, http.StatusOK
 }
 
 // Get user information from the response body and headers.
@@ -172,9 +176,8 @@ func parseBody(w http.ResponseWriter, r *http.Request) (User, bool) {
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&user); err != nil {
 		fmt.Printf("Failed to decode JSON object in the request\n%v\n", err)
-		return fmt.Errof("Invalid JSON object"),
+		return fmt.Errof("Invalid JSON object\n"),
 			http.StatusBadRequest
-		return user, false
 	}
 
 	// Get the token from the header.
@@ -196,7 +199,7 @@ func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) bool {
 		if err != nil {
 			fmt.Printf("What? %v\n", err)
 		}
-		return fmt.Errorf("Invalid Token"),
+		return fmt.Errorf("Invalid Token\n"),
 			http.StatusUnauthorized
 		return false
 	}
@@ -291,6 +294,6 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
 }
 
 // Yeah, this is basically just a test dummy
-func loadProfile(w http.ResponseWriter, r *http.Request) {
-
+func loadProfile(w http.ResponseWriter, r *http.Request) (error, int) {
+	return nil, http.StatusOK
 }

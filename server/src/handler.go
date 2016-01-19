@@ -43,7 +43,7 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 			err := fmt.Errorf("Endpoint not defined: %v\n", location)
 			return err, http.StatusInternalServerError
 		}
-	}
+	}()
 	if err != nil {
 		fmt.Printf("UserHandler error: %v\n", err)
 		http.Error(w, err.Error(), status)
@@ -72,7 +72,7 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 			return fmt.Errorf("Unknown stories api location: %v\n", location),
 				http.StatusBadRequest
 		}
-	}
+	}()
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), status)
