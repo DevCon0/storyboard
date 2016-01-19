@@ -86,7 +86,7 @@ angular.module('storyBoard.createStory', [])
       ]
     }
 
-    StoryStorage.saveStory(story)
+    StoryStorage.saveStory(story, localStorageService.get('sessiontoken'))
     .then(function(data){
       $state.go('dashboard');
     });
