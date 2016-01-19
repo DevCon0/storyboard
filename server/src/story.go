@@ -145,15 +145,15 @@ func library(w http.ResponseWriter, r *http.Request, userId string) {
 	}
 
 	// Convert the story id's from strings to bson object id's.
-	oids := make([]bson.ObjectId, len(user.Stories))
+	storyIds := make([]bson.ObjectId, len(user.Stories))
 	for i, storyId := range user.Stories {
-		oids[i] = bson.ObjectIdHex(storyId)
+		storyIds[i] = bson.ObjectIdHex(storyId)
 	}
 
 	// Find full story data for data for all of the user's stories.
 	stories := []Story{}
 	err = storiesCollection.Find(
-		bson.M{"_id": bson.M{"$in": oids}},
+		bson.M{"_id": bson.M{"$in": storyIds}},
 	).All(&stories)
 	if err != nil {
 		fmt.Printf("Failed to find user's stories in the database\n%v\n", err)
