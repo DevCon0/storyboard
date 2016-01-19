@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -17,6 +16,16 @@ var (
 	tokenSecret []byte = []byte("Chuck Norris")
 )
 
+// Return a bool indicating whether the request method is correct.
+// If it is not, send an error response.
+func verifyMethod(wanted string, w http.ResponseWriter, r *http.Request) bool {
+	if r.Method != wanted {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return false
+	}
+	return true
+}
+
 func signup(w http.ResponseWriter, r *http.Request) {
 	// Make sure the request method is a POST request.
 	if ok := verifyMethod("POST", w, r); !ok {
@@ -24,7 +33,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a User struct from the request body.
-	user, ok := decodeToken(w, r)
+	user, ok := parseBody(w, r)
 	if !ok {
 		return
 	}
@@ -73,16 +82,6 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Signed up!"))
 }
 
-// Return a bool indicating whether the request method is correct.
-// If it is not, send an error response.
-func verifyMethod(wanted string, w http.ResponseWriter, r *http.Request) bool {
-	if r.Method != wanted {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-		return false
-	}
-	return true
-}
-
 func signin(w http.ResponseWriter, r *http.Request) {
 	// Make sure the request method is a POST request.
 	if ok := verifyMethod("POST", w, r); !ok {
@@ -90,7 +89,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a User struct from the request body.
-	user, ok := decodeToken(w, r)
+	user, ok := parseBody(w, r)
 	if !ok {
 		return
 	}
@@ -108,6 +107,20 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("user:\n%#v\n\n", user)
+	// 'user' example:
+	// main.User{
+	// 	Id:"V\x99^K\f;v\x12aj\x87.",
+	// 	CreatedAt:time.Time{
+	//   		sec:63588488523,
+	//   		nsec:738000000,
+	//   		loc:(*time.Location)(0x991c00)
+	//   	},
+	// 	Username:"meme",
+	// 	Password:"",
+	// 	Fullname:"",
+	// 	Stories:[]string{},
+	// 	Token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE0NTMxNTgyNjQsInVzZXIiOnsidXNlcklkIjoiNTY5OTVlNGIwYzNiNzYxMjYxNmE4NzJlIiwiY3JlYXRlZEF0IjoiMjAxNi0wMS0xNVQxNTowMjowMy43MzgtMDY6MDAiLCJ1c2VybmFtZSI6Im1lbWUiLCJwYXNzd29yZCI6IiQyYSQxMCRPTWVKZ1owOVN0d2t2WkQ2My9TeWdlbGJDOTlLdUJVd1Y1Mk45My9yVE83eC5VVExEdVl4LiIsImZ1bGxuYW1lIjoiIiwic3RvcmllcyI6W10sInRva2VuIjoiIn19.ISBygDI3ZGoIwyMwrYhEwYGJZrKtBmfzKAQhNmKlZYE"
+	// }
 
 	// Stringify the response object.
 	js, err := json.Marshal(user)
@@ -122,7 +135,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
-func decodeToken(w http.ResponseWriter, r *http.Request) (User, bool) {
+func parseBody(w http.ResponseWriter, r *http.Request) (User, bool) {
 	// Declare a variable for the user to sign in.
 	user := User{}
 
@@ -134,13 +147,46 @@ func decodeToken(w http.ResponseWriter, r *http.Request) (User, bool) {
 	//   the problem most likely is a mismatch
 	//   between the User type and the JSON object.
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&user)
-	if err != nil {
+	if err := decoder.Decode(&user); err != nil {
 		fmt.Printf("Failed to decode JSON object in the request\n%v\n", err)
 		http.Error(w, "Invalid JSON object", http.StatusBadRequest)
 		return user, false
 	}
+
+	// Get the token from the header.
+	user.Token = r.Header.Get("token")
+
+	fmt.Printf("user: %#v\n\n", user)
+
 	return user, true
+}
+
+func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) bool {
+	// fmt.Printf("u.Token: %#v\n\n", u.Token)
+	// fmt.Printf("u: %#v\n\n", u)
+
+	token, err := jwt.Parse(u.Token, func(token *jwt.Token) (interface{}, error) {
+		return tokenSecret, nil
+	})
+	if err != nil || !token.Valid {
+		if err != nil {
+			fmt.Printf("What? %v\n", err)
+		}
+		http.Error(w, "Invalid Token", http.StatusUnauthorized)
+		return false
+	}
+
+	// fmt.Printf("token: %#v\n\n", token.Claims["user"])
+	// user := token.Claims["user"]
+	// fmt.Printf("user: %#v\n\n", user)
+
+	// u.Id = user["userId"]
+	// u.Username = user["username"]
+	// // *u.Fullname = user.Fullname
+	// u.Stories = user["Stories"]
+
+	return true
+	// fmt.Printf("Parsed? %#v\n", token)
 }
 
 func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) bool {
@@ -201,11 +247,40 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
 
 	// Add the signed token to the User struct.
 	u.Token = tokenString
+	fmt.Printf("tokenString:\n%v\n", tokenString)
+
+	// Update the token in the database.
+	if err = usersCollection.Update(
+		bson.M{"username": u.Username},
+		bson.M{"$set": bson.M{"token": u.Token}},
+	); err != nil {
+		fmt.Printf("Failed to update token in the database\n%v\n", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return false
+	}
 
 	// Erase the password from the User struct for enhanced security.
 	u.Password = ""
 
 	return true
+}
+
+/*
+	Everything under here is not used.
+*/
+
+func decodeToken(w http.ResponseWriter, r *http.Request) (User, bool) {
+	// Declare a variable for the user to sign in.
+	user, ok := parseBody(w, r)
+	if !ok {
+		return user, false
+	}
+
+	if ok := user.verifyToken(w, r); !ok {
+		return user, false
+	}
+
+	return user, true
 }
 
 type Profile struct {
@@ -229,20 +304,31 @@ type Profile struct {
 // 	// }
 // }
 
+// Yeah, this is basically just a test dummy
 func loadProfile(w http.ResponseWriter, r *http.Request) {
-	paths := strings.Split(r.URL.Path, "/")
-	if len(paths) < 3 {
-		fmt.Printf("No profile specified in path\n")
-		http.Error(w, "No profile specified in path", http.StatusBadRequest)
-		return
-	}
-	fmt.Printf("paths: %#v\n", paths)
-	// username := paths[4]
+	// paths := strings.Split(r.URL.Path, "/")
+	// if len(paths) < 3 {
+	// 	fmt.Printf("No profile specified in path\n")
+	// 	http.Error(w, "No profile specified in path", http.StatusBadRequest)
+	// 	return
+	// }
+	// fmt.Printf("paths: %#v\n", paths)
+	// // username := paths[4]
 
-	// Make sure the request method is a POST request.
-	if ok := verifyMethod("GET", w, r); !ok {
-		return
-	}
+	// // Make sure the request method is a POST request.
+	// if ok := verifyMethod("POST", w, r); !ok {
+	// 	return
+	// }
+
+	// user, ok := decodeToken(w, r)
+	// if !ok {
+	// 	return
+	// }
+	// if user.Fullname != "" {
+	// 	fmt.Println("ok")
+	// }
+
+	// user.decodeToken(w, r)
 
 	// q := bson.M{"username": username}
 
