@@ -44,26 +44,34 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func storyHandler(w http.ResponseWriter, r *http.Request) {
-	baseLocation := "/api/stories/"
-	routeAndId := strings.TrimPrefix(r.URL.Path, baseLocation)
-	split := strings.Split(routeAndId, "/")
-	location := split[0]
-	id := concat(split[1:]...)
+	err, status := func() (error, int) {
+		baseLocation := "/api/stories/"
+		routeAndId := strings.TrimPrefix(r.URL.Path, baseLocation)
+		split := strings.Split(routeAndId, "/")
+		location := split[0]
+		id := concat(split[1:]...)
 
-	fmt.Println("storyHandler location", location)
+		fmt.Println("storyHandler location", location)
 
-	switch location {
+		switch location {
 
-	case "story":
-		handleStory(w, r, id)
+		case "story":
+			return handleStory(w, r, id)
 
-	case "library":
-		library(w, r, id)
+		case "library":
+			return library(w, r, id)
 
-	case "showcase":
-		showCase(w, r)
+		case "showcase":
+			return showCase(w, r)
 
-	default:
-		fmt.Printf("Unknown stories api location: %v\n", location)
+		default:
+			err := fmt.Errorf("Unknown stories api location: %v\n", location)
+			return err, http.StatusInternalServerError
+		}
+	}
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), status)
+		return
 	}
 }

@@ -178,7 +178,36 @@ func library(w http.ResponseWriter, r *http.Request, userId string) {
 
 // GET request to 'api/stories/showcase'.
 // Respond with the full data for the top 3 stories.
-func showCase(w http.ResponseWriter, r *http.Request) {
+func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
+
+	stories := []Story{}
+
+	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(
+		&stories,
+	)
+	if err != nil {
+		return err, http.StatusNotFound
+	}
+
+	// fmt.Printf("Number of stories: %v\n%#v\n", len(stories), stories)
+
+	// Stringify the story data into JSON format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// GET request to 'api/stories/showcase'.
+// Respond with the full data for the top 3 stories.
+func showCase2(w http.ResponseWriter, r *http.Request) {
 	stories := []Story{}
 
 	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(&stories)
