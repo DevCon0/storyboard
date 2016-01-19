@@ -1,35 +1,17 @@
 <div class="row">
-        <h1>Welcome {{username}}</h1>
-    </div>
+  <h1>Welcome {{username}}</h1>
 </div>
-
 <div class='row'>
-        <h2 class="bannertitle">Created Stories:</h2>
-    </div>
+  <h2 class="bannertitle">Created Stories:</h2>
 </div>
-</br>
-<!--<div class="row">
-    <div class="col-md-1"></div>
-    <div ng-repeat="story in userLibrary">
-        <div ng-if="$index % 2 == 0" class="row">
-            <div class="col-md-2">
-                <div class="libraryStoryFrame">
-                    <a href="/#/singleStory"><img ng-src="{{story.url}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.text}}</p><p>-{{story.creator}}</p></span></a>
-                </div>
-            </div>
-        </div>
+<div class="row">
+  <div ng-repeat="story in userLibrary">
+    <div class="col-md-3">
+      <div class="libraryStoryFrame">
+        <a href="/#/singleStory"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>
+      </div>
     </div>
-</div>-->
-    <div class="row">
-    <div ng-repeat="story in userLibrary">
-        <!--<div class="row" ng-if="$index % 5 == 0"></div>
-        <div class="col-md-1" ng-if="$index % 5 == 0"></div>-->
-        <div class="col-md-2">
-            <div class="libraryStoryFrame">
-                <a href="/#/singleStory"><img ng-src="{{story.url}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.text}}</p><p>-{{story.creator}}</p></span></a>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 

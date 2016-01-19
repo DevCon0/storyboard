@@ -24,8 +24,9 @@ angular.module('storyBoard.storyStorageService', [])
       }      
     })
     .then(function (resp) {
-      console.log('resp from getuserLibrary', resp);
-    })
+      console.log('resp.data from getuserLibrary', resp.data);
+      return resp.data;
+    });
   };
 
   storyStorage.saveStory = function (story,token) {
