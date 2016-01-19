@@ -9,25 +9,25 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func handleStory(w http.ResponseWriter, r *http.Request, storyId string) {
-	if r.Method == "GET" {
-		getStory(w, r, storyId)
-	}
-	if r.Method == "POST" {
-		saveStory(w, r)
+func handleStory(w http.ResponseWriter, r *http.Request, storyId string) (error, int) {
+	switch r.Method {
+	case "GET":
+		return getStory(w, r, storyId)
+	case "POST":
+		return saveStory(w, r)
+	default:
+		return fmt.Errorf("Only GET and POST requests allowed\n"),
+			http.StatusBadRequest
 	}
 }
 
 // GET request to 'api/stories/story/<story_id>'.
 // Respond with the full data for the story specified in the url.
-func getStory(w http.ResponseWriter, r *http.Request, storyId string) {
+func getStory(w http.ResponseWriter, r *http.Request, storyId string) (error, int) {
 	// Make sure a story id was given in the url.
 	if len(storyId) <= 0 {
-		fmt.Println("Story id not specified in the url")
-		http.Error(
-			w, "Story id not specified in the url", http.StatusBadRequest,
-		)
-		return
+		return fmt.Errorf("Story id not specified in the url\n"),
+			http.StatusBadRequest
 	}
 
 	// Fetch story data from the database.
@@ -36,11 +36,8 @@ func getStory(w http.ResponseWriter, r *http.Request, storyId string) {
 		"_id": bson.ObjectIdHex(storyId),
 	}).One(&story)
 	if err != nil {
-		fmt.Println("Story not found in the database")
-		http.Error(
-			w, "Story not found in the database", http.StatusNotFound,
-		)
-		return
+		return fmt.Errorf("Story not found in the database\n"),
+			http.StatusNotFound
 	}
 
 	// fmt.Printf("story response Data: \n%#v\n\n", story)
@@ -48,28 +45,28 @@ func getStory(w http.ResponseWriter, r *http.Request, storyId string) {
 	// Stringify story data into JSON string format.
 	js, err := json.Marshal(story)
 	if err != nil {
-		fmt.Printf("Failed to stringify:\n%#v\n%v\n", story, err)
-		http.Error(
-			w, err.Error(), http.StatusInternalServerError,
-		)
-		return
+		return fmt.Errorf("Failed to stringify %v\n%v\n", storyId, err),
+			http.StatusInternalServerError
 	}
 
 	// Send the story with status 200;
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
+
+	return nil, http.StatusOK
 }
 
 // POST request to 'api/stories/story'.
 // Respond with the full data for the story specified in the url.
-func saveStory(w http.ResponseWriter, r *http.Request) {
+func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Grab the JSON object in the response body
 	story := Story{}
-	if err := json.NewDecoder(r.Body).Decode(&story); err != nil {
-		fmt.Printf("Problem decoding story object: \n%v\n", err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+
+	err := json.NewDecoder(r.Body).Decode(&story)
+	if err != nil {
+		return fmt.Errorf("Invalid JSON object in request body \n%v\n", err),
+			http.StatusBadRequest
 	}
 
 	// fmt.Printf("story from request: %v\n", story)
@@ -79,10 +76,10 @@ func saveStory(w http.ResponseWriter, r *http.Request) {
 	story.CreatedAt = time.Now()
 
 	// Add the new story to the database.
-	if err := storiesCollection.Insert(&story); err != nil {
-		fmt.Printf("Error adding story to Mongo: \n%v\n", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	err = storiesCollection.Insert(&story)
+	if err != nil {
+		return fmt.Errorf("Error adding story to Mongo: \n%v\n", err),
+			http.StatusInternalServerError
 	}
 
 	// Get user info from the token in the header.
@@ -90,11 +87,10 @@ func saveStory(w http.ResponseWriter, r *http.Request) {
 	user.Token = r.Header.Get("token")
 
 	// Get user info from the database, using the token in the header.
-	err := usersCollection.Find(bson.M{"token": user.Token}).One(&user)
+	err = usersCollection.Find(bson.M{"token": user.Token}).One(&user)
 	if err != nil {
-
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
+		return err,
+			http.StatusNotFound
 	}
 
 	// Save storyId to current users' array of stories
@@ -103,16 +99,15 @@ func saveStory(w http.ResponseWriter, r *http.Request) {
 		bson.M{"$push": bson.M{"stories": story.Id.Hex()}},
 	)
 	if err != nil {
-		fmt.Printf("Error adding story to user stories array : %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return fmt.Errorf("Failed to add story to user's stories\n%v\n", err),
+			http.StatusInternalServerError
 	}
 
 	// Stringify the story data into JSON format.
 	js, err := json.Marshal(story)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return err,
+			http.StatusInternalServerError
 	}
 
 	// Send the new story JSON object with status 201.
@@ -120,16 +115,17 @@ func saveStory(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write(js)
 
+	return nil, http.StatusCreated
 }
 
 // GET request to 'api/stories/library'.
 // Respond with the full data for all of the stories
 //   created by a signed-in user.
 //   Find the user's stories by using the token in the request header.
-func library(w http.ResponseWriter, r *http.Request, userId string) {
+func library(w http.ResponseWriter, r *http.Request, userId string) (error, int) {
 	// Make sure that this is a GET request.
-	if ok := verifyMethod("GET", w, r); !ok {
-		return
+	if err, status := verifyMethod("GET", w, r); err != nil {
+		return err, status
 	}
 
 	// Get user info from the token in the header.
@@ -139,9 +135,8 @@ func library(w http.ResponseWriter, r *http.Request, userId string) {
 	// Get user info from the database, using the token in the header.
 	err := usersCollection.Find(bson.M{"token": user.Token}).One(&user)
 	if err != nil {
-		fmt.Printf("Failed to find token in the database\n%v\n", err)
-		http.Error(w, "Invalid token", http.StatusUnauthorized)
-		return
+		return fmt.Errorf("Failed to find token in the database\n%v\n", err),
+			http.StatusUnauthorized
 	}
 
 	// Convert the story id's from strings to bson object id's.
@@ -152,13 +147,12 @@ func library(w http.ResponseWriter, r *http.Request, userId string) {
 
 	// Find full story data for data for all of the user's stories.
 	stories := []Story{}
-	err = storiesCollection.Find(
-		bson.M{"_id": bson.M{"$in": storyIds}},
-	).All(&stories)
+	err = storiesCollection.Find(bson.M{
+		"_id": bson.M{"$in": storyIds},
+	}).All(&stories)
 	if err != nil {
-		fmt.Printf("Failed to find user's stories in the database\n%v\n", err)
-		http.Error(w, "No user stories found", http.StatusNotFound)
-		return
+		return fmt.Errorf("Failed to find user's stories\n%v\n", err),
+			http.StatusNotFound
 	}
 
 	// fmt.Printf("%#v\n", stories)
@@ -166,28 +160,29 @@ func library(w http.ResponseWriter, r *http.Request, userId string) {
 	// Stringify the story data array into JSON format.
 	js, err := json.Marshal(stories)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return err,
+			http.StatusInternalServerError
 	}
 
 	// Send the JSON object with status 200.
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
+
+	return nil, http.StatusOK
 }
 
 // GET request to 'api/stories/showcase'.
 // Respond with the full data for the top 3 stories.
-func showCase(w http.ResponseWriter, r *http.Request) {
+func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
+
 	stories := []Story{}
 
-	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(&stories)
+	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(
+		&stories,
+	)
 	if err != nil {
-		fmt.Printf(
-			"Failed to find showcase stories in the database\n%v\n", err,
-		)
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
+		return err, http.StatusNotFound
 	}
 
 	// fmt.Printf("Number of stories: %v\n%#v\n", len(stories), stories)
@@ -195,12 +190,13 @@ func showCase(w http.ResponseWriter, r *http.Request) {
 	// Stringify the story data into JSON format.
 	js, err := json.Marshal(stories)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return err, http.StatusInternalServerError
 	}
 
 	// Send the JSON object with status 200.
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
+
+	return nil, http.StatusOK
 }
