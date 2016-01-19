@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"time"
 
@@ -175,7 +176,6 @@ func library(w http.ResponseWriter, r *http.Request, userId string) (error, int)
 // GET request to 'api/stories/showcase'.
 // Respond with the full data for the top 3 stories.
 func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
-
 	stories := []Story{}
 
 	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(
@@ -199,4 +199,55 @@ func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
 	w.Write(js)
 
 	return nil, http.StatusOK
+}
+
+// GET request to 'api/stories/showcase'.
+// Respond with the full data for 3 random stories.
+func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
+	stories := []Story{}
+
+	err := storiesCollection.Find(nil).All(&stories)
+	if err != nil {
+		return err, http.StatusNotFound
+	}
+
+	max := len(stories)
+	randomNumbers := []int{}
+	randomStories := make([]Story, 3)
+	i := 0
+	for {
+		n := rand.Intn(max)
+		if intSlcContains(randomNumbers, n) {
+			continue
+		}
+		randomNumbers = append(randomNumbers, n)
+		randomStories[i] = stories[n]
+
+		i++
+		if i >= 3 {
+			break
+		}
+	}
+
+	// Stringify the story data into JSON format.
+	js, err := json.Marshal(randomStories)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+func intSlcContains(slc []int, q int) bool {
+	for _, n := range slc {
+		if n == q {
+			return true
+		}
+	}
+	return false
 }
