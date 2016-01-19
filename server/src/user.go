@@ -26,6 +26,7 @@ func verifyMethod(wanted string, w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
+// Add a user to the database.
 func signup(w http.ResponseWriter, r *http.Request) {
 	// Make sure the request method is a POST request.
 	if ok := verifyMethod("POST", w, r); !ok {
@@ -82,6 +83,10 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Signed up!"))
 }
 
+// Verify the submitted password for a user,
+//   create a token for the user,
+//   update the token in the database,
+//   and send the token back to the client.
 func signin(w http.ResponseWriter, r *http.Request) {
 	// Make sure the request method is a POST request.
 	if ok := verifyMethod("POST", w, r); !ok {
@@ -135,6 +140,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
+// Get user information from the response body and headers.
 func parseBody(w http.ResponseWriter, r *http.Request) (User, bool) {
 	// Declare a variable for the user to sign in.
 	user := User{}
@@ -161,10 +167,10 @@ func parseBody(w http.ResponseWriter, r *http.Request) (User, bool) {
 	return user, true
 }
 
+// Return a bool whether a user's token is valid.
+// If not, send an http error.
 func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) bool {
-	// fmt.Printf("u.Token: %#v\n\n", u.Token)
-	// fmt.Printf("u: %#v\n\n", u)
-
+	// Parse the token with the tokenSecret.
 	token, err := jwt.Parse(u.Token, func(token *jwt.Token) (interface{}, error) {
 		return tokenSecret, nil
 	})
@@ -176,19 +182,10 @@ func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 
-	// fmt.Printf("token: %#v\n\n", token.Claims["user"])
-	// user := token.Claims["user"]
-	// fmt.Printf("user: %#v\n\n", user)
-
-	// u.Id = user["userId"]
-	// u.Username = user["username"]
-	// // *u.Fullname = user.Fullname
-	// u.Stories = user["Stories"]
-
 	return true
-	// fmt.Printf("Parsed? %#v\n", token)
 }
 
+// Return a bool whether the password submitted for a user is correct.
 func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) bool {
 	// Make sure required fields are filled out.
 	if len(u.Password) <= 0 {
@@ -228,6 +225,11 @@ func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
+// Create a token for a user,
+//   store it in the *User struct,
+//   update the token in the database,
+//   remove the password from the *User struct.
+// Return a bool indicating whether an error occurred.
 func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
 	// Create a new, empty token.
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -265,96 +267,7 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) bool {
 	return true
 }
 
-/*
-	Everything under here is not used.
-*/
-
-func decodeToken(w http.ResponseWriter, r *http.Request) (User, bool) {
-	// Declare a variable for the user to sign in.
-	user, ok := parseBody(w, r)
-	if !ok {
-		return user, false
-	}
-
-	if ok := user.verifyToken(w, r); !ok {
-		return user, false
-	}
-
-	return user, true
-}
-
-type Profile struct {
-	Id        bson.ObjectId `bson:"_id,omitempty"`
-	CreatedAt time.Time     `bson:"created_at"`
-	Username  string
-	Firstname string
-	Lastname  string
-	Stories   []string
-	Favorites []string
-}
-
-// func (p *Profile) getInfo(w http.ResponseWriter, r *http.Request) bool {
-// 	// q := bson.M{"username": u.Username}
-// 	// err := collection.Find(q).One(&u)
-// 	// if err != nil {
-// 	// 	fmt.Printf("Failed to retrieve %v from the database\n", u.Username)
-// 	// 	fmt.Println(err)
-// 	// 	http.Error(w, "Invalid username", http.StatusUnauthorized)
-// 	// 	return false
-// 	// }
-// }
-
 // Yeah, this is basically just a test dummy
 func loadProfile(w http.ResponseWriter, r *http.Request) {
-	// paths := strings.Split(r.URL.Path, "/")
-	// if len(paths) < 3 {
-	// 	fmt.Printf("No profile specified in path\n")
-	// 	http.Error(w, "No profile specified in path", http.StatusBadRequest)
-	// 	return
-	// }
-	// fmt.Printf("paths: %#v\n", paths)
-	// // username := paths[4]
 
-	// // Make sure the request method is a POST request.
-	// if ok := verifyMethod("POST", w, r); !ok {
-	// 	return
-	// }
-
-	// user, ok := decodeToken(w, r)
-	// if !ok {
-	// 	return
-	// }
-	// if user.Fullname != "" {
-	// 	fmt.Println("ok")
-	// }
-
-	// user.decodeToken(w, r)
-
-	// q := bson.M{"username": username}
-
-	// // fmt.Printf("%#v\n", user)
-	// fmt.Printf("Loading %v's profile...\n", username)
-
-	// q := bson.M{"username": u.Username}
-	// err := collection.Find(q).One(&u)
-	// if err != nil {
-	// 	fmt.Printf("Failed to retrieve %v from the database\n", u.Username)
-	// 	fmt.Println(err)
-	// 	http.Error(w, "Invalid username", http.StatusUnauthorized)
-	// 	return false
-	// }
-
-	// // fmt.Printf("profile:\n%#v\n\n", profile)
-
-	// // Stringify the response object.
-	// js, err := json.Marshal(profile)
-	// if err != nil {
-	// 	fmt.Printf("Failed to convert response data to JSON:\n%#v\n", profile)
-	// 	http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	// 	return
-	// }
-
-	// // Send the response object to the client.
-	// w.Header().Set("Content-Type", "application/json")
-	// w.Write(js)
 }
