@@ -15,9 +15,15 @@ angular.module('storyBoard.dashboard', [])
 
   $scope.deleteStory = function (storyId) {
     console.log('deleteStory function (controller) run with', storyId);
-    StoryStorage.deleteStory(storyId)
+    StoryStorage.deleteStory(storyId, localStorageService.get('sessiontoken'))
     .then(function (resp) {
       console.log('resp from deleteStory', resp);
+    })
+    .then(function () {
+      StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))
+      .then(function (library) {
+        $scope.userLibrary = library;
+      });
     })
   }
 
