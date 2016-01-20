@@ -8,14 +8,37 @@ angular.module('storyBoard.createStory', [])
 
   $scope.user = localStorageService.get('username');
 
-  $scope.storyTitle = null;
-  $scope.storyDescription = null;
-  $scope.storyThumbnailUrl = null;
 
-  $scope.frame1YoutubeUrl = null;
-  $scope.frame1StartTime = null;
-  $scope.frame1EndTime = null;
-  $scope.showSpinner1 = false;
+  if (localStorageService.get('editStory')) {
+    var editStory = localStorageService.get('editStory');
+    $scope.storyTitle = editStory.title;
+    $scope.storyDescription = editStory.description;
+    $scope.storyThumbnailUrl = editStory.thumbnail;
+
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[0].videoId;
+    $scope.frame1StartTime = editStory.frames[0].start;
+    $scope.frame1EndTime = editStory.frames[0].end;
+    $scope.showSpinner1 = false;
+
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[1].videoId;
+    $scope.frame2StartTime = editStory.frames[1].start;
+    $scope.frame2EndTime = editStory.frames[1].end;
+    $scope.showSpinner2 = false;
+
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[2].videoId;;
+    $scope.frame3StartTime = editStory.frames[2].start;
+    $scope.frame3EndTime = editStory.frames[2].end;
+    $scope.showSpinner3 = false;
+
+  } else{
+    $scope.storyTitle = null;
+    $scope.storyDescription = null;
+    $scope.storyThumbnailUrl = null;
+
+    $scope.frame1YoutubeUrl = null;
+   $scope.frame1StartTime = null;
+   $scope.frame1EndTime = null;
+    $scope.showSpinner1 = false;
 
   $scope.frame2YoutubeUrl = null;
   $scope.frame2StartTime = null;
@@ -26,6 +49,7 @@ angular.module('storyBoard.createStory', [])
   $scope.frame3StartTime = null;
   $scope.frame3EndTime = null;
   $scope.showSpinner3 = false;
+}
 
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
@@ -66,6 +90,7 @@ angular.module('storyBoard.createStory', [])
   $scope.saveStory = function(){
     var story = {
       title: $scope.storyTitle,
+      storyId: editStory.storyId,
       description: $scope.storyDescription,
       thumbnail: $scope.storyThumbnailUrl,
       username: $scope.user,
@@ -97,11 +122,17 @@ angular.module('storyBoard.createStory', [])
         }
       ]
     }
-
-    StoryStorage.saveStory(story, localStorageService.get('sessiontoken'))
-    .then(function(data){
-      $state.go('dashboard');
-    });
+    if(localStorageService.get('editStory')===null){
+      StoryStorage.saveStory(story, localStorageService.get('sessiontoken'))
+      .then(function(data){
+        $state.go('dashboard');
+      });
+    } else {
+      StoryStorage.editStory(story, localStorageService.get('sessiontoken'))
+      .then(function (data) {
+        $state.go('dashboard');
+      })
+    }
   }
 
   $scope.previewStory = function () {

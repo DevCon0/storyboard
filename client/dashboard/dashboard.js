@@ -10,6 +10,15 @@ angular.module('storyBoard.dashboard', [])
 
   $scope.editStory = function (storyId) {
     console.log('editStory function (controller) run with', storyId);
+    localStorageService.remove('editStory');
+    StoryStorage.getStory(storyId)
+    .then(function (resp) {
+      console.log('editStory contorller response.data', resp.data);
+      localStorageService.set('editStory', resp.data);
+    })
+    .then(function () {
+      $state.go('createStory');
+    })
 
   }
 
