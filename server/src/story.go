@@ -34,11 +34,26 @@ func getStory(w http.ResponseWriter, r *http.Request, storyId string) (error, in
 		return fmt.Errorf("Story id not specified in the url\n"),
 			http.StatusBadRequest
 	}
+	storyObjectId := bson.ObjectIdHex(storyId)
+
+	// Update the views in the database.
+	// story.Views++
+	err := storiesCollection.Update(bson.M{
+		"_id": storyObjectId,
+	}, bson.M{
+		"$inc": bson.M{
+			"views": 1,
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("Failed to update story views in the database\n"),
+			http.StatusNotFound
+	}
 
 	// Fetch story data from the database.
 	story := Story{}
-	err := storiesCollection.Find(bson.M{
-		"_id": bson.ObjectIdHex(storyId),
+	err = storiesCollection.Find(bson.M{
+		"_id": storyObjectId,
 	}).One(&story)
 	if err != nil {
 		return fmt.Errorf("Story not found in the database\n"),
@@ -95,7 +110,12 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Set mongo values "_id" and "created_at" (cf. 'schema.go').
 	story.Id = bson.NewObjectId()
 	story.CreatedAt = time.Now()
-	// story.Author = user.Username
+
+	// Set default values.
+	story.Views = 0
+	if story.Author == "" {
+		story.Author = user.Username
+	}
 
 	// Add the new story to the database.
 	err = storiesCollection.Insert(&story)
