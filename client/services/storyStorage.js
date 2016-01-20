@@ -55,5 +55,14 @@ angular.module('storyBoard.storyStorageService', [])
       })
   };
 
+  storyStorage.deleteStory = function (id) {
+    console.log('deleteStory (Factory) called with', id);
+    return $http({
+      method: 'DELETE',
+      url: '/api/stories/story/' + id,
+      data: id
+    })
+  };
+
   return storyStorage;
 })
