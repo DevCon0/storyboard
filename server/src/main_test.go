@@ -451,7 +451,7 @@ func TestShowCase(t *testing.T) {
 	showCaseUrl := "http://localhost:8020/api/stories/showcase"
 	t.Logf("Sending GET request to\n%v...\n", showCaseUrl)
 
-	res, err := getRequest(showCaseUrl)
+	res, err := request("GET", showCaseUrl)
 	if err != nil {
 		t.Errorf("%v\n", err)
 	}
@@ -526,6 +526,62 @@ func TestShowCase(t *testing.T) {
 	}
 }
 
+func TestRemoval(t *testing.T) {
+	// Find the test user's info in the database.
+	t.Log("Testing database connection...")
+	session, err := initDb()
+	if err != nil {
+		t.Errorf("Failed to connect to the database\n%v\n", err)
+	}
+
+	defer session.Close()
+
+	t.Log("Looking for BobTheTester...")
+	err = usersCollection.Find(
+		bson.M{"username": "BobTheTester"},
+	).One(&BobTheTester)
+	if err != nil {
+		t.Errorf("BobTheTester is invisible\n%v\n", err)
+	}
+
+	if len(BobTheTester.Stories) <= 0 {
+		t.Errorf("BobTheTester has not created any stories\n")
+	}
+
+	// Remove the story which was created by the test.
+	t.Log("Removing BobTheTester's stories from the database...")
+	// totalStories := len(BobTheTester.Stories)
+	for _, storyId := range BobTheTester.Stories {
+		url := concat("http://localhost:8020/api/stories/story/", storyId)
+		expectedStatus := http.StatusOK
+
+		t.Logf("Sending DELETE request to %v\n", url)
+		res, err := request("DELETE", url)
+		if err != nil {
+			t.Errorf("%v\n", err)
+		} else if res.StatusCode != expectedStatus {
+			t.Errorf(
+				"Expected status code %v, got %v\n",
+				expectedStatus, res.StatusCode,
+			)
+		} else {
+			t.Logf("Response received\n")
+		}
+
+		res.Body.Close()
+	}
+
+	t.Log("Looking for BobTheTester again...")
+	err = usersCollection.Find(
+		bson.M{"username": "BobTheTester"},
+	).One(&BobTheTester)
+	if err != nil {
+		t.Errorf("BobTheTester is invisible\n%v\n", err)
+	} else if len(BobTheTester.Stories) > 0 {
+		t.Errorf("BobTheTester still has his deleted stories\n")
+	}
+}
+
 func TestCleanup(t *testing.T) {
 	t.Log("Cleaning up test collections in database...")
 	// check database for user Bob
@@ -539,10 +595,7 @@ func TestCleanup(t *testing.T) {
 
 	// Remove the story which was created by the test.
 	t.Log("Removing test stories from the database...")
-	// t.Log("lastResult.Id", lastResult.Id)
-	collection := db.C("stories")
-	q := bson.M{"username": "BobTheTester"}
-	_, err = collection.RemoveAll(q)
+	_, err = storiesCollection.RemoveAll(bson.M{"username": "BobTheTester"})
 	if err != nil {
 		t.Errorf("Failed to remove test story from the database\n%v\n", err)
 	}
@@ -576,10 +629,11 @@ func jsonPost(url, jsonStr string) (*http.Response, error) {
 	return client.Do(req)
 }
 
-func getRequest(url string) (*http.Response, error) {
-	req, err := http.NewRequest("GET", url, nil)
+func request(method, url string) (*http.Response, error) {
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to send request to %v\n%v\n", url, err)
+		return nil,
+			fmt.Errorf("Failed to send %v request to %v\n%v\n", method, url, err)
 	}
 
 	req.Header.Set("token", BobTheTester.Token)
@@ -587,7 +641,8 @@ func getRequest(url string) (*http.Response, error) {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to send request to %v\n%v\n", url, err)
+		return nil,
+			fmt.Errorf("Failed to send %v request to %v\n%v\n", method, url, err)
 	}
 
 	return res, err
