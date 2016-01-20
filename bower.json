@@ -24,6 +24,7 @@
     "polymer": "Polymer/polymer#^0.5",
     "paper-header-panel": "PolymerElements/paper-header-panel#~1.1.2",
     "paper-card": "PolymerElements/paper-card#~1.0.9",
-    "paper-spinner": "PolymerElements/paper-spinner#~1.1.0"
+    "paper-spinner": "PolymerElements/paper-spinner#~1.1.0",
+    "iron-icons": "PolymerElements/iron-icons#~1.1.1"
   }
 }
