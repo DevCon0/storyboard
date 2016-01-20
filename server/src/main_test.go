@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
 
 	"gopkg.in/mgo.v2/bson"
@@ -560,6 +561,16 @@ func TestEditStory(t *testing.T) {
 			)
 		} else {
 			t.Logf("Response received\n")
+		}
+
+		resStory := Story{}
+		err = json.NewDecoder(res.Body).Decode(&resStory)
+		if err != nil {
+			t.Errorf("Invalid JSON object in request body \n%v\n", err)
+		}
+
+		if !strings.Contains(resStory.Title, " (Edited)") {
+			t.Errorf("Edit not updated in the database\n")
 		}
 
 		res.Body.Close()
