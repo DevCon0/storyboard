@@ -346,3 +346,40 @@ func loadProfile(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	return nil, http.StatusOK
 }
+
+// Get user info from the token in the header.
+// Query the database for the token,
+//   and return the data received.
+func getUserInfoFromHeader(r *http.Request) (User, error, int) {
+	// Get user info from the token in the header.
+	user := User{}
+	user.Token = r.Header.Get("token")
+	err, status := user.verifyToken()
+	if err != nil {
+		return user, err, status
+	}
+
+	// Get user info from the database, using the token in the header.
+	err = usersCollection.Find(bson.M{"token": user.Token}).One(&user)
+	if err != nil {
+		return user,
+			fmt.Errorf("Failed to find token in the database\n%v\n", err),
+			http.StatusUnauthorized
+	}
+
+	return user, nil, http.StatusOK
+}
+
+// Verify whether this user is the author of story
+//   by using the string version of a story id.
+// Return an error and an http status code if the user is not the author.
+func (u *User) verifyAuthorship(storyId string) (error, int) {
+	for _, userStoryId := range u.Stories {
+		if userStoryId == storyId {
+			return nil, http.StatusOK
+		}
+	}
+
+	return fmt.Errorf("User is not a creator of this story\n"),
+		http.StatusUnauthorized
+}

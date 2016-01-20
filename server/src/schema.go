@@ -26,6 +26,7 @@ type Story struct {
 	Thumbnail   string        `json:"thumbnail"`
 	Username    string        `json:"username"`
 	Author      string        `json:"author"`
+	Views       int           `json:"views"`
 	Frames      []Frame       `json:"frames"`
 	FRAME1      int
 	FRAME2      int
