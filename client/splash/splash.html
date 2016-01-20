@@ -1,16 +1,10 @@
-<div class="col-md-2"></div>
-<h2>Top Stories Today</h2>
+<div class="col-md-offset-1"><h2>Top Stories Today</h2></div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div ng-repeat="story in showcase">
-        <div class="col-md-2">
-            <div class="centerBlock">
-                <div class="topStoryframe">
-                    <a href="/#/singleStory/{{story.storyId}}"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-1"></div>
+  <div ng-repeat="story in showcase">
+    <div class="col-md-3">
+      <div class="topStoryframe">
+        <a href="/#/singleStory/{{story.storyId}}"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>
+      </div>
     </div>
-    <div class="col-md-1"></div>
+  </div>
 </div>
