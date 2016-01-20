@@ -219,7 +219,48 @@ body {
 .creationFrameDiv {
   margin-left: 10px;
   margin-right: 10px;
-  border: 2px solid black;
   padding: 8px;
 }
 
+.no-padding {
+  padding: 0px !important;
+}
+
+paper-header-panel {
+  height: 620px;
+  margin-left: auto;
+  margin-right: auto;
+  margin: 12px;
+  @apply(--shadow-elevation-2dp);
+}
+
+paper-card{
+  margin: 5px;
+}
+
+.paper-header {
+  background-color: blue;
+  color: #fff;
+  height: 60px;
+  line-height: 60px;
+  font-size: 32px;
+  font-family: helvetica;
+  padding-left: 10px;
+}
+
+paper-card {
+  font-family: helvetica;
+  padding: 5px;
+  width: 100%;
+  margin: 0px;
+}
+
+.content {
+  background-color: white;
+  height: 554px;
+  padding: 20px;
+}
+
+.blue {
+  background-color: var(--paper-light-blue-500);
+}
