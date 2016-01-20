@@ -1,6 +1,6 @@
 body { 
   padding-top: 65px; 
-  background-color: #bbbbbb; 
+  background-color: #bbb;
 }
 
 .clean {
@@ -8,7 +8,29 @@ body {
 }
 
 .navbar {
-  background-color:darkslategray;
+  background-color: #4285F4;
+  border: none !important;
+}
+
+.nav-header-text {
+  font-size: 34px;
+}
+
+.nav-header-text:hover {
+  color: #ddd !important;
+}
+
+.nav-link-text {
+  font-size: 24px;
+}
+
+.nav-link-text:hover {
+  background-color: #fff !important;
+  color: #4285F4 !important;
+}
+
+.nav-text-color {
+  color: #fff !important;
 }
 
 .splashcontent {
