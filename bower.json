@@ -20,6 +20,10 @@
     "angular": "~1.4.8",
     "angular-bootstrap": "~0.14.3",
     "angular-ui-router": "~0.2.15",
-    "angular-local-storage": "~0.2.3"
+    "angular-local-storage": "~0.2.3",
+    "polymer": "Polymer/polymer#^0.5",
+    "paper-header-panel": "PolymerElements/paper-header-panel#~1.1.2",
+    "paper-card": "PolymerElements/paper-card#~1.0.9",
+    "paper-spinner": "PolymerElements/paper-spinner#~1.1.0"
   }
 }
