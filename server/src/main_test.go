@@ -2,10 +2,17 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"testing"
 
 	"gopkg.in/mgo.v2/bson"
+)
+
+var (
+	BobTheTester User
 )
 
 func TestDatabase(t *testing.T) {
@@ -85,18 +92,6 @@ func TestBasicServer(t *testing.T) {
 
 }
 
-func jsonPost(url, jsonStr string) (*http.Response, error) {
-	jsonBytes := []byte(jsonStr)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	return client.Do(req)
-}
-
 func TestSignup(t *testing.T) {
 	t.Log("Testing signup...")
 	url := "http://localhost:8020/api/users/signup"
@@ -129,7 +124,7 @@ func TestSignup(t *testing.T) {
 	collection := db.C("users")
 
 	result := User{}
-	q := bson.M{"username": "Bob"}
+	q := bson.M{"username": "BobTheTester"}
 	err = collection.Find(q).One(&result)
 	if err != nil {
 		t.Errorf("Failed to find test user in the database\n%v\n", err)
@@ -157,6 +152,15 @@ func TestSignin(t *testing.T) {
 	} else {
 		t.Log("Bob totally signed in!!!")
 	}
+
+	// Remember BobTheTester for future tests.
+	err = json.NewDecoder(res.Body).Decode(&BobTheTester)
+	if err != nil {
+		content, _ := ioutil.ReadAll(res.Body)
+		t.Logf("res.Body/content:\n%#v\n", string(content))
+		t.Errorf("Invalid JSON object in response body \n%v\n", err)
+	}
+
 	res.Body.Close()
 
 	jsonStr = `{
@@ -230,6 +234,53 @@ func TestStoryCreation(t *testing.T) {
 	}
 	res.Body.Close()
 
+	jsonStr = `{
+    "title": "When Bob meets Dwight",
+    "username": "BobTheTester",
+    "frame1": 0,
+    "frame2": 1,
+    "frame3": 2,
+    "frames": [
+        {
+            "player": {},
+            "playerdiv": "player1",
+            "videoid": "lPLkMbGgjHM",
+            "start": 0,
+            "end": 9
+        },
+        {
+            "player": {},
+            "playerdiv": "player2",
+            "videoid": "JmDheMx_bGA",
+            "start": 0,
+            "end": 4
+        },
+        {
+            "player": {},
+            "playerdiv": "player3",
+            "videoid": "ulkAfiT3KxU",
+            "start": 8,
+            "end": 23
+        }
+    ]
+}`
+
+	res, err = jsonPost(url, jsonStr)
+	if err != nil {
+		t.Errorf(
+			"Failed to send request to %v\n%v\n",
+			url, err,
+		)
+	} else if res.StatusCode != expectedStatus {
+		t.Errorf(
+			"Expected status code %v, got %v\n",
+			expectedStatus, res.StatusCode,
+		)
+	} else {
+		t.Log("Successfully created story!")
+	}
+	res.Body.Close()
+
 	t.Log("Testing story creation with missing properties...")
 
 	jsonStr = `{
@@ -284,7 +335,7 @@ func TestStoryFetch(t *testing.T) {
 	err = collection.Find(q).All(&result)
 	if err != nil {
 		t.Errorf(
-			"Failed to remove test story in the database\n%v\n",
+			"Failed to find test story in the database\n%v\n",
 			err,
 		)
 	}
@@ -306,8 +357,6 @@ func TestStoryFetch(t *testing.T) {
 		}
 	}
 	id := lastResult.Id
-	t.Log(id)
-	t.Log(id.Hex())
 
 	url := concat("http://localhost:8020/api/stories/story/", id.Hex())
 	t.Log(url)
@@ -328,28 +377,153 @@ func TestStoryFetch(t *testing.T) {
 		t.Logf("Response received from %v\n", url)
 	}
 
-	// story := Story{}
-	// decoder := json.NewDecoder(res.Body)
-	// err = decoder.Decode(&story)
-	// if err != nil {
-	// 	fmt.Printf("Failed to decode JSON object in the request\n%v\n", err)
-	// }
-	// t.Logf("%#v\n", story)
-	// t.Logf("%#v\n", story.Id.Hex())
-
 	res.Body.Close()
+}
 
-	// // Remove the story which was created by the test.
-	// t.Log("Removing test stories from the database...")
-	// // t.Log("lastResult.Id", lastResult.Id)
-	// q = bson.M{"_id": id}
-	// err = collection.Remove(q)
-	// if err != nil {
-	// 	t.Errorf(
-	// 		"Failed to remove test story from the database\n%v\n",
-	// 		err,
-	// 	)
-	// }
+func TestLibraryFetch(t *testing.T) {
+	t.Log("Testing user library fetching...")
+
+	url := "http://localhost:8020/api/stories/library"
+
+	// t.Logf("user.Id.Hex(): %v\n", user.Id.Hex())
+	t.Logf("Sending GET request to\n%v...\n", url)
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		t.Errorf(
+			"Failed to send request to %v\n%v\n",
+			url, err,
+		)
+	}
+	// t.Logf("user.Token: %v\n", user.Token)
+	req.Header.Set("token", BobTheTester.Token)
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		t.Errorf(
+			"Failed to send request to %v\n%v\n",
+			url, err,
+		)
+	}
+	defer res.Body.Close()
+
+	stories := []Story{}
+
+	err = json.NewDecoder(res.Body).Decode(&stories)
+	if err != nil {
+		t.Errorf("Invalid JSON object in response body \n%v\n", err)
+	}
+
+	if len(stories) <= 1 {
+		t.Errorf(
+			"Failed to find test stories in the database\n",
+		)
+		return
+	}
+
+	for _, story := range stories {
+		url := concat("http://localhost:8020/api/stories/story/", story.Id.Hex())
+
+		expectedStatus := http.StatusOK
+		res, err := http.Get(url)
+		if err != nil {
+			t.Errorf(
+				"Failed to send request to %v\n%v\n",
+				url, err,
+			)
+		} else if res.StatusCode != expectedStatus {
+			t.Errorf(
+				"Expected status code %v, got %v\n",
+				expectedStatus, res.StatusCode,
+			)
+		} else {
+			t.Logf("Response received from %v\n", url)
+		}
+
+	}
+}
+
+// Test GET requests to 'api/stories/showcase'.
+func TestShowCase(t *testing.T) {
+	t.Log("Testing showcase fetching...")
+
+	// Send GET request to 'api/stories/showcase'.
+	showCaseUrl := "http://localhost:8020/api/stories/showcase"
+	t.Logf("Sending GET request to\n%v...\n", showCaseUrl)
+
+	res, err := getRequest(showCaseUrl)
+	if err != nil {
+		t.Errorf("%v\n", err)
+	}
+	defer res.Body.Close()
+
+	// Pull the JSON object out of the response body.
+	stories := []Story{}
+	err = json.NewDecoder(res.Body).Decode(&stories)
+	if err != nil {
+		t.Errorf("Invalid JSON object in response body \n%v\n", err)
+	}
+
+	// The response body should contain 3 stories.
+	if len(stories) < 3 {
+		t.Errorf("Received only %d stories\n", len(stories))
+		return
+	}
+
+	// Make sure the received stories can be retrieved
+	//   from a GET request to 'api/stories/story/<story_id>'
+	for i, story := range stories {
+
+		// Check whether 2 copies of the same story were received.
+		for otherI, otherStory := range stories {
+			if i == otherI {
+				continue
+			}
+			if story.Id == otherStory.Id {
+				t.Errorf(
+					"Received duplicate stories:\n%v\n%v\n",
+					story.Title, otherStory.Title,
+				)
+			}
+		}
+
+		// Send a GET request to 'api/stories/story/<story_id>'.
+		url := concat(
+			"http://localhost:8020/api/stories/story/", story.Id.Hex(),
+		)
+
+		expectedStatus := http.StatusOK
+		res, err := http.Get(url)
+		if err != nil {
+			t.Errorf("Failed to send request to %v\n%v\n", url, err)
+		} else if res.StatusCode != expectedStatus {
+			t.Errorf(
+				"Expected status code %v, got %v\n",
+				expectedStatus, res.StatusCode,
+			)
+		} else {
+			t.Logf("Response received from %v\n", url)
+		}
+
+		// Convert the JSON object in the response body to a story type.
+		resStory := Story{}
+		err = json.NewDecoder(res.Body).Decode(&resStory)
+		if err != nil {
+			t.Errorf("Invalid JSON object in response body \n%v\n", err)
+		}
+		res.Body.Close()
+
+		// Make sure the Title property in the 'api/stories/story' response
+		//   matches the one for the story in the
+		//   'api/stories/showcase' response.
+		if resStory.Title != story.Title {
+			t.Errorf(
+				"Data received from %v differs from data received from %v\n",
+				showCaseUrl, url,
+			)
+		}
+
+	}
 }
 
 func TestCleanup(t *testing.T) {
@@ -370,19 +544,51 @@ func TestCleanup(t *testing.T) {
 	q := bson.M{"username": "BobTheTester"}
 	_, err = collection.RemoveAll(q)
 	if err != nil {
-		t.Errorf(
-			"Failed to remove test story from the database\n%v\n",
-			err,
-		)
+		t.Errorf("Failed to remove test story from the database\n%v\n", err)
 	}
 
-	t.Log("Killing BobTheTester...")
-	collection = db.C("users")
-	q = bson.M{"username": "BobTheTester"}
-
 	// Remove BobTheTester from the database.
-	_, err = collection.RemoveAll(q)
+	t.Log("Killing BobTheTester...")
+
+	_, err = usersCollection.RemoveAll(bson.M{"username": "BobTheTester"})
 	if err != nil {
 		t.Errorf("Failed to remove test users from the database\n%v\n", err)
 	}
+
+	_, err = db.C("testUsers").RemoveAll(bson.M{"username": "BobTheTester"})
+	if err != nil {
+		t.Errorf("Failed to remove test users from the database\n%v\n", err)
+	}
+}
+
+func jsonPost(url, jsonStr string) (*http.Response, error) {
+	jsonBytes := []byte(jsonStr)
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("token", BobTheTester.Token)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	return client.Do(req)
+}
+
+func getRequest(url string) (*http.Response, error) {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to send request to %v\n%v\n", url, err)
+	}
+
+	req.Header.Set("token", BobTheTester.Token)
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to send request to %v\n%v\n", url, err)
+	}
+
+	return res, err
 }

@@ -16,11 +16,22 @@ $ /bin/server.exe (for Windows)
 
 Now visit [localhost:8020](http://localhost:8020/)
 
+## Testing  
+
+Start server:  
+```
+$ storyboard/server/serve
+```
+
+Then in another Terminal window:  
+```
+$ cd storyboard/server/src
+$ go test -v
+```
+
 ### Architecture Overview
 
 The tech stack is MongoDB, Angular, and Go.
-
-
 
 #Release Notes
 ##### 1/15/2016 - alpha v0.0.1
