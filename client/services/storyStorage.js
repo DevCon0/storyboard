@@ -55,8 +55,9 @@ angular.module('storyBoard.storyStorageService', [])
       })
   };
 
-  storyStorage.editStory = function (story,token) {
-    console.log('getStory called with', story);
+  storyStorage.editStory = function (story, storyId, token) {
+    story['storyId'] = storyId;
+    console.log('editStory called with', story);
     return $http({
       method: 'PUT',
       url: '/api/stories/story',

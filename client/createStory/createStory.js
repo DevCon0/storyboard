@@ -1,16 +1,15 @@
 angular.module('storyBoard.createStory', [])
 
-.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window, Auth) {
+.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window, Auth, $stateParams) {
 
   if ( ! (Auth.isAuth()) ) {
     $state.go('signin')
   }
 
   $scope.user = localStorageService.get('username');
-
-
-  if (localStorageService.get('editStory')) {
-    var editStory = localStorageService.get('editStory');
+  var wasPassed = Object.keys($stateParams.story).length !== 0;
+  if (wasPassed) {
+    var editStory = $stateParams.story;
     $scope.storyTitle = editStory.title;
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
@@ -90,7 +89,6 @@ angular.module('storyBoard.createStory', [])
   $scope.saveStory = function(){
     var story = {
       title: $scope.storyTitle,
-      storyId: editStory.storyId,
       description: $scope.storyDescription,
       thumbnail: $scope.storyThumbnailUrl,
       username: $scope.user,
@@ -122,16 +120,16 @@ angular.module('storyBoard.createStory', [])
         }
       ]
     }
-    if(localStorageService.get('editStory')===null){
-      StoryStorage.saveStory(story, localStorageService.get('sessiontoken'))
-      .then(function(data){
-        $state.go('dashboard');
-      });
-    } else {
-      StoryStorage.editStory(story, localStorageService.get('sessiontoken'))
-      .then(function (data) {
-        $state.go('dashboard');
+    if (wasPassed) {
+      StoryStorage.editStory(story, editStory.storyId, localStorageService.get('sessiontoken'))
+        .then(function (data) {
+          $state.go('dashboard');
       })
+    } else {
+      StoryStorage.saveStory(story, localStorageService.get('sessiontoken'))
+        .then(function (data) {
+          $state.go('dashboard');
+        });
     }
   }
 
