@@ -70,6 +70,11 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusBadRequest
 	}
 
+	if len(story.Frames) <= 0 {
+		return fmt.Errorf("Incomplete JSON data\n"),
+			http.StatusBadRequest
+	}
+
 	// fmt.Printf("story from request: %v\n", story)
 
 	// Set mongo values "_id" and "created_at" (cf. 'schema.go').
