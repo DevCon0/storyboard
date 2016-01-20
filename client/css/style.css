@@ -261,6 +261,10 @@ paper-card {
   padding: 20px;
 }
 
+paper-spinner.blue{
+  --paper-spinner-color: var(--google-blue-500);
+}
+
 @media screen and (max-width: 992px) {
   .content {
     height: 2000px;

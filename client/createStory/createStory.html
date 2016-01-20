@@ -43,6 +43,7 @@
           <input type="text" ng-model="frame1EndTime" class="form-control" id="endTime1" placeholder="0">
         </div>
         <button type="submit" class="btn btn-success">Preview Act</button>
+        <span><paper-spinner-lite ng-if="showSpinner1" class="blue" active></paper-spinner-lite></span>
       </form>
       <div class="col-md-12 clean"></div>
       <div id="frame1Preview" class="col-md-12"></div>
@@ -64,6 +65,7 @@
           <input type="text" ng-model="frame2EndTime" class="form-control" id="endTime2" placeholder="0">
         </div>
         <button type="submit" class="btn btn-success">Preview Act</button>
+        <span><paper-spinner-lite ng-if="showSpinner2" class="blue" active></paper-spinner-lite></span>
       </form>
       <div class="col-md-12 clean"></div>
       <div id="frame2Preview" class="col-md-12"></div>
@@ -85,6 +87,7 @@
           <input type="text" ng-model="frame3EndTime" class="form-control" id="endTime3" placeholder="0">
         </div>
         <button type="submit" class="btn btn-success">Preview Act</button>
+        <span><paper-spinner-lite ng-if="showSpinner3" class="blue" active></paper-spinner-lite></span>
       </form>
       <div class="col-md-12 clean"></div>
       <div id="frame3Preview" class="col-md-12"></div>
