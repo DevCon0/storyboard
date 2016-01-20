@@ -1,21 +1,43 @@
 angular.module('storyBoard.createStory', [])
 
-.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window, Auth) {
+.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window, Auth, $stateParams) {
 
   if ( ! (Auth.isAuth()) ) {
     $state.go('signin')
   }
 
   $scope.user = localStorageService.get('username');
+  var wasPassed = Object.keys($stateParams.story).length !== 0;
+  if (wasPassed) {
+    var editStory = $stateParams.story;
+    $scope.storyTitle = editStory.title;
+    $scope.storyDescription = editStory.description;
+    $scope.storyThumbnailUrl = editStory.thumbnail;
 
-  $scope.storyTitle = null;
-  $scope.storyDescription = null;
-  $scope.storyThumbnailUrl = null;
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[0].videoId;
+    $scope.frame1StartTime = editStory.frames[0].start;
+    $scope.frame1EndTime = editStory.frames[0].end;
+    $scope.showSpinner1 = false;
 
-  $scope.frame1YoutubeUrl = null;
-  $scope.frame1StartTime = null;
-  $scope.frame1EndTime = null;
-  $scope.showSpinner1 = false;
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[1].videoId;
+    $scope.frame2StartTime = editStory.frames[1].start;
+    $scope.frame2EndTime = editStory.frames[1].end;
+    $scope.showSpinner2 = false;
+
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[2].videoId;;
+    $scope.frame3StartTime = editStory.frames[2].start;
+    $scope.frame3EndTime = editStory.frames[2].end;
+    $scope.showSpinner3 = false;
+
+  } else{
+    $scope.storyTitle = null;
+    $scope.storyDescription = null;
+    $scope.storyThumbnailUrl = null;
+
+    $scope.frame1YoutubeUrl = null;
+   $scope.frame1StartTime = null;
+   $scope.frame1EndTime = null;
+    $scope.showSpinner1 = false;
 
   $scope.frame2YoutubeUrl = null;
   $scope.frame2StartTime = null;
@@ -26,6 +48,7 @@ angular.module('storyBoard.createStory', [])
   $scope.frame3StartTime = null;
   $scope.frame3EndTime = null;
   $scope.showSpinner3 = false;
+}
 
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
@@ -97,11 +120,17 @@ angular.module('storyBoard.createStory', [])
         }
       ]
     }
-
-    StoryStorage.saveStory(story, localStorageService.get('sessiontoken'))
-    .then(function(data){
-      $state.go('dashboard');
-    });
+    if (wasPassed) {
+      StoryStorage.editStory(story, editStory.storyId, localStorageService.get('sessiontoken'))
+        .then(function (data) {
+          $state.go('dashboard');
+      })
+    } else {
+      StoryStorage.saveStory(story, localStorageService.get('sessiontoken'))
+        .then(function (data) {
+          $state.go('dashboard');
+        });
+    }
   }
 
   $scope.previewStory = function () {

@@ -1,6 +1,6 @@
 angular.module('storyBoard.dashboard', [])
 
-.controller('dashboardCtrl', function ($scope, $state, StoryStorage, localStorageService, Auth) {
+.controller('dashboardCtrl', function ($scope, $state, StoryStorage, localStorageService, Auth, $stateParams) {
 
   if ( ! (Auth.isAuth()) ) {
     $state.go('signin')
@@ -10,6 +10,10 @@ angular.module('storyBoard.dashboard', [])
 
   $scope.editStory = function (storyId) {
     console.log('editStory function (controller) run with', storyId);
+    StoryStorage.getStory(storyId)
+    .then(function (resp) {
+      $state.go('createStory', { story: resp.data });
+    })
 
   }
 
