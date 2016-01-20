@@ -20,7 +20,7 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 	// => "/$PWD/client/bower_components/mithril/mithril.min.js"
 	title := concat(rootDir, slash, "client", slash, fileRequested)
 
-	fmt.Printf("Serving file:\n    %q\n", title)
+	// fmt.Printf("Serving file:\n    %q\n", title)
 
 	http.ServeFile(w, r, title)
 }
