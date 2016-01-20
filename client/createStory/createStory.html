@@ -1,10 +1,9 @@
-<div style="display: inline-block; margin: 0px auto;">
 <paper-header-panel>
 <div class="paper-header blue">{{user}}, create your own story!<span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">Pre-populate inputs</button></span></div>
 <!-- <h1>{{user}}, create your own story!<span><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">Pre-populate inputs</button></span></h1> -->
 <div class="content">
 <div class="row">
-  <div class="creationFrameDiv col-md-2">
+  <div class="col-md-offset-1 col-md-3">
     <paper-card heading="Story Info" elevation="3">
       <form>
           <div class="form-group">
@@ -29,7 +28,7 @@
     </paper-card>
   </div>
   <div class="creationFrameDiv col-md-2">
-    <paper-card heading="Act I" elevation="2">
+    <paper-card heading="Act I" elevation="3">
       <form ng-submit="previewFrame(1)">
         <div class="form-group">
           <label for="youtubeUrl1">Youtube URL</label>
@@ -50,7 +49,7 @@
     </paper-card>
   </div>
   <div class="creationFrameDiv col-md-2">
-    <paper-card heading="Act II" elevation="2">
+    <paper-card heading="Act II" elevation="3">
       <form ng-submit="previewFrame(2)">
         <div class="form-group">
           <label for="youtubeUrl2">Youtube URL</label>
@@ -71,7 +70,7 @@
     </paper-card>
   </div>
   <div class="creationFrameDiv col-md-2">
-    <paper-card heading="Act III" elevation="2">
+    <paper-card heading="Act III" elevation="3">
       <form ng-submit="previewFrame(3)">
         <div class="form-group">
           <label for="youtubeUrl3">Youtube URL</label>
@@ -94,7 +93,7 @@
 </div>
 </div> <!--content-->
 </paper-header-panel>
-</div>
+
 <div id="myModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <!-- Modal Content-->
