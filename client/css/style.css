@@ -278,3 +278,11 @@ paper-spinner.blue{
 .blue {
   background-color: var(--paper-light-blue-500);
 }
+
+.create-page-btn {
+  width: 155px;
+}
+
+.icon-margin-left {
+  margin-left: 5px;
+}
