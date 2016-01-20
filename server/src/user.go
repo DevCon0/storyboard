@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -253,6 +254,9 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Create a new, empty token.
 	token := jwt.New(jwt.SigningMethodHS256)
 
+	// Erase the password from the User struct for enhanced security.
+	u.Password = ""
+
 	// Insert claims inside the token.
 	token.Claims["user"] = u
 	token.Claims["iat"] = time.Now().Unix()
@@ -280,13 +284,65 @@ func (u *User) genToken(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusInternalServerError
 	}
 
-	// Erase the password from the User struct for enhanced security.
-	u.Password = ""
-
 	return nil, http.StatusOK
 }
 
-// Yeah, this is basically just a test dummy
+// GET request to 'api/users/profile/<username>'.
+// Respond with the full data for all of the stories
+//   created by the user.
+//   Find the user's stories by using the username in the url.
 func loadProfile(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Make sure that this is a GET request.
+	if err, status := verifyMethod("GET", w, r); err != nil {
+		return err, status
+	}
+
+	paths := strings.Split(r.URL.Path, "/")
+	if len(paths) < 5 {
+		return fmt.Errorf("No user specified\n"),
+			http.StatusBadRequest
+	}
+
+	// Get user info from the token in the header.
+	user := User{}
+	user.Username = paths[4]
+
+	// Get user info from the database, using the token in the header.
+	err := usersCollection.Find(bson.M{"username": user.Username}).One(&user)
+	if err != nil {
+		return fmt.Errorf("Failed to find user in the database\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// Convert the story id's from strings to bson object id's.
+	storyIds := make([]bson.ObjectId, len(user.Stories))
+	for i, storyId := range user.Stories {
+		storyIds[i] = bson.ObjectIdHex(storyId)
+	}
+
+	// Find full story data for data for all of the user's stories.
+	stories := []Story{}
+	err = storiesCollection.Find(bson.M{
+		"_id": bson.M{"$in": storyIds},
+	}).All(&stories)
+	if err != nil {
+		return fmt.Errorf("Failed to find user's stories\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// fmt.Printf("%#v\n", stories)
+
+	// Stringify the story data array into JSON format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return err,
+			http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
 	return nil, http.StatusOK
 }
