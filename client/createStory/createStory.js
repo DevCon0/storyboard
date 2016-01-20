@@ -15,14 +15,17 @@ angular.module('storyBoard.createStory', [])
   $scope.frame1YoutubeUrl = null;
   $scope.frame1StartTime = null;
   $scope.frame1EndTime = null;
+  $scope.showSpinner1 = false;
 
   $scope.frame2YoutubeUrl = null;
   $scope.frame2StartTime = null;
   $scope.frame2EndTime = null;
+  $scope.showSpinner2 = false;
 
   $scope.frame3YoutubeUrl = null;
   $scope.frame3StartTime = null;
   $scope.frame3EndTime = null;
+  $scope.showSpinner3 = false;
 
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
@@ -156,6 +159,7 @@ angular.module('storyBoard.createStory', [])
         frameEndTime = $scope.frame1EndTime;
         frameDivId = 'frame1Preview';
         framePlayerName = 'frame1';
+        $scope.showSpinner1 = true;
         break;
       case 2:
         frameYoutubeUrl = $scope.frame2YoutubeUrl;
@@ -163,6 +167,7 @@ angular.module('storyBoard.createStory', [])
         frameEndTime = $scope.frame2EndTime;
         frameDivId = 'frame2Preview';
         framePlayerName = 'frame2';
+        $scope.showSpinner2 = true;
         break;
       case 3:
         frameYoutubeUrl = $scope.frame3YoutubeUrl;
@@ -170,6 +175,7 @@ angular.module('storyBoard.createStory', [])
         frameEndTime = $scope.frame3EndTime;
         frameDivId = 'frame3Preview';
         framePlayerName = 'frame3';
+        $scope.showSpinner3 = true;
         break;
     }
 
@@ -204,6 +210,25 @@ angular.module('storyBoard.createStory', [])
           end: end
         },
         events: {
+          'onReady': function(){
+            switch(framePlayerName){
+              case 'frame1':
+                $scope.$apply(function () {
+                        $scope.showSpinner1 = false;
+                });
+              break;
+              case 'frame2':
+                $scope.$apply(function () {
+                        $scope.showSpinner2 = false;
+                });
+              break;
+              case 'frame3':
+                $scope.$apply(function () {
+                        $scope.showSpinner3 = false;
+                });
+              break;
+            }
+          },
           'onStateChange': function(event){
             //TODO: move into shared Youtube functionality service
             switch(event.data){

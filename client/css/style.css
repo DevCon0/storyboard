@@ -1,6 +1,6 @@
 body { 
   padding-top: 65px; 
-  background-color: #bbbbbb; 
+  background-color: #bbb;
 }
 
 .clean {
@@ -8,7 +8,29 @@ body {
 }
 
 .navbar {
-  background-color:darkslategray;
+  background-color: #4285F4;
+  border: none !important;
+}
+
+.nav-header-text {
+  font-size: 34px;
+}
+
+.nav-header-text:hover {
+  color: #ddd !important;
+}
+
+.nav-link-text {
+  font-size: 24px;
+}
+
+.nav-link-text:hover {
+  background-color: #fff !important;
+  color: #4285F4 !important;
+}
+
+.nav-text-color {
+  color: #fff !important;
 }
 
 .splashcontent {
@@ -44,13 +66,13 @@ body {
 }
 
 .topStoryframe {
-  float: left;
-  height: 300px;
+  /*float: left;*/
+  height: 250px;
   overflow: hidden;
   position: relative;
-  width: 350px;
+  width: 250px;
   box-shadow: 10px 10px 5px #888888 ;
-  margin: 15px;
+/*  margin: 15px;*/
 }
 
 .topStoryframe a {
@@ -60,8 +82,10 @@ body {
 }
 
 .topStoryframe img {
-  width:350px;
-  height:auto;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   margin:auto;
   border:solid;
   border-width: 5px;
@@ -78,7 +102,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  top: 220px;
+  top: 120px;
   transition-property: top;
   transition-duration: 0.2s;  
   width: 100%;  
@@ -132,13 +156,13 @@ body {
 }
 
 .libraryStoryFrame img {
-  width:100%;
-  height:auto;
-  margin:auto;
-  border:solid;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  border: solid;
   border-width: 5px;
-  border-color:black;
-  border-radius:5px;
+  border-color: black;
+  border-radius: 5px;
 }
 
 .libraryStoryFrame a .caption {
@@ -195,7 +219,62 @@ body {
 .creationFrameDiv {
   margin-left: 10px;
   margin-right: 10px;
-  border: 2px solid black;
-  padding: 8px;
+  margin-bottom: 10px;
+  padding: 0px 8px;
 }
 
+.no-padding {
+  padding: 0px !important;
+}
+
+paper-header-panel {
+  min-height: 620px;
+  /*overflow: hidden;*/
+  margin-left: auto;
+  margin-right: auto;
+  margin: 12px;
+  background-color: #fff;
+  @apply(--shadow-elevation-2dp);
+}
+
+.paper-header {
+  background-color: blue;
+  color: #fff;
+  height: 60px;
+  line-height: 60px;
+  font-size: 32px;
+  font-family: helvetica;
+  padding-left: 10px;
+}
+
+paper-card {
+  font-family: helvetica;
+  background-color: #ddd !important;
+  padding: 5px;
+  width: 100%;
+  margin: 0px;
+}
+
+.content {
+  background-color: white;
+  height: 554px;
+  padding: 20px;
+}
+
+paper-spinner.blue{
+  --paper-spinner-color: var(--google-blue-500);
+}
+
+@media screen and (max-width: 992px) {
+  .content {
+    height: 2000px;
+  }
+
+  paper-card {
+    margin: 10px 0px;
+  }
+}
+
+.blue {
+  background-color: var(--paper-light-blue-500);
+}
