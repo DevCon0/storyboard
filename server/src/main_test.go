@@ -12,7 +12,8 @@ import (
 )
 
 var (
-	BobTheTester User
+	BobTheTester        User
+	BobTheTesterStories []Story
 )
 
 func TestDatabase(t *testing.T) {
@@ -102,7 +103,7 @@ func TestSignup(t *testing.T) {
 		"password": "Sue"
 	}`
 
-	res, err := jsonPost(url, jsonStr)
+	res, err := jsonRequest("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -141,7 +142,7 @@ func TestSignin(t *testing.T) {
 		"password": "Sue"
 	}`
 
-	res, err := jsonPost(url, jsonStr)
+	res, err := jsonRequest("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -168,7 +169,7 @@ func TestSignin(t *testing.T) {
 		"password": "George"
 	}`
 
-	res, err = jsonPost(url, jsonStr)
+	res, err = jsonRequest("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -218,7 +219,7 @@ func TestStoryCreation(t *testing.T) {
 }`
 
 	expectedStatus := http.StatusCreated
-	res, err := jsonPost(url, jsonStr)
+	res, err := jsonRequest("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -265,7 +266,7 @@ func TestStoryCreation(t *testing.T) {
     ]
 }`
 
-	res, err = jsonPost(url, jsonStr)
+	res, err = jsonRequest("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -292,7 +293,7 @@ func TestStoryCreation(t *testing.T) {
     }`
 
 	expectedStatus = http.StatusBadRequest
-	res, err = jsonPost(url, jsonStr)
+	res, err = jsonRequest("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -388,40 +389,26 @@ func TestLibraryFetch(t *testing.T) {
 	// t.Logf("user.Id.Hex(): %v\n", user.Id.Hex())
 	t.Logf("Sending GET request to\n%v...\n", url)
 
-	req, err := http.NewRequest("GET", url, nil)
+	res, err := request("GET", url)
 	if err != nil {
-		t.Errorf(
-			"Failed to send request to %v\n%v\n",
-			url, err,
-		)
+		t.Errorf("%v\n", err)
 	}
-	// t.Logf("user.Token: %v\n", user.Token)
-	req.Header.Set("token", BobTheTester.Token)
-	client := &http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		t.Errorf(
-			"Failed to send request to %v\n%v\n",
-			url, err,
-		)
-	}
-	defer res.Body.Close()
 
-	stories := []Story{}
-
-	err = json.NewDecoder(res.Body).Decode(&stories)
+	err = json.NewDecoder(res.Body).Decode(&BobTheTesterStories)
 	if err != nil {
 		t.Errorf("Invalid JSON object in response body \n%v\n", err)
 	}
 
-	if len(stories) <= 1 {
+	res.Body.Close()
+
+	if len(BobTheTesterStories) <= 1 {
 		t.Errorf(
 			"Failed to find test stories in the database\n",
 		)
 		return
 	}
 
-	for _, story := range stories {
+	for _, story := range BobTheTesterStories {
 		url := concat("http://localhost:8020/api/stories/story/", story.Id.Hex())
 
 		expectedStatus := http.StatusOK
@@ -526,7 +513,62 @@ func TestShowCase(t *testing.T) {
 	}
 }
 
-func TestRemoval(t *testing.T) {
+func TestEditStory(t *testing.T) {
+	t.Log("Testing story editing...")
+
+	// Find the test user's info in the database.
+	t.Log("Testing database connection...")
+	session, err := initDb()
+	if err != nil {
+		t.Errorf("Failed to connect to the database\n%v\n", err)
+	}
+
+	defer session.Close()
+
+	t.Log("Looking for BobTheTester...")
+	err = usersCollection.Find(
+		bson.M{"username": "BobTheTester"},
+	).One(&BobTheTester)
+	if err != nil {
+		t.Errorf("BobTheTester is invisible\n%v\n", err)
+	}
+
+	if len(BobTheTester.Stories) <= 0 {
+		t.Errorf("BobTheTester has not created any stories, but he has!\n")
+	}
+
+	// Remove the story which was created by the test.
+	t.Log("Trying to edit BobTheTester's stories...")
+	// totalStories := len(BobTheTester.Stories)
+	for _, story := range BobTheTesterStories {
+		story.Title = concat(story.Title, " (Edited)")
+		js, err := json.Marshal(story)
+		if err != nil {
+			t.Errorf("Failed to stringify %v\n%v\n", story, err)
+		}
+
+		url := "http://localhost:8020/api/stories/story"
+		expectedStatus := http.StatusOK
+
+		res, err := jsonRequest("PUT", url, string(js))
+		if err != nil {
+			t.Errorf("%v\n", err)
+		} else if res.StatusCode != expectedStatus {
+			t.Errorf(
+				"Expected status code %v, got %v\n",
+				expectedStatus, res.StatusCode,
+			)
+		} else {
+			t.Logf("Response received\n")
+		}
+
+		res.Body.Close()
+	}
+}
+
+func TestRemoveStory(t *testing.T) {
+	t.Log("Testing story removal...")
+
 	// Find the test user's info in the database.
 	t.Log("Testing database connection...")
 	session, err := initDb()
@@ -614,10 +656,10 @@ func TestCleanup(t *testing.T) {
 	}
 }
 
-func jsonPost(url, jsonStr string) (*http.Response, error) {
+func jsonRequest(method, url, jsonStr string) (*http.Response, error) {
 	jsonBytes := []byte(jsonStr)
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonBytes))
 	if err != nil {
 		return nil, err
 	}
