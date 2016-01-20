@@ -237,7 +237,7 @@ paper-header-panel {
   @apply(--shadow-elevation-2dp);
 }
 
-.paper-header {
+.create-story-paper-header {
   background-color: blue;
   color: #fff;
   height: 60px;
