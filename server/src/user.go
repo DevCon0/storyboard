@@ -102,12 +102,12 @@ func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	fmt.Printf("Signing in %v...\n", user.Username)
 
-	if err, status = user.verifyPassword(w, r); err != nil {
+	if err, status = user.verifyPassword(); err != nil {
 		return err, status
 	}
 
 	// Make a response object to send to the client.
-	if err, status = user.genToken(w, r); err != nil {
+	if err, status = user.genToken(); err != nil {
 		return err, status
 	}
 
@@ -192,7 +192,7 @@ func parseBody(w http.ResponseWriter, r *http.Request) (User, error, int) {
 
 // Return a bool whether a user's token is valid.
 // If not, send an http error.
-func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) (error, int) {
+func (u *User) verifyToken() (error, int) {
 	// Parse the token with the tokenSecret.
 	token, err := jwt.Parse(u.Token, func(token *jwt.Token) (interface{}, error) {
 		return tokenSecret, nil
@@ -209,7 +209,7 @@ func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) (error, int) 
 }
 
 // Return a bool whether the password submitted for a user is correct.
-func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) (error, int) {
+func (u *User) verifyPassword() (error, int) {
 	// Make sure required fields are filled out.
 	if len(u.Password) <= 0 {
 		return fmt.Errorf("Password required"),
@@ -250,7 +250,7 @@ func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) (error, in
 //   update the token in the database,
 //   remove the password from the *User struct.
 // Return a bool indicating whether an error occurred.
-func (u *User) genToken(w http.ResponseWriter, r *http.Request) (error, int) {
+func (u *User) genToken() (error, int) {
 	// Create a new, empty token.
 	token := jwt.New(jwt.SigningMethodHS256)
 

@@ -37,6 +37,6 @@ type Frame struct {
 	Player    struct{} `json:"player"`
 	PlayerDiv string   `json:"playerDiv"`
 	VideoId   string   `json:"videoId"`
-	Start     int      `json:"start"`
-	End       int      `json:"end"`
+	Start     float32  `json:"start"`
+	End       float32  `json:"end"`
 }
