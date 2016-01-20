@@ -3,28 +3,29 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
 
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 var (
 	BobTheTester        User
 	BobTheTesterStories []Story
+	session             *mgo.Session
 )
 
+// Test basic database insertion, retrieval, and removal.
 func TestDatabase(t *testing.T) {
 	t.Log("Testing database connection...")
-	session, err := initDb()
+	var err error
+	session, err = initDb()
 	if err != nil {
 		t.Errorf("Failed to connect to the database\n%v\n", err)
 	}
-
-	defer session.Close()
 
 	t.Log("Testing database insertion...")
 
@@ -56,20 +57,17 @@ func TestDatabase(t *testing.T) {
 	t.Log("Testing database retrieval...")
 
 	result := []User{}
-	q := bson.M{"firstname": "Alice"}
-	err = collection.Find(q).All(&result)
-	if err != nil {
+	err = collection.Find(bson.M{"username": "AliceRex"}).All(&result)
+	if err != nil || len(result) == 0 {
 		t.Errorf("Failed to find test user in the database\n%v\n", err)
 	}
 
-	q = bson.M{}
-	err = collection.Find(q).All(&result)
-	if err != nil {
+	err = collection.Find(nil).All(&result)
+	if err != nil || len(result) == 0 {
 		t.Errorf("Failed to find test users in the database\n%v\n", err)
 	}
-	// t.Log("  result:\n", result)
 
-	info, err := collection.RemoveAll(q)
+	info, err := collection.RemoveAll(nil)
 	if err != nil {
 		t.Errorf("Failed to remove test users from the database\n%v\n", err)
 	}
@@ -104,7 +102,7 @@ func TestSignup(t *testing.T) {
 		"password": "Sue"
 	}`
 
-	res, err := jsonRequest("POST", url, jsonStr)
+	res, err := request("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -115,22 +113,12 @@ func TestSignup(t *testing.T) {
 	}
 	defer res.Body.Close()
 
-	// check database for user Bob
-	t.Log("Testing database connection...")
-	session, err := initDb()
-	if err != nil {
-		t.Errorf("Failed to connect to the database\n%v\n", err)
-	}
-
-	defer session.Close()
-	collection := db.C("users")
-
 	result := User{}
-	q := bson.M{"username": "BobTheTester"}
-	err = collection.Find(q).One(&result)
+	err = usersCollection.Find(bson.M{"username": "BobTheTester"}).One(&result)
 	if err != nil {
 		t.Errorf("Failed to find test user in the database\n%v\n", err)
 	}
+
 	t.Logf("Bob was found in database\n")
 }
 
@@ -143,7 +131,7 @@ func TestSignin(t *testing.T) {
 		"password": "Sue"
 	}`
 
-	res, err := jsonRequest("POST", url, jsonStr)
+	res, err := request("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -170,7 +158,7 @@ func TestSignin(t *testing.T) {
 		"password": "George"
 	}`
 
-	res, err = jsonRequest("POST", url, jsonStr)
+	res, err = request("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -220,7 +208,7 @@ func TestStoryCreation(t *testing.T) {
 }`
 
 	expectedStatus := http.StatusCreated
-	res, err := jsonRequest("POST", url, jsonStr)
+	res, err := request("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -267,7 +255,7 @@ func TestStoryCreation(t *testing.T) {
     ]
 }`
 
-	res, err = jsonRequest("POST", url, jsonStr)
+	res, err = request("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -294,7 +282,7 @@ func TestStoryCreation(t *testing.T) {
     }`
 
 	expectedStatus = http.StatusBadRequest
-	res, err = jsonRequest("POST", url, jsonStr)
+	res, err = request("POST", url, jsonStr)
 	if err != nil {
 		t.Errorf(
 			"Failed to send request to %v\n%v\n",
@@ -317,33 +305,18 @@ func TestStoryCreation(t *testing.T) {
 func TestStoryFetch(t *testing.T) {
 	t.Log("Testing single story fetching...")
 
-	// Find the story which was created by the test.
-	t.Log("Connecting to the database...")
-	session, err := initDb()
-	if err != nil {
-		t.Errorf(
-			"Failed to connect to the database\n%v\n",
-			err,
-		)
-		return
-	}
-
-	defer session.Close()
 	collection := db.C("stories")
 
 	t.Log("Finding test stories from the database...")
 	result := []Story{}
 	q := bson.M{"username": "BobTheTester"}
-	err = collection.Find(q).All(&result)
+	err := collection.Find(q).All(&result)
 	if err != nil {
 		t.Errorf(
 			"Failed to find test story in the database\n%v\n",
 			err,
 		)
 	}
-
-	// t.Logf("%#v\n", result)
-	// t.Logf("%#v\n", result[0])
 
 	if len(result) <= 0 {
 		t.Errorf(
@@ -390,7 +363,7 @@ func TestLibraryFetch(t *testing.T) {
 	// t.Logf("user.Id.Hex(): %v\n", user.Id.Hex())
 	t.Logf("Sending GET request to\n%v...\n", url)
 
-	res, err := request("GET", url)
+	res, err := request("GET", url, "")
 	if err != nil {
 		t.Errorf("%v\n", err)
 	}
@@ -439,7 +412,7 @@ func TestShowCase(t *testing.T) {
 	showCaseUrl := "http://localhost:8020/api/stories/showcase"
 	t.Logf("Sending GET request to\n%v...\n", showCaseUrl)
 
-	res, err := request("GET", showCaseUrl)
+	res, err := request("GET", showCaseUrl, "")
 	if err != nil {
 		t.Errorf("%v\n", err)
 	}
@@ -518,16 +491,8 @@ func TestEditStory(t *testing.T) {
 	t.Log("Testing story editing...")
 
 	// Find the test user's info in the database.
-	t.Log("Testing database connection...")
-	session, err := initDb()
-	if err != nil {
-		t.Errorf("Failed to connect to the database\n%v\n", err)
-	}
-
-	defer session.Close()
-
 	t.Log("Looking for BobTheTester...")
-	err = usersCollection.Find(
+	err := usersCollection.Find(
 		bson.M{"username": "BobTheTester"},
 	).One(&BobTheTester)
 	if err != nil {
@@ -551,7 +516,7 @@ func TestEditStory(t *testing.T) {
 		url := "http://localhost:8020/api/stories/story"
 		expectedStatus := http.StatusOK
 
-		res, err := jsonRequest("PUT", url, string(js))
+		res, err := request("PUT", url, string(js))
 		if err != nil {
 			t.Errorf("%v\n", err)
 		} else if res.StatusCode != expectedStatus {
@@ -581,16 +546,8 @@ func TestRemoveStory(t *testing.T) {
 	t.Log("Testing story removal...")
 
 	// Find the test user's info in the database.
-	t.Log("Testing database connection...")
-	session, err := initDb()
-	if err != nil {
-		t.Errorf("Failed to connect to the database\n%v\n", err)
-	}
-
-	defer session.Close()
-
 	t.Log("Looking for BobTheTester...")
-	err = usersCollection.Find(
+	err := usersCollection.Find(
 		bson.M{"username": "BobTheTester"},
 	).One(&BobTheTester)
 	if err != nil {
@@ -609,7 +566,7 @@ func TestRemoveStory(t *testing.T) {
 		expectedStatus := http.StatusOK
 
 		t.Logf("Sending DELETE request to %v\n", url)
-		res, err := request("DELETE", url)
+		res, err := request("DELETE", url, "")
 		if err != nil {
 			t.Errorf("%v\n", err)
 		} else if res.StatusCode != expectedStatus {
@@ -637,18 +594,10 @@ func TestRemoveStory(t *testing.T) {
 
 func TestCleanup(t *testing.T) {
 	t.Log("Cleaning up test collections in database...")
-	// check database for user Bob
-	t.Log("Testing database connection...")
-	session, err := initDb()
-	if err != nil {
-		t.Errorf("Failed to connect to the database\n%v\n", err)
-	}
-
-	defer session.Close()
 
 	// Remove the story which was created by the test.
 	t.Log("Removing test stories from the database...")
-	_, err = storiesCollection.RemoveAll(bson.M{"username": "BobTheTester"})
+	_, err := storiesCollection.RemoveAll(bson.M{"username": "BobTheTester"})
 	if err != nil {
 		t.Errorf("Failed to remove test story from the database\n%v\n", err)
 	}
@@ -665,9 +614,11 @@ func TestCleanup(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to remove test users from the database\n%v\n", err)
 	}
+
+	session.Close()
 }
 
-func jsonRequest(method, url, jsonStr string) (*http.Response, error) {
+func request(method, url, jsonStr string) (*http.Response, error) {
 	jsonBytes := []byte(jsonStr)
 
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonBytes))
@@ -676,27 +627,10 @@ func jsonRequest(method, url, jsonStr string) (*http.Response, error) {
 	}
 
 	req.Header.Set("token", BobTheTester.Token)
-	req.Header.Set("Content-Type", "application/json")
+	if len(jsonBytes) > 0 {
+		req.Header.Set("Content-Type", "application/json")
+	}
 
 	client := &http.Client{}
 	return client.Do(req)
-}
-
-func request(method, url string) (*http.Response, error) {
-	req, err := http.NewRequest(method, url, nil)
-	if err != nil {
-		return nil,
-			fmt.Errorf("Failed to send %v request to %v\n%v\n", method, url, err)
-	}
-
-	req.Header.Set("token", BobTheTester.Token)
-
-	client := &http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		return nil,
-			fmt.Errorf("Failed to send %v request to %v\n%v\n", method, url, err)
-	}
-
-	return res, err
 }
