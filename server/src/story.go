@@ -17,7 +17,7 @@ func handleStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	case "POST":
 		return saveStory(w, r)
 	case "PUT":
-		return editStory(w, r, storyId)
+		return editStory(w, r)
 	case "DELETE":
 		return deleteStory(w, r, storyId)
 	default:
@@ -266,26 +266,66 @@ func intSlcContains(slc []int, q int) bool {
 	return false
 }
 
-// PUT request to 'api/stories/story/<story_id>'.
+// PUT request to 'api/stories/story'.
 // Respond with the full data for the story specified in the url.
-func editStory(w http.ResponseWriter, r *http.Request, storyId string) (error, int) {
-	// Make sure a story id was given in the url.
-	if len(storyId) <= 0 {
-		return fmt.Errorf("Story id not specified in the url\n"),
+func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Grab the JSON object in the response body
+	story := Story{}
+
+	err := json.NewDecoder(r.Body).Decode(&story)
+	if err != nil {
+		return fmt.Errorf("Invalid JSON object in request body \n%v\n", err),
 			http.StatusBadRequest
 	}
 
-	// Fetch story data from the database.
-	story := Story{}
-	err := storiesCollection.Find(bson.M{
-		"_id": bson.ObjectIdHex(storyId),
-	}).One(&story)
+	if len(story.Frames) <= 0 {
+		return fmt.Errorf("Incomplete JSON data\n"),
+			http.StatusBadRequest
+	}
+
+	// Get user info from the token in the header.
+	user := User{}
+	user.Token = r.Header.Get("token")
+	err, status := user.verifyToken()
 	if err != nil {
-		return fmt.Errorf("Story not found in the database\n"),
+		return err, status
+	}
+
+	// Get user info from the database, using the token in the header.
+	err = usersCollection.Find(bson.M{"token": user.Token}).One(&user)
+	if err != nil {
+		return err,
 			http.StatusNotFound
 	}
 
-	// fmt.Printf("story response Data: \n%#v\n\n", story)
+	// Make sure that the user with this token is the creator of this story.
+	storyId := story.Id.Hex()
+	userOwnsStory := false
+	for _, userStoryId := range user.Stories {
+		if userStoryId == storyId {
+			userOwnsStory = true
+			break
+		}
+	}
+
+	if userOwnsStory == false {
+		return fmt.Errorf("User is not a creator of this story\n"),
+			http.StatusUnauthorized
+	}
+
+	// Fetch story data from the database.
+	err = storiesCollection.Update(
+		bson.M{"_id": story.Id},
+		bson.M{"$set": bson.M{
+			"title":       story.Title,
+			"description": story.Description,
+			"thumbnail":   story.Thumbnail,
+			"frames":      story.Frames,
+		}})
+	if err != nil {
+		return fmt.Errorf("Failed to update story in the database\n"),
+			http.StatusInternalServerError
+	}
 
 	// Stringify story data into JSON string format.
 	js, err := json.Marshal(story)
@@ -304,7 +344,7 @@ func editStory(w http.ResponseWriter, r *http.Request, storyId string) (error, i
 
 // DELETE request to 'api/stories/story/<story_id>'.
 // Only the owner of the story can delete it.
-// Respond with the full data for the story specified in the url.
+// Respond with status 200.
 func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error, int) {
 	// Make sure a story id was given in the url.
 	if len(storyId) <= 0 {
@@ -339,18 +379,15 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 			http.StatusUnauthorized
 	}
 
-	fmt.Printf("User stories before:\n%#v\n", user.Stories)
-
 	// Make sure that the user with this token is the creator of this story.
 	userOwnsStory := false
-	for i, userStoryId := range user.Stories {
+	for _, userStoryId := range user.Stories {
 		if userStoryId == storyId {
 			userOwnsStory = true
-			user.Stories = append(user.Stories[:i], user.Stories[i+1:]...)
 			break
 		}
 	}
-	fmt.Printf("User stories after:\n%#v\n", user.Stories)
+
 	if userOwnsStory == false {
 		return fmt.Errorf("User is not a creator of this story\n"),
 			http.StatusUnauthorized

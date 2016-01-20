@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"time"
 
 	"gopkg.in/mgo.v2"
 	// "io/ioutil"
@@ -53,6 +54,8 @@ func initDb() (*mgo.Session, error) {
 	}
 
 	session.SetMode(mgo.Monotonic, true)
+	session.SetSocketTimeout(15 * time.Second)
+
 	db = session.DB("devcon0")
 	usersCollection = db.C("users")
 	storiesCollection = db.C("stories")
