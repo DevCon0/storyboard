@@ -2,6 +2,8 @@ body {
   padding-top: 65px; 
   background-color: #bbb;
   background-image: url('/img/sketch3.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .clean {
