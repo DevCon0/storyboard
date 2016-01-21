@@ -7,24 +7,26 @@ angular.module('storyBoard.createStory', [])
   }
 
   $scope.user = localStorageService.get('username');
+  var token = localStorageService.get('sessiontoken');
   var wasPassed = Object.keys($stateParams.story).length !== 0;
+
   if (wasPassed) {
     var editStory = $stateParams.story;
     $scope.storyTitle = editStory.title;
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
 
-    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[0].videoId;
+    $scope.frame1YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
     $scope.frame1StartTime = editStory.frames[0].start;
     $scope.frame1EndTime = editStory.frames[0].end;
     $scope.showSpinner1 = false;
 
-    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[1].videoId;
+    $scope.frame2YoutubeUrl = recreateVideoUrl(editStory.frames[1].videoId);
     $scope.frame2StartTime = editStory.frames[1].start;
     $scope.frame2EndTime = editStory.frames[1].end;
     $scope.showSpinner2 = false;
 
-    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=" + editStory.frames[2].videoId;;
+    $scope.frame3YoutubeUrl = recreateVideoUrl(editStory.frames[2].videoId);
     $scope.frame3StartTime = editStory.frames[2].start;
     $scope.frame3EndTime = editStory.frames[2].end;
     $scope.showSpinner3 = false;
@@ -121,12 +123,12 @@ angular.module('storyBoard.createStory', [])
       ]
     }
     if (wasPassed) {
-      StoryStorage.editStory(story, editStory.storyId, localStorageService.get('sessiontoken'))
+      StoryStorage.editStory(story, editStory.storyId, token)
         .then(function (data) {
           $state.go('dashboard');
       })
     } else {
-      StoryStorage.saveStory(story, localStorageService.get('sessiontoken'))
+      StoryStorage.saveStory(story, token)
         .then(function (data) {
           $state.go('dashboard');
         });
@@ -290,5 +292,12 @@ angular.module('storyBoard.createStory', [])
 
     return videoId;
   }
+
+
+  function recreateVideoUrl(youtubeID) {
+    var header = "https://www.youtube.com/watch?v=";
+    return header + youtubeID;
+  }
+
 });
 
