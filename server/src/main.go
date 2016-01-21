@@ -16,15 +16,33 @@ import (
 var (
 	rootDir           string
 	slash             string = string(filepath.Separator)
+	session           *mgo.Session
 	db                *mgo.Database
 	usersCollection   *mgo.Collection
 	storiesCollection *mgo.Collection
+	connectedToDb     bool
 )
 
 func main() {
-	session, err := initDb()
-	chkerr(err)
+	initDb()
+
+	fmt.Println("Database connection established.")
 	defer session.Close()
+
+	// Restart the database connection every hour.
+	ticker := time.NewTicker(1 * time.Hour)
+	quit := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				restartDbConnection()
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
 
 	setRootDir()
 
@@ -42,15 +60,24 @@ func main() {
 	http.ListenAndServe(port, nil)
 }
 
-func initDb() (*mgo.Session, error) {
+// Connect to the mongo database.
+func initDb() {
 	// dbpath="db"; ! [ -d "${dbpath}" ] && mkdir -p "${dbpath}"; mongod --port 27018 --dbpath "${dbpath}" --wiredTigerJournalCompressor snappy --wiredTigerCollectionBlockCompressor snappy --cpu
+
+	connectedToDb = false
 
 	url := "mongodb://devcon0:devcon0@ds037415.mongolab.com:37415/devcon0"
 	// url := "localhost:27018"
-
-	session, err := mgo.Dial(url)
+	var err error
+	session, err = mgo.Dial(url)
 	if err != nil {
-		return session, err
+		fmt.Printf("Error: Failed to connect to mongodb: %v\n", err)
+		for second := 5; second > 0; second-- {
+			fmt.Printf("\rRetrying in %d...", second)
+			time.Sleep(time.Second)
+		}
+		fmt.Println()
+		initDb()
 	}
 
 	session.SetMode(mgo.Monotonic, true)
@@ -60,7 +87,24 @@ func initDb() (*mgo.Session, error) {
 	usersCollection = db.C("users")
 	storiesCollection = db.C("stories")
 
-	return session, nil
+	connectedToDb = true
+}
+
+// Restart the database if the connection has been lost.
+func restartDbConnection() {
+	if err := session.Ping(); err != nil {
+		fmt.Println("Restarting database connection...")
+		session.Close()
+		initDb()
+	}
+}
+
+// If not connected to the database,
+//   wait to return until a connection is established.
+func verifyDbConnection() {
+	if !connectedToDb {
+		verifyDbConnection()
+	}
 }
 
 // Find out where this go file exists on the file system.
