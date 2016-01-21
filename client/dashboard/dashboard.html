@@ -5,7 +5,7 @@
   <h2 class="bannertitle">Created Stories:</h2>
 </div>
 <div class="row">
-  <div ng-repeat="story in userLibrary">
+  <div ng-repeat="story in userLibrary | filter:searchText">
     <div class="col-md-3">
       <div class="libraryStoryFrame">
         <a href="/#/singleStory/{{story.storyId}}"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>

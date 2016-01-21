@@ -1,4 +1,4 @@
-angular.module('storyBoard.splash', [])
+angular.module('storyBoard.splash', ['ngAnimate'])
 
 .controller('splashCtrl', function ($rootScope, $scope, $state, $window, StoryStorage) {
   StoryStorage.getShowcase()
