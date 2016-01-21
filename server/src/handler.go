@@ -77,6 +77,8 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 		case "showcase":
 			// return showCase(w, r)
 			return showCaseRandom(w, r)
+		case "search":
+			return searchStories(w, r, id)
 		default:
 			return fmt.Errorf("Unknown stories api location: %v\n", location),
 				http.StatusBadRequest

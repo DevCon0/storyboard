@@ -64,7 +64,8 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 	password := []byte(user.Password)
 
 	// Generate a token for the user.
-	if err, status = user.genToken(); err != nil {
+	shouldUpdateInDb := false
+	if err, status = user.genToken(shouldUpdateInDb); err != nil {
 		return err, status
 	}
 
@@ -115,7 +116,8 @@ func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 	}
 
 	// Make a response object to send to the client.
-	if err, status = user.genToken(); err != nil {
+	shouldUpdateInDb := true
+	if err, status = user.genToken(shouldUpdateInDb); err != nil {
 		return err, status
 	}
 
@@ -258,7 +260,7 @@ func (u *User) verifyPassword() (error, int) {
 //   update the token in the database,
 //   remove the password from the *User struct.
 // Return a bool indicating whether an error occurred.
-func (u *User) genToken() (error, int) {
+func (u *User) genToken(shouldUpdateInDb bool) (error, int) {
 	// Create a new, empty token.
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -274,13 +276,16 @@ func (u *User) genToken() (error, int) {
 	tokenString, err := token.SignedString(tokenSecret)
 	if err != nil {
 		fmt.Printf("Failed to create token\n%v\n", err)
-		return fmt.Errorf("Internal Server Error"),
+		return fmt.Errorf("Failed to create token\n%v\n", err),
 			http.StatusInternalServerError
 	}
 
 	// Add the signed token to the User struct.
 	u.Token = tokenString
-	// fmt.Printf("tokenString:\n%v\n", tokenString)
+
+	if !shouldUpdateInDb {
+		return nil, http.StatusOK
+	}
 
 	// Update the token in the database.
 	if err = usersCollection.Update(
