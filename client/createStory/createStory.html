@@ -1,9 +1,9 @@
-<paper-header-panel>
-<div class="create-story-paper-header paper-header blue">{{user}}, create your own story!<span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">Pre-populate inputs</button></span></div>
-<div class="content">
+<paper-header-panel class="create-story-paper-header-panel">
+<div class="create-story-paper-header blue">{{user}}, create your own story!<span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">Pre-populate inputs</button></span></div>
+<div class="create-story-paper-header-panel-content">
 <div class="row">
   <div class="col-md-offset-1 col-md-3">
-    <paper-card heading="Story Info" elevation="3">
+    <paper-card heading="Story Info" elevation="3" class="create-story-paper-card">
       <form>
           <div class="form-group">
             <label for="storyTitleInput">Story Title</label>
@@ -28,7 +28,7 @@
     </paper-card>
   </div>
   <div class="creationFrameDiv col-md-2">
-    <paper-card heading="Act I" elevation="3">
+    <paper-card heading="Act I" elevation="3" class="create-story-paper-card">
       <form ng-submit="previewFrame(1)">
         <div class="form-group">
           <label for="youtubeUrl1">Youtube URL</label>
@@ -50,7 +50,7 @@
     </paper-card>
   </div>
   <div class="creationFrameDiv col-md-2">
-    <paper-card heading="Act II" elevation="3">
+    <paper-card heading="Act II" elevation="3" class="create-story-paper-card">
       <form ng-submit="previewFrame(2)">
         <div class="form-group">
           <label for="youtubeUrl2">Youtube URL</label>
@@ -72,7 +72,7 @@
     </paper-card>
   </div>
   <div class="creationFrameDiv col-md-2">
-    <paper-card heading="Act III" elevation="3">
+    <paper-card heading="Act III" elevation="3" class="create-story-paper-card">
       <form ng-submit="previewFrame(3)">
         <div class="form-group">
           <label for="youtubeUrl3">Youtube URL</label>

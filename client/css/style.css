@@ -1,6 +1,7 @@
 body { 
   padding-top: 65px; 
   background-color: #bbb;
+  background-image: url('/img/sketch3.jpg');
 }
 
 .clean {
@@ -227,7 +228,7 @@ body {
   padding: 0px !important;
 }
 
-paper-header-panel {
+.create-story-paper-header-panel {
   min-height: 620px;
   /*overflow: hidden;*/
   margin-left: auto;
@@ -247,7 +248,7 @@ paper-header-panel {
   padding-left: 10px;
 }
 
-paper-card {
+.create-story-paper-card {
   font-family: helvetica;
   background-color: #ddd !important;
   padding: 5px;
@@ -255,7 +256,7 @@ paper-card {
   margin: 0px;
 }
 
-.content {
+.create-story-paper-header-panel-content {
   background-color: white;
   height: 554px;
   padding: 20px;
@@ -266,11 +267,11 @@ paper-spinner.blue{
 }
 
 @media screen and (max-width: 992px) {
-  .content {
+  .create-story-paper-header-panel-content {
     height: 2000px;
   }
 
-  paper-card {
+  .create-story-paper-card {
     margin: 10px 0px;
   }
 }
@@ -285,4 +286,66 @@ paper-spinner.blue{
 
 .icon-margin-left {
   margin-left: 5px;
+}
+
+.single-story-outer {
+  width: 100%;
+  height: 100%;
+  padding-left: 70px;
+  padding-right: 0px;
+}
+
+.single-story-inner {
+  width: 100%;
+}
+
+.single-story-paper-header-panel {
+  float: left;
+  height: 600px;
+  margin: 12px;
+  color: #fff;
+  @apply(--shadow-elevation-2dp);
+}
+
+.single-story-paper-card{
+  background-color: #ddd !important;
+  margin: 5px;
+  font-family: helvetica;
+}
+
+.single-story-paper-header {
+  background-color: blue;
+  height: 64px;
+  line-height: 64px;
+  font-size: 32px;
+  font-family: helvetica;
+  padding: 0px;
+  padding-left: 5px;
+}
+
+.single-story-paper-header-panel-content {
+  background-color: white;
+  height: 354px;/*354px;*/
+  padding: 20px;
+}
+
+@media screen and (max-width: 1275px) {
+  .single-story-paper-header-panel-content {
+    height: 2000px;
+  }
+
+  .single-story-paper-header-panel {
+    height: 1500px;
+  }
+
+  .single-story-paper-card{
+    margin: 10px 0px;
+  }
+}
+
+.log-in-paper-card {
+  background-color: #ddd !important;
+  width: 450px;
+  padding: 0px 40px 10px 40px;
+  margin-top: 100px;
 }
