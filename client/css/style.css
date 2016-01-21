@@ -10,6 +10,23 @@ body {
   margin: 10px;
 }
 
+.dashfade.ng-enter {
+  transition:0.5s linear all;
+  opacity:0;
+}
+
+.dashfade.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+.dashfade.ng-leave {
+  transition:0.5s linear all;
+  opacity:1;
+}
+.dashfade.ng-leave.ng-leave-active {
+  opacity:0;
+}
+
 .navbar {
   background-color: #4285F4;
   border: none !important;
