@@ -330,6 +330,7 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			"title":       story.Title,
 			"description": story.Description,
 			"thumbnail":   story.Thumbnail,
+			"tags":        story.Tags,
 			"frames":      story.Frames,
 		}})
 	if err != nil {
@@ -411,6 +412,39 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	// Send the story with status 200;
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Story deleted"))
+
+	return nil, http.StatusOK
+}
+
+// GET request to 'api/stories/search/<search_tag>'.
+// Respond with an array of stories which contain the search tag.
+func searchStories(w http.ResponseWriter, r *http.Request, searchTag string) (error, int) {
+	// Make sure a story id was given in the url.
+	if len(searchTag) <= 0 {
+		return fmt.Errorf("Search tag not specified in the url\n"),
+			http.StatusBadRequest
+	}
+
+	// Search the stories collection for stories which contain the search tag.
+	stories := []Story{}
+	err := storiesCollection.Find(bson.M{"tags": searchTag}).All(&stories)
+	if err != nil {
+		return fmt.Errorf("Failed to find matching stories\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// Prepare JSON response data by stringify the data for 'stories'
+	//   into JSON string format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return fmt.Errorf("Failed to stringify stories\n%v\n", err),
+			http.StatusInternalServerError
+	}
+
+	// Send the story with status 200;
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
 
 	return nil, http.StatusOK
 }
