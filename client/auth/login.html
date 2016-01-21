@@ -2,13 +2,16 @@
     <div class='col-md-12'>
         <div class="col-md-4 col-md-offset-4">
             <paper-card class="log-in-paper-card">
-            <h2 class="sign-in">Sign In</h2>
-            <form name="signinForm" ng-submit='signin()'>
+            <h2 class="sign-in">Log In</h2>
+            <form name="signinForm" ng-submit='login()'>
                 <input type='text' ng-model='user.username' placeholder='Username' class='form-control' name='name' required>
+                <div class="row clean"></div>
                 <input type="password" ng-model='user.password' placeholder='Password' class='form-control' name='password' required>
+                <div class="row clean"></div>
                 <div ng-show="showErr" class='message-error'>{{err}}</div>
-                <button class="btn btn-primary">Sign In</button>
-                <div><a ui-sref="signup">Sign Up</a></div>
+                <button class="btn btn-primary">Log in</button>
+                <div class="row clean"></div>
+                <div>Don't have an account? <a ui-sref="signup">Sign up here for free!</a></div>
             </form>
             </paper-card>
         </div>

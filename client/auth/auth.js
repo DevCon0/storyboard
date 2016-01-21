@@ -20,9 +20,9 @@ angular.module('storyBoard.auth', [])
 
   };
 
-  $scope.signin = function () {
+  $scope.login = function () {
     console.log('user: ', $scope.user);
-    Auth.signin($scope.user)
+    Auth.login($scope.user)
       .then(function () {
         localStorageService.set('user', $scope.user);
       })

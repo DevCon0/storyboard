@@ -3,7 +3,7 @@ angular.module('storyBoard.dashboard', [])
 .controller('dashboardCtrl', function ($scope, $state, StoryStorage, localStorageService, Auth, $stateParams) {
 
   if ( ! (Auth.isAuth()) ) {
-    $state.go('signin')
+    $state.go('login')
   }
 
   $scope.username = localStorageService.get('username');
