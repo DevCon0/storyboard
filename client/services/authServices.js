@@ -2,7 +2,7 @@ angular.module('storyBoard.authService', [])
 
 .factory('Auth', function ($http, $location, $window, localStorageService, $state) {
   var auth = {};
-  auth.signin = function (user) {
+  auth.login = function (user) {
     return $http({
       method: 'POST',
       url: '/api/users/signin',
@@ -33,7 +33,7 @@ angular.module('storyBoard.authService', [])
     return !!localStorageService.get('sessiontoken');
   };
 
-  auth.signout = function (token) {
+  auth.logout = function (token) {
     localStorageService.clearAll();
     return $http({
       method: 'POST',

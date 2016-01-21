@@ -1,15 +1,19 @@
-<div class="clear"></div>
 <div id='signup' class='col-md-12'>
-    <div class="col-md-4 col-md-offset-4 loginbox">
-        <h2 class="sign-in-up-title fade-in-three-quarter-sec">Sign Up</h2>
-        <form name="signupForm" ng-submit='signup()'>
-            <input type='text' name='Username' placeholder='Username' class='form-control my-margin-quarter-em fade-in-three-quarter-sec shadow' ng-model='user.username' ng-minlength="3">
-            <p style="color:red" ng-show='signupForm.username.$error.minlength' class='help-block'>Username is too short.</p>
-            <input type="password" placeholder='Password' name='password' class='form-control my-margin-quarter-em fade-in-three-quarter-sec shadow' ng-model='user.password' ng-minlength="3">
-            <p style="color:red" ng-show='signupForm.password.$error.minlength && signupForm.password.$dirty' class='help-block'>Password is too short.</p>
-            <div ng-show="showErr" class='message-error'>{{err}}</div>
-            <button class="btn btn-primary fade-in-1-and-three-quarter-sec sign-in-up-button-text my-margin-half-em shadow">Sign Up</button>
-        </form>
-        <a href="#/signin" class='account fade-in-1-and-three-quarter-sec loginlink'>Sign In</a>
+    <div class="col-md-4 col-md-offset-4">
+        <paper-card class="log-in-paper-card">
+            <h2 class="sign-in-up-title fade-in-three-quarter-sec">Sign Up</h2>
+            <form name="signupForm" ng-submit='signup()'>
+                <input type='text' name='Username' placeholder='Username' class='form-control my-margin-quarter-em fade-in-three-quarter-sec shadow' ng-model='user.username' ng-minlength="3">
+                <p style="color:red" ng-show='signupForm.username.$error.minlength' class='help-block'>Username is too short.</p>
+                <div class="row clean"></div>
+                <input type="password" placeholder='Password' name='password' class='form-control my-margin-quarter-em fade-in-three-quarter-sec shadow' ng-model='user.password' ng-minlength="3">
+                <p style="color:red" ng-show='signupForm.password.$error.minlength && signupForm.password.$dirty' class='help-block'>Password is too short.</p>
+                <div class="row clean"></div>
+                <div ng-show="showErr" class='message-error'>{{err}}</div>
+                <button class="btn btn-primary fade-in-1-and-three-quarter-sec sign-in-up-button-text my-margin-half-em shadow">Sign Up</button>
+            </form>
+            <div class="row clean"></div>
+            <span>Already have an account? </span><a href="#/signin" class='account loginlink'>Log in here!</a>
+        </paper-card>
     </div>
 </div>

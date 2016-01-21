@@ -4,13 +4,13 @@ angular.module('storyBoard.navBar', [])
   console.log($scope);
 
   if (Auth.isAuth()) {
-    $scope.currentUserSignedIn = true;
+    $scope.currentUserLoggedIn = true;
   }
 
-  $scope.signout = function () {
+  $scope.logout = function () {
     var token = localStorageService.get('sessiontoken');
-    $scope.currentUserSignedIn = false;
-    Auth.signout(token);
+    $scope.currentUserLoggedIn = false;
+    Auth.logout(token);
   }
 
 })

@@ -3,13 +3,12 @@ angular.module('storyBoard.createStory', [])
 .controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window, Auth, $stateParams) {
 
   if ( ! (Auth.isAuth()) ) {
-    $state.go('signin')
+    $state.go('login')
   }
 
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
   var wasPassed = Object.keys($stateParams.story).length !== 0;
-
 
   if (wasPassed) {
     var editStory = $stateParams.story;

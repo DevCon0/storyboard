@@ -5,10 +5,10 @@
         </div>
         <nav class="navbar-collapse" ng-class="{collapse: isCollapsed}">
           <ul class="nav navbar-nav navbar-right">
-            <li><a ng-show="currentUserSignedIn" href="/#/createStory" class="nav-link-text nav-text-color">Create Story</a></li>
-            <li><a ng-show="currentUserSignedIn" href="/#/dashboard" class="nav-link-text nav-text-color">Dashboard</a></li>
-            <li ng-hide="currentUserSignedIn"><a href="/#/signin" class="nav-link-text nav-text-color">Sign In</a></li>
-            <li><a ng-show="currentUserSignedIn" href="/#/signout" ng-click="signout()" class="nav-link-text nav-text-color">Sign Out</a></li>
+            <li><a ng-show="currentUserLoggedIn" href="/#/createStory" class="nav-link-text nav-text-color">Create Story</a></li>
+            <li><a ng-show="currentUserLoggedIn" href="/#/dashboard" class="nav-link-text nav-text-color">Dashboard</a></li>
+            <li ng-hide="currentUserLoggedIn"><a href="/#/login" class="nav-link-text nav-text-color">Log In</a></li>
+            <li><a ng-show="currentUserLoggedIn" href="/#/" ng-click="logout()" class="nav-link-text nav-text-color">Log Out</a></li>
           </ul>
         </nav><!--/.nav-collapse -->
     </div>
