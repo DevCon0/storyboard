@@ -31,15 +31,15 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('signin', {
-      url: "/signin",
+    .state('login', {
+      url: "/login",
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
           controller: 'navBarCtrl'
         },
         'content': {
-          templateUrl: '/auth/signin.html',
+          templateUrl: '/auth/login.html',
           controller: 'authCtrl'
         }
       }
