@@ -10,7 +10,6 @@ angular.module('storyBoard.createStory', [])
   var token = localStorageService.get('sessiontoken');
   var wasPassed = Object.keys($stateParams.story).length !== 0;
 
-
   if (wasPassed) {
     var editStory = $stateParams.story;
     $scope.storyTitle = editStory.title;
