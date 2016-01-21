@@ -88,8 +88,20 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusInternalServerError
 	}
 
+	// Prepare to send response data.
+	// Stringify the user into JSON string format.
+	js, err := json.Marshal(user)
+	if err != nil {
+		fmt.Printf("Failed to convert response data to JSON:\n%#v\n", user)
+		return fmt.Errorf("Internal Server Error\n"),
+			http.StatusInternalServerError
+	}
+
+	// Send the response object to the client.
+	w.Header().Set("Content-Type", "application/json")
+
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Signed up!"))
+	w.Write(js)
 
 	fmt.Printf("Signed up %v\n", user.Username)
 
@@ -123,7 +135,8 @@ func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	// fmt.Printf("user:\n%#v\n\n", user)
 
-	// Stringify the response object.
+	// Prepare to send response data.
+	// Stringify the user into JSON string format.
 	js, err := json.Marshal(user)
 	if err != nil {
 		fmt.Printf("Failed to convert response data to JSON:\n%#v\n", user)
