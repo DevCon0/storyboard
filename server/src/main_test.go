@@ -8,24 +8,18 @@ import (
 	"strings"
 	"testing"
 
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 var (
 	BobTheTester        User
 	BobTheTesterStories []Story
-	session             *mgo.Session
 )
 
 // Test basic database insertion, retrieval, and removal.
 func TestDatabase(t *testing.T) {
 	t.Log("Testing database connection...")
-	var err error
-	session, err = initDb()
-	if err != nil {
-		t.Errorf("Failed to connect to the database\n%v\n", err)
-	}
+	initDb()
 
 	t.Log("Testing database insertion...")
 
@@ -49,7 +43,7 @@ func TestDatabase(t *testing.T) {
 			Stories:   []string{},
 		},
 	}
-	err = collection.Insert(testUsers...)
+	err := collection.Insert(testUsers...)
 	if err != nil {
 		t.Errorf("Failed to insert test users into the database\n%v\n", err)
 	}
