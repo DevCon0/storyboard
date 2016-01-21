@@ -55,5 +55,30 @@ angular.module('storyBoard.storyStorageService', [])
       })
   };
 
+  storyStorage.editStory = function (story, storyId, token) {
+    story['storyId'] = storyId;
+    console.log('editStory called with', story);
+    return $http({
+      method: 'PUT',
+      url: '/api/stories/story',
+      headers: {
+        'token': token
+      },
+      data: story
+    })
+  };
+
+  storyStorage.deleteStory = function (id,token) {
+    console.log('deleteStory (Factory) called with', id);
+    return $http({
+      method: 'DELETE',
+      url: '/api/stories/story/' + id,
+      headers: {
+        'token': token
+      },
+      data: id
+    })
+  };
+
   return storyStorage;
 })

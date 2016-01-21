@@ -10,6 +10,7 @@
       <div class="libraryStoryFrame">
         <a href="/#/singleStory/{{story.storyId}}"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>
       </div>
+        <button class="btn btn-lg btn-success edit-button" ng-click="editStory(story.storyId)">Edit</button><button class="btn btn-lg btn-danger delete-button" ng-click="deleteStory(story.storyId)">Delete</button>
     </div>
   </div>
 </div>

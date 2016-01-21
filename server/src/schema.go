@@ -26,6 +26,7 @@ type Story struct {
 	Thumbnail   string        `json:"thumbnail"`
 	Username    string        `json:"username"`
 	Author      string        `json:"author"`
+	Views       int           `json:"views"`
 	Frames      []Frame       `json:"frames"`
 	FRAME1      int
 	FRAME2      int
@@ -37,6 +38,6 @@ type Frame struct {
 	Player    struct{} `json:"player"`
 	PlayerDiv string   `json:"playerDiv"`
 	VideoId   string   `json:"videoId"`
-	Start     int      `json:"start"`
-	End       int      `json:"end"`
+	Start     float32  `json:"start"`
+	End       float32  `json:"end"`
 }

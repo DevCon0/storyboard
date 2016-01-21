@@ -102,12 +102,12 @@ func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	fmt.Printf("Signing in %v...\n", user.Username)
 
-	if err, status = user.verifyPassword(w, r); err != nil {
+	if err, status = user.verifyPassword(); err != nil {
 		return err, status
 	}
 
 	// Make a response object to send to the client.
-	if err, status = user.genToken(w, r); err != nil {
+	if err, status = user.genToken(); err != nil {
 		return err, status
 	}
 
@@ -192,7 +192,7 @@ func parseBody(w http.ResponseWriter, r *http.Request) (User, error, int) {
 
 // Return a bool whether a user's token is valid.
 // If not, send an http error.
-func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) (error, int) {
+func (u *User) verifyToken() (error, int) {
 	// Parse the token with the tokenSecret.
 	token, err := jwt.Parse(u.Token, func(token *jwt.Token) (interface{}, error) {
 		return tokenSecret, nil
@@ -209,7 +209,7 @@ func (u *User) verifyToken(w http.ResponseWriter, r *http.Request) (error, int) 
 }
 
 // Return a bool whether the password submitted for a user is correct.
-func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) (error, int) {
+func (u *User) verifyPassword() (error, int) {
 	// Make sure required fields are filled out.
 	if len(u.Password) <= 0 {
 		return fmt.Errorf("Password required"),
@@ -250,7 +250,7 @@ func (u *User) verifyPassword(w http.ResponseWriter, r *http.Request) (error, in
 //   update the token in the database,
 //   remove the password from the *User struct.
 // Return a bool indicating whether an error occurred.
-func (u *User) genToken(w http.ResponseWriter, r *http.Request) (error, int) {
+func (u *User) genToken() (error, int) {
 	// Create a new, empty token.
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -345,4 +345,41 @@ func loadProfile(w http.ResponseWriter, r *http.Request) (error, int) {
 	w.Write(js)
 
 	return nil, http.StatusOK
+}
+
+// Get user info from the token in the header.
+// Query the database for the token,
+//   and return the data received.
+func getUserInfoFromHeader(r *http.Request) (User, error, int) {
+	// Get user info from the token in the header.
+	user := User{}
+	user.Token = r.Header.Get("token")
+	err, status := user.verifyToken()
+	if err != nil {
+		return user, err, status
+	}
+
+	// Get user info from the database, using the token in the header.
+	err = usersCollection.Find(bson.M{"token": user.Token}).One(&user)
+	if err != nil {
+		return user,
+			fmt.Errorf("Failed to find token in the database\n%v\n", err),
+			http.StatusUnauthorized
+	}
+
+	return user, nil, http.StatusOK
+}
+
+// Verify whether this user is the author of story
+//   by using the string version of a story id.
+// Return an error and an http status code if the user is not the author.
+func (u *User) verifyAuthorship(storyId string) (error, int) {
+	for _, userStoryId := range u.Stories {
+		if userStoryId == storyId {
+			return nil, http.StatusOK
+		}
+	}
+
+	return fmt.Errorf("User is not a creator of this story\n"),
+		http.StatusUnauthorized
 }

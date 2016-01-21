@@ -84,6 +84,9 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
       }
     })
     .state('createStory', {
+      params: {
+        story: {}
+      },
       url: "/createStory",
       views: {
         'navBar': {
