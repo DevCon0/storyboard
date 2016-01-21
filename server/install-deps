@@ -1,4 +1,33 @@
 #!/bin/bash
+
+_chkGopath() {
+    if [ -z "$(command -v go)" ]; then
+        echo "Go needs to be installed in order to install ependencies";
+        return 1;
+    fi;
+
+    if [ -n "${GOPATH}" ]; then
+        return 0;
+    fi;
+
+    local file="${HOME}/.bashrc";
+    [ ! -e "${file}" ] &&
+        file="${HOME}/.bash_profile";
+
+    local msg="Add these lines to your ${file}:"
+    [ ! -e "${file}" ] &&
+        msg="Add these lines to your Terminal configuration file:"
+
+    echo "${msg}";
+    echo 'export GOPATH=$HOME/go';
+    echo 'export PATH=$PATH:$GOPATH/bin';
+
+    return 1;
+}
+
+_chkGopath ||
+    exit $?;
+
 declare Dependencies=(
     "gopkg.in/mgo.v2"
     "gopkg.in/mgo.v2/bson"
