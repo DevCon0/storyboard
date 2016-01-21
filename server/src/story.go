@@ -250,12 +250,14 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 		return err, http.StatusNotFound
 	}
 
-	max := len(stories)
+	limit := len(stories)
+	targetTotal := 15
 	randomNumbers := []int{}
-	randomStories := make([]Story, 3)
+	randomStories := make([]Story, targetTotal)
+
 	i := 0
 	for {
-		n := rand.Intn(max)
+		n := rand.Intn(limit)
 		if intSlcContains(randomNumbers, n) {
 			continue
 		}
@@ -263,7 +265,7 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 		randomStories[i] = stories[n]
 
 		i++
-		if i >= 3 {
+		if i == targetTotal || i == limit {
 			break
 		}
 	}
@@ -384,6 +386,8 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	if err != nil {
 		return err, status
 	}
+	fmt.Println("user.Username: ", user.Username)
+	fmt.Println("storyId: ", storyId)
 
 	// Remove story data from the database.
 	err = storiesCollection.Remove(

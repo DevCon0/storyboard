@@ -58,8 +58,17 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 	user.Id = bson.NewObjectId()
 	user.CreatedAt = time.Now()
 
-	// Encrypt the password.
+	// Remeber the password submitted in the request.
+	// (It will be removed from the 'user' struct insde the
+	//   'user.genToken()' function)
 	password := []byte(user.Password)
+
+	// Generate a token for the user.
+	if err, status = user.genToken(); err != nil {
+		return err, status
+	}
+
+	// Encrypt the password.
 	newPassword, err := bcrypt.GenerateFromPassword(password, 10)
 	if err != nil {
 		fmt.Printf("bcrypt encryption failed for some reason\n")
@@ -67,12 +76,11 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusInternalServerError
 	}
 
-	// Overwrite exposed password with encrypted password
+	// Re-set the user's password to the newly encrypted one.
 	user.Password = string(newPassword)
 
 	// Add the new user to the database.
-	collection := db.C("users")
-	err = collection.Insert(&user)
+	err = usersCollection.Insert(&user)
 	if err != nil {
 		fmt.Printf("Database insertion failed for user:\n%#v\n", user)
 		return fmt.Errorf("Internal Server Error\n"),
