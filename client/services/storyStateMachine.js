@@ -84,10 +84,28 @@ angular.module('storyBoard.storyStateMachineService', [])
   };
 
   storyStateMachine.recueCurrentVideo = function(event){
-    var currentVideoInfo = event.target.h.h;
-    var currentVideoId = currentVideoInfo.videoId;
-    var currentVideoStart = currentVideoInfo.playerVars.start;
-    var currentVideoEnd = currentVideoInfo.playerVars.end;
+    var currentVideoId    = null;
+    var currentVideoStart = null;
+    var currentVideoEnd   = null;
+    var currentIframe = event.target.getIframe();
+    var currentPlayerDiv = currentIframe.getAttribute('id');
+    switch(currentPlayerDiv){
+      case 'player1':
+        currentVideoId = this.story.frames[this.story.FRAME1].videoId;
+        currentVideoStart = this.story.frames[this.story.FRAME1].start;
+        currentVideoEnd = this.story.frames[this.story.FRAME1].end;
+        break;
+      case 'player2':
+        currentVideoId = this.story.frames[this.story.FRAME2].videoId;
+        currentVideoStart = this.story.frames[this.story.FRAME2].start;
+        currentVideoEnd = this.story.frames[this.story.FRAME2].end;
+        break;
+      case 'player3':
+        currentVideoId = this.story.frames[this.story.FRAME3].videoId;
+        currentVideoStart = this.story.frames[this.story.FRAME3].start;
+        currentVideoEnd = this.story.frames[this.story.FRAME3].end;
+        break;
+    }
     event.target.cueVideoById(
       {
         'videoId': currentVideoId,
