@@ -387,8 +387,6 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	if err != nil {
 		return err, status
 	}
-	fmt.Println("user.Username: ", user.Username)
-	fmt.Println("storyId: ", storyId)
 
 	// Remove story data from the database.
 	err = storiesCollection.Remove(
@@ -447,4 +445,207 @@ func searchStories(w http.ResponseWriter, r *http.Request, searchTag string) (er
 	w.Write(js)
 
 	return nil, http.StatusOK
+}
+
+// POST request to 'api/stories/votes'.
+func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Get user info from the token in the request header.
+	user := User{}
+	var err error
+	status := http.StatusCreated
+
+	chanErrGetUserInfoFromHeader := make(chan error, 1)
+	chanHttpStatus := make(chan int, 1)
+
+	// Spawn a new thread to find user info from the header.
+	go func() {
+		// Get user info from the token in the header.
+		user, err, status = getUserInfoFromHeader(r)
+		chanErrGetUserInfoFromHeader <- err
+		chanHttpStatus <- status
+	}()
+
+	// Concurrently, decode the JSON object in the request body.
+	vote := Vote{}
+	err = json.NewDecoder(r.Body).Decode(&vote)
+	if err != nil {
+		return fmt.Errorf("Invalid JSON object in request body \n%v\n", err),
+			http.StatusBadRequest
+	}
+
+	// Verify that the request provided required fields.
+	if vote.StoryId == "" {
+		return fmt.Errorf("storyId field required in request body\n"),
+			http.StatusBadRequest
+	}
+	switch vote.Direction {
+	case "up", "down":
+		// Good
+	default:
+		return fmt.Errorf("direction field required in request body\n"),
+			http.StatusBadRequest
+	}
+
+	// fmt.Printf("vote:\n  %#v\n", vote)
+
+	// Search the stories collection for stories which contain the search tag.
+	story := Story{}
+	storyObjectId := bson.ObjectIdHex(vote.StoryId)
+
+	err = storiesCollection.Find(bson.M{"_id": storyObjectId}).One(&story)
+	if err != nil {
+		return fmt.Errorf("Failed to find matching story\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// Wait for both threads to complete.
+	// Return an error if one was found.
+	if err = <-chanErrGetUserInfoFromHeader; err != nil {
+		return err, <-chanHttpStatus
+	}
+
+	vote.Username = user.Username
+
+	userAlreadyVoted := false
+	totalVotes := len(story.Votes)
+
+	for i := totalVotes - 1; i >= 0; i-- {
+		currVote := &story.Votes[i]
+
+		if currVote.Username != user.Username {
+			continue
+		}
+
+		userAlreadyVoted = true
+
+		if currVote.Direction == vote.Direction {
+			return fmt.Errorf("%v has already %vvoted %v\n",
+					user.Username, vote.Direction, story.Title),
+				http.StatusUnauthorized
+		} else {
+			(*currVote).Direction = vote.Direction
+			break
+		}
+
+	}
+
+	switch vote.Direction {
+	case "up":
+		if userAlreadyVoted {
+			story.VoteCount += 2
+		} else {
+			story.VoteCount++
+		}
+	case "down":
+		if userAlreadyVoted {
+			story.VoteCount -= 2
+		} else {
+			story.VoteCount--
+		}
+	}
+
+	// fmt.Printf("story:\n  %#v\n", story)
+
+	// userAlreadyVoted := false
+	// err = storiesCollection.Find(bson.M{
+	// 	"_id": storyObjectId,
+	// }).Select(bson.M{
+	// 	"votes": bson.M{
+	// 		"$elemMatch": bson.M{
+	// 			"username": user.Username,
+	// 		},
+	// 	},
+	// }).One(&story)
+	// if err == nil {
+	// 	userAlreadyVoted = true
+	// }
+
+	switch userAlreadyVoted {
+	case true:
+		// _, err = storiesCollection.Find(bson.M{
+		// 	"_id": storyObjectId,
+		// }).Select(bson.M{
+		// 	"votes": bson.M{
+		// 		"$elemMatch": bson.M{
+		// 			"username": user.Username,
+		// 		},
+		// 	},
+		// }).Apply(mgo.Change{
+		// 	Update: bson.M{
+		// 		"$set": bson.M{
+		// 			"votes":     story.Votes,
+		// 			"voteCount": story.VoteCount,
+		// 		},
+		// 	},
+		// 	Upsert:    true,
+		// 	ReturnNew: true,
+		// }, &story.Votes)
+		err = storiesCollection.Update(bson.M{
+			"_id":            storyObjectId,
+			"votes.username": user.Username,
+		}, bson.M{
+			"$set": bson.M{
+				"votes.$.direction": vote.Direction,
+				"voteCount":         story.VoteCount,
+			},
+		})
+	default:
+		// err = storiesCollection.Update(bson.M{
+		// 	"_id": storyObjectId,
+		// }, bson.M{
+		// 		"$push": bson.M{
+		// 			"votes":     vote,
+		// 		},
+		// })
+		//
+		// err = storiesCollection.Update(bson.M{
+		// 	"_id": storyObjectId,
+		// }, bson.M{
+		// 		"$set": bson.M{
+		// 			"voteCount": story.VoteCount,
+		// 		},
+		// })
+		//
+		err = storiesCollection.Update(bson.M{
+			"_id": storyObjectId,
+		}, bson.M{
+			"$set": bson.M{
+				"votes":     story.Votes,
+				"voteCount": story.VoteCount,
+			},
+		})
+	}
+
+	// fmt.Printf("story:\n  %#v\n", story)
+
+	// err = storiesCollection.Update(bson.M{
+	// 	"_id": storyObjectId,
+	// }, bson.M{
+	// 	"$set": bson.M{
+	// 		"votes":     story.Votes,
+	// 		"voteCount": story.VoteCount,
+	// 	},
+	// })
+	if err != nil {
+		return fmt.Errorf(
+				"Failed to update story votes in the database\n%v\n", err,
+			),
+			http.StatusNotFound
+	}
+
+	// Prepare JSON response data by stringify the data for 'story'
+	//   into JSON string format.
+	js, err := json.Marshal(story)
+	if err != nil {
+		return fmt.Errorf("Failed to stringify story\n%v\n", err),
+			http.StatusInternalServerError
+	}
+
+	// Send the story with status 200;
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	// w.Write(js)
+	w.Write(js)
+
+	return nil, http.StatusCreated
 }
