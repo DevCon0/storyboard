@@ -1,5 +1,6 @@
 var storyBoardApp = angular.module('storyBoardApp', [
                                    'ui.router',
+                                   'ng-polymer-elements',
                                    'LocalStorageModule',
                                    'storyBoard.auth',
                                    'storyBoard.navBar',

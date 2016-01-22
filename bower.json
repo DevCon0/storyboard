@@ -25,6 +25,10 @@
     "paper-header-panel": "PolymerElements/paper-header-panel#~1.1.2",
     "paper-card": "PolymerElements/paper-card#~1.0.9",
     "paper-spinner": "PolymerElements/paper-spinner#~1.1.0",
-    "iron-icons": "PolymerElements/iron-icons#~1.1.1"
+    "iron-icons": "PolymerElements/iron-icons#~1.1.1",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#~1.1.2",
+    "paper-item": "PolymerElements/paper-item#~1.1.3",
+    "ng-polymer-elements": "~0.3.0",
+    "paper-menu": "PolymerElements/paper-menu#~1.2.2"
   }
 }
