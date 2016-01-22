@@ -7,12 +7,6 @@ angular.module('storyBoard.authService', [])
       method: 'POST',
       url: '/api/users/signin',
       data: user
-    })
-    .then(function (resp) {
-      console.log('ran sign in with resp: ', resp);
-      localStorageService.set('sessiontoken', resp.data.token);
-      localStorageService.set('username', resp.data.username);
-      $location.path('/');
     });
   };
 
@@ -22,11 +16,6 @@ angular.module('storyBoard.authService', [])
       url: '/api/users/signup',
       data: user
     })
-    .then(function (resp) {
-      localStorageService.set('sessiontoken', resp.data.token);
-      localStorageService.set('username', resp.data.username);
-      $location.path('/')
-    });
   };
 
   auth.isAuth = function () {

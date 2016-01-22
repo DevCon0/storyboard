@@ -3,29 +3,22 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"testing"
 
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 var (
 	BobTheTester        User
 	BobTheTesterStories []Story
-	session             *mgo.Session
 )
 
 // Test basic database insertion, retrieval, and removal.
 func TestDatabase(t *testing.T) {
 	t.Log("Testing database connection...")
-	var err error
-	session, err = initDb()
-	if err != nil {
-		t.Errorf("Failed to connect to the database\n%v\n", err)
-	}
+	initDb()
 
 	t.Log("Testing database insertion...")
 
@@ -49,7 +42,7 @@ func TestDatabase(t *testing.T) {
 			Stories:   []string{},
 		},
 	}
-	err = collection.Insert(testUsers...)
+	err := collection.Insert(testUsers...)
 	if err != nil {
 		t.Errorf("Failed to insert test users into the database\n%v\n", err)
 	}
@@ -97,7 +90,7 @@ func TestSignup(t *testing.T) {
 	url := "http://localhost:8020/api/users/signup"
 
 	jsonStr := `{
-		"username":"BobTheTester",
+		"username": "BobTheTester",
 		"fullname": "Bob",
 		"password": "Sue"
 	}`
@@ -146,8 +139,6 @@ func TestSignin(t *testing.T) {
 	// Remember BobTheTester for future tests.
 	err = json.NewDecoder(res.Body).Decode(&BobTheTester)
 	if err != nil {
-		content, _ := ioutil.ReadAll(res.Body)
-		t.Logf("res.Body/content:\n%#v\n", string(content))
 		t.Errorf("Invalid JSON object in response body \n%v\n", err)
 	}
 
@@ -179,6 +170,7 @@ func TestStoryCreation(t *testing.T) {
 	jsonStr := `{
     "title": "When Bob meets Alice",
     "username": "BobTheTester",
+    "tags": ["test", "Bob", "tagme"],
     "frame1": 0,
     "frame2": 1,
     "frame3": 2,
@@ -227,6 +219,7 @@ func TestStoryCreation(t *testing.T) {
 	jsonStr = `{
     "title": "When Bob meets Dwight",
     "username": "BobTheTester",
+    "tags": ["test", "Bob"],
     "frame1": 0,
     "frame2": 1,
     "frame3": 2,
@@ -334,7 +327,6 @@ func TestStoryFetch(t *testing.T) {
 	id := lastResult.Id
 
 	url := concat("http://localhost:8020/api/stories/story/", id.Hex())
-	t.Log(url)
 
 	expectedStatus := http.StatusOK
 	res, err := http.Get(url)
@@ -349,7 +341,7 @@ func TestStoryFetch(t *testing.T) {
 			expectedStatus, res.StatusCode,
 		)
 	} else {
-		t.Logf("Response received from %v\n", url)
+		t.Logf("Response received from \n%v\n", url)
 	}
 
 	res.Body.Close()
@@ -398,7 +390,7 @@ func TestLibraryFetch(t *testing.T) {
 				expectedStatus, res.StatusCode,
 			)
 		} else {
-			t.Logf("Response received from %v\n", url)
+			t.Logf("Response received from \n%v\n", url)
 		}
 
 	}
@@ -463,7 +455,7 @@ func TestShowCase(t *testing.T) {
 				expectedStatus, res.StatusCode,
 			)
 		} else {
-			t.Logf("Response received from %v\n", url)
+			t.Logf("Response received from \n%v\n", url)
 		}
 
 		// Convert the JSON object in the response body to a story type.
@@ -485,6 +477,46 @@ func TestShowCase(t *testing.T) {
 		}
 
 	}
+}
+
+func TestStorySearch(t *testing.T) {
+	t.Log("Testing single story fetching...")
+
+	url := "http://localhost:8020/api/stories/search/tagme"
+	t.Logf("GET request to%v\n", url)
+
+	expectedStatus := http.StatusOK
+	res, err := http.Get(url)
+	if err != nil {
+		t.Errorf(
+			"Failed to send request to %v\n%v\n",
+			url, err,
+		)
+		return
+	} else if res.StatusCode != expectedStatus {
+		t.Errorf(
+			"Expected status code %v, got %v\n",
+			expectedStatus, res.StatusCode,
+		)
+		return
+	}
+
+	t.Logf("Response received\n")
+
+	// content, _ := ioutil.ReadAll(res.Body)
+	// t.Logf("res.Body/content:\n%#v\n", string(content))
+
+	stories := []Story{}
+	err = json.NewDecoder(res.Body).Decode(&stories)
+	if err != nil {
+		t.Errorf("Invalid JSON object in response body \n%v\n", err)
+	} else if len(stories) != 1 {
+		t.Errorf("Did not receive any stories from the search request\n")
+	}
+
+	// t.Logf("stories:\n%#v\n", stories)
+
+	res.Body.Close()
 }
 
 func TestEditStory(t *testing.T) {

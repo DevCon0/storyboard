@@ -1,10 +1,21 @@
-<div class="col-md-offset-1"><h2>Top Stories Today</h2></div>
 <div class="row">
-  <div ng-repeat="story in showcase">
-    <div class="col-md-3">
-      <div class="topStoryframe">
-        <a href="/#/singleStory/{{story.storyId}}"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>
-      </div>
+    <div class="col-md-offset-1"><h2>Top Stories Today</h2></div>
+</div>
+
+<form class="form-horizontal">
+    <div class="form-group form-group-lg">
+        <div class="col-sm-3 col-sm-offset-1">
+            <input class="form-control" type="text" id="formGroupInputLarge" placeholder="Search" ng-model="search">
+        </div>
     </div>
-  </div>
+</form>
+
+<div class="row">
+    <div class="dashfade" ng-repeat="story in showcase | filter:search">
+        <div class="col-md-3">
+            <div class="topStoryframe">
+                <a href="/#/singleStory/{{story.storyId}}"><img ng-src="{{story.thumbnail}}"></img> <span class="caption"><h2>{{story.title}}</h2><p>{{story.description}}</p><p>-{{story.username}}</p></span></a>
+            </div>
+        </div>
+    </div>
 </div>

@@ -58,8 +58,18 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 	user.Id = bson.NewObjectId()
 	user.CreatedAt = time.Now()
 
-	// Encrypt the password.
+	// Remeber the password submitted in the request.
+	// (It will be removed from the 'user' struct insde the
+	//   'user.genToken()' function)
 	password := []byte(user.Password)
+
+	// Generate a token for the user.
+	shouldUpdateInDb := false
+	if err, status = user.genToken(shouldUpdateInDb); err != nil {
+		return err, status
+	}
+
+	// Encrypt the password.
 	newPassword, err := bcrypt.GenerateFromPassword(password, 10)
 	if err != nil {
 		fmt.Printf("bcrypt encryption failed for some reason\n")
@@ -67,20 +77,31 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusInternalServerError
 	}
 
-	// Overwrite exposed password with encrypted password
+	// Re-set the user's password to the newly encrypted one.
 	user.Password = string(newPassword)
 
 	// Add the new user to the database.
-	collection := db.C("users")
-	err = collection.Insert(&user)
+	err = usersCollection.Insert(&user)
 	if err != nil {
 		fmt.Printf("Database insertion failed for user:\n%#v\n", user)
 		return fmt.Errorf("Internal Server Error\n"),
 			http.StatusInternalServerError
 	}
 
+	// Prepare to send response data.
+	// Stringify the user into JSON string format.
+	js, err := json.Marshal(user)
+	if err != nil {
+		fmt.Printf("Failed to convert response data to JSON:\n%#v\n", user)
+		return fmt.Errorf("Internal Server Error\n"),
+			http.StatusInternalServerError
+	}
+
+	// Send the response object to the client.
+	w.Header().Set("Content-Type", "application/json")
+
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Signed up!"))
+	w.Write(js)
 
 	fmt.Printf("Signed up %v\n", user.Username)
 
@@ -107,13 +128,15 @@ func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 	}
 
 	// Make a response object to send to the client.
-	if err, status = user.genToken(); err != nil {
+	shouldUpdateInDb := true
+	if err, status = user.genToken(shouldUpdateInDb); err != nil {
 		return err, status
 	}
 
 	// fmt.Printf("user:\n%#v\n\n", user)
 
-	// Stringify the response object.
+	// Prepare to send response data.
+	// Stringify the user into JSON string format.
 	js, err := json.Marshal(user)
 	if err != nil {
 		fmt.Printf("Failed to convert response data to JSON:\n%#v\n", user)
@@ -250,7 +273,7 @@ func (u *User) verifyPassword() (error, int) {
 //   update the token in the database,
 //   remove the password from the *User struct.
 // Return a bool indicating whether an error occurred.
-func (u *User) genToken() (error, int) {
+func (u *User) genToken(shouldUpdateInDb bool) (error, int) {
 	// Create a new, empty token.
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -266,13 +289,16 @@ func (u *User) genToken() (error, int) {
 	tokenString, err := token.SignedString(tokenSecret)
 	if err != nil {
 		fmt.Printf("Failed to create token\n%v\n", err)
-		return fmt.Errorf("Internal Server Error"),
+		return fmt.Errorf("Failed to create token\n%v\n", err),
 			http.StatusInternalServerError
 	}
 
 	// Add the signed token to the User struct.
 	u.Token = tokenString
-	// fmt.Printf("tokenString:\n%v\n", tokenString)
+
+	if !shouldUpdateInDb {
+		return nil, http.StatusOK
+	}
 
 	// Update the token in the database.
 	if err = usersCollection.Update(
