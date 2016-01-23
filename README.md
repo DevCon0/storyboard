@@ -34,6 +34,18 @@ $ go test -v
 The tech stack is MongoDB, Angular, and Go.
 
 #Release Notes
+##### 1/22/2016 - alpha v0.1.4
+A user can preview a Story before saving it.
+
+A user can save a created story.
+
+A user can view their created story from the dashboard.
+
+A user can edit a story they’ve created and re-save it.
+
+A user can delete a story they’ve created.
+
+
 ##### 1/15/2016 - alpha v0.0.1
 
 A user can access our site via a web URL (heroku hosted).
