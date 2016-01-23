@@ -14,7 +14,8 @@ angular.module('storyBoard.singleStory', [])
   .then(function (story) {
     $scope.storyTitle = story.data.title;
     $scope.storyUsername = story.data.username;
-    StoryStateMachine.setStory(story.data, $scope);
+    var isSingleStoryView = true;
+    StoryStateMachine.setStory(story.data, isSingleStoryView, $scope);
   });
 
   $scope.voteUp = function () {
