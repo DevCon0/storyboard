@@ -397,6 +397,7 @@ paper-spinner-lite.blueSpinner{
     -o-transition: all 0.75s ease-in-out;
     -ms-transition: all 0.75s ease-in-out;
     transition: all 0.75s ease-in-out;
+    transform-origin:left top;
 }
 
 
@@ -406,9 +407,9 @@ paper-spinner-lite.blueSpinner{
     -o-transform: scale( 2.8 );
     -ms-transform: scale( 2.8 );
     transform: scale( 2.8 );
-    padding-left:15%;
-    padding-top:200px;
     z-index:1;
+    padding-top:20px;
+    transform-origin:left top;
     
     vertical-align: middle;
 }
@@ -425,6 +426,7 @@ paper-spinner-lite.blueSpinner{
     -o-transition: all 0.75s ease-in-out;
     -ms-transition: all 0.75s ease-in-out;
     transition: all 0.75s ease-in-out;
+        transform-origin:center top;
 }
 
 .growact2{
@@ -433,9 +435,9 @@ paper-spinner-lite.blueSpinner{
     -o-transform: scale( 2.8 );
     -ms-transform: scale( 2.8 );
     transform: scale( 2.8 );
-    padding-left:6%;
-    padding-top:200px;
+    padding-top:20px;
     z-index:1;
+        transform-origin:center top;
     
     vertical-align: middle;
 }
@@ -452,6 +454,7 @@ paper-spinner-lite.blueSpinner{
     -o-transition: all 0.75s ease-in-out;
     -ms-transition: all 0.75s ease-in-out;
     transition: all 0.75s ease-in-out;
+        transform-origin:right top;
 }
 .growact3{
     -webkit-transform: scale( 2.8 );
@@ -459,9 +462,9 @@ paper-spinner-lite.blueSpinner{
     -o-transform: scale( 2.8 );
     -ms-transform: scale( 2.8 );
     transform: scale( 2.8 );
-    padding-right:36%;
-    padding-top:200px;
+    padding-top:20px;
     z-index:1;
+        transform-origin:right top;
     
     vertical-align: middle;
 }
