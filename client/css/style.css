@@ -387,16 +387,16 @@ paper-spinner-lite.blueSpinner{
 
 /*Grow stop the center*/
 .act1 {
-    -webkit-transform: scale( 1 );
-    -moz-transform: scale( 1 );
-    -o-transform: scale( 1 );
-    -ms-transform: scale( 1 );
-    transform: scale( 1 );
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    -ms-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transform: scale( 0.9 );
+    -moz-transform: scale( 0.9 );
+    -o-transform: scale( 0.9 );
+    -ms-transform: scale( 0.9 );
+    transform: scale( 0.9 );
+    -webkit-transition: all 0.75s ease-in-out;
+    -moz-transition: all 0.75s ease-in-out;
+    -o-transition: all 0.75s ease-in-out;
+    -ms-transition: all 0.75s ease-in-out;
+    transition: all 0.75s ease-in-out;
 }
 
 
@@ -415,16 +415,16 @@ paper-spinner-lite.blueSpinner{
 
 
 .act2 {
-    -webkit-transform: scale( 1 );
-    -moz-transform: scale( 1 );
-    -o-transform: scale( 1 );
-    -ms-transform: scale( 1 );
-    transform: scale( 1 );
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    -ms-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transform: scale( 0.9 );
+    -moz-transform: scale( 0.9 );
+    -o-transform: scale( 0.9 );
+    -ms-transform: scale( 0.9 );
+    transform: scale( 0.9 );
+    -webkit-transition: all 0.75s ease-in-out;
+    -moz-transition: all 0.75s ease-in-out;
+    -o-transition: all 0.75s ease-in-out;
+    -ms-transition: all 0.75s ease-in-out;
+    transition: all 0.75s ease-in-out;
 }
 
 .growact2{
@@ -442,16 +442,16 @@ paper-spinner-lite.blueSpinner{
 
 
 .act3 {
-    -webkit-transform: scale( 1 );
-    -moz-transform: scale( 1 );
-    -o-transform: scale( 1 );
-    -ms-transform: scale( 1 );
-    transform: scale( 1 );
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    -ms-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transform: scale( 0.9 );
+    -moz-transform: scale( 0.9 );
+    -o-transform: scale( 0.9 );
+    -ms-transform: scale( 0.9 );
+    transform: scale( 0.9 );
+    -webkit-transition: all 0.75s ease-in-out;
+    -moz-transition: all 0.75s ease-in-out;
+    -o-transition: all 0.75s ease-in-out;
+    -ms-transition: all 0.75s ease-in-out;
+    transition: all 0.75s ease-in-out;
 }
 .growact3{
     -webkit-transform: scale( 2.8 );
