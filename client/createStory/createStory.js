@@ -74,26 +74,26 @@ angular.module('storyBoard.createStory', [])
 
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
-    $scope.storyTitle = "Testing Title";
-    $scope.storyDescription = "Testing description";
-    $scope.storyThumbnailUrl = "https://imgflip.com/s/meme/Futurama-Fry.jpg"
+    $scope.storyTitle = "Danger Zone";
+    $scope.storyDescription = "You're in the ....";
+    $scope.storyThumbnailUrl = "http://www.foodsafetymagazine.com/fsm/cache/file/3B40D087-FDF9-43B7-9353CE2E6C9CC945.jpg"
 
-    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=yViIi3gie2c";
-    $scope.frame1StartTime = "32";
-    $scope.frame1EndTime = "37";
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=siwpn14IE7E";
+    $scope.frame1StartTime = "29";
+    $scope.frame1EndTime = "33";
     $scope.frame1ImageUrl = "http://i.imgur.com/7j15tXU.jpg";
     $scope.frame1UrlDuration = 2;
 
-    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=PLLQK9la6Go";
-    $scope.frame2StartTime = "174";
-    $scope.frame2EndTime = "179";
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=8vuZ8jSVNUI";
+    $scope.frame2StartTime = "21";
+    $scope.frame2EndTime = "26";
     $scope.frame2ImageUrl = "http://gifstumblr.com/images/bird-vs-action-figure_1509.gif";
     $scope.frame2UrlDuration = 3;
 
 
-    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=COvnHv42T-A";
-    $scope.frame3StartTime = "104";
-    $scope.frame3EndTime = "106";
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=8vuZ8jSVNUI";
+    $scope.frame3StartTime = "35";
+    $scope.frame3EndTime = "45";
     $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
     $scope.frame3UrlDuration = 1;
   }
@@ -291,15 +291,11 @@ angular.module('storyBoard.createStory', [])
             //TODO: move into shared Youtube functionality service
             switch(event.data){
               case YT.PlayerState.PAUSED:
-                var currentVideoInfo = event.target.h.h;
-                var currentVideoId = currentVideoInfo.videoId;
-                var currentVideoStart = currentVideoInfo.playerVars.start;
-                var currentVideoEnd = currentVideoInfo.playerVars.end;
                 event.target.cueVideoById(
                   {
-                    'videoId': currentVideoId,
-                    'startSeconds': currentVideoStart,
-                    'endSeconds': currentVideoEnd
+                    'videoId': videoId,
+                    'startSeconds': start,
+                    'endSeconds': end
                   }
                 );
                 break;
