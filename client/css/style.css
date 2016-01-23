@@ -470,6 +470,22 @@ paper-spinner-lite.blueSpinner{
 }
 
 
+/*.player-video {
+    background-color:red;
+}*/
+
+.center-it {
+    margin-left: 7%;
+}
+
+.panel-body{
+    background-color:rgba(0, 0, 0, 0.1);
+}
+
+.story-title{
+    font-weight:bold; 
+}
+
 /*Down 1.5x
 .growact1 {
         -webkit-transform: scale( 1 );
