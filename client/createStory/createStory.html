@@ -1,5 +1,5 @@
 <paper-header-panel class="create-story-paper-header-panel">
-<div class="create-story-paper-header blue">{{user}}, create your own story!<span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">Pre-populate inputs</button></span></div>
+<div class="create-story-paper-header blue">{{user}}, create your own story!<span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO Pre-populate inputs DEMO</button></span></div>
 <div class="create-story-paper-header-panel-content">
 <div class="row">
   <div class="col-md-offset-1 col-md-3">
@@ -41,15 +41,15 @@
         <form ng-submit="previewFrame(1)">
           <div class="form-group">
             <label for="youtubeUrl1">Youtube URL</label>
-            <input type="url" ng-model="frame1YoutubeUrl" class="form-control" id="youtubeUrl1" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame1YoutubeUrl" class="form-control" id="youtubeUrl1" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <label for="startTime1">Start Time (sec)</label>
-            <input type="text" ng-model="frame1StartTime" class="form-control" id="startTime1" placeholder="0">
+            <input type="text" ng-model="$parent.frame1StartTime" class="form-control" id="startTime1" placeholder="0">
           </div>
           <div class="form-group">
             <label for="endTime1">End Time (sec)</label>
-            <input type="text" ng-model="frame1EndTime" class="form-control" id="endTime1" placeholder="0">
+            <input type="text" ng-model="$parent.frame1EndTime" class="form-control" id="endTime1" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner1" class="blue" active></paper-spinner-lite></span>
@@ -66,7 +66,7 @@
           </div>
           <div class="form-group">
             <label for="imageUrl1Duration">Duration (sec)</label>
-            <input type="text" ng-model="frame1UrlDuration" class="form-control" id="imageUrl1Duration" placeholder="0">
+            <input type="text" ng-model="$parent.frame1UrlDuration" class="form-control" id="imageUrl1Duration" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -89,15 +89,15 @@
         <form ng-submit="previewFrame(2)">
           <div class="form-group">
             <label for="youtubeUrl2">Youtube URL</label>
-            <input type="url" ng-model="frame2YoutubeUrl" class="form-control" id="youtubeUrl2" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame2YoutubeUrl" class="form-control" id="youtubeUrl2" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <label for="startTime2">Start Time (sec)</label>
-            <input type="text" ng-model="frame2StartTime" class="form-control" id="startTime2" placeholder="0">
+            <input type="text" ng-model="$parent.frame2StartTime" class="form-control" id="startTime2" placeholder="0">
           </div>
           <div class="form-group">
             <label for="endTime2">End Time (sec)</label>
-            <input type="text" ng-model="frame2EndTime" class="form-control" id="endTime2" placeholder="0">
+            <input type="text" ng-model="$parent.frame2EndTime" class="form-control" id="endTime2" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner2" class="blue" active></paper-spinner-lite></span>
@@ -114,7 +114,7 @@
           </div>
           <div class="form-group">
             <label for="imageUrl2Duration">Duration (sec)</label>
-            <input type="text" ng-model="frame2UrlDuration" class="form-control" id="imageUrl2Duration" placeholder="0">
+            <input type="text" ng-model="$parent.frame2UrlDuration" class="form-control" id="imageUrl2Duration" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -137,15 +137,15 @@
         <form ng-submit="previewFrame(3)">
           <div class="form-group">
             <label for="youtubeUrl3">Youtube URL</label>
-            <input type="url" ng-model="frame3YoutubeUrl" class="form-control" id="youtubeUrl3" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame3YoutubeUrl" class="form-control" id="youtubeUrl3" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <label for="startTime3">Start Time (sec)</label>
-            <input type="text" ng-model="frame3StartTime" class="form-control" id="startTime3" placeholder="0">
+            <input type="text" ng-model="$parent.frame3StartTime" class="form-control" id="startTime3" placeholder="0">
           </div>
           <div class="form-group">
             <label for="endTime3">End Time (sec)</label>
-            <input type="text" ng-model="frame3EndTime" class="form-control" id="endTime3" placeholder="0">
+            <input type="text" ng-model="$parent.frame3EndTime" class="form-control" id="endTime3" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner3" class="blue" active></paper-spinner-lite></span>
@@ -162,7 +162,7 @@
           </div>
           <div class="form-group">
             <label for="imageUrl3Duration">Duration (sec)</label>
-            <input type="text" ng-model="frame3UrlDuration" class="form-control" id="imageUrl3Duration" placeholder="0">
+            <input type="text" ng-model="$parent.frame3UrlDuration" class="form-control" id="imageUrl3Duration" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
