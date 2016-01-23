@@ -387,16 +387,17 @@ paper-spinner-lite.blueSpinner{
 
 /*Grow stop the center*/
 .act1 {
-    -webkit-transform: scale( 1 );
-    -moz-transform: scale( 1 );
-    -o-transform: scale( 1 );
-    -ms-transform: scale( 1 );
-    transform: scale( 1 );
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    -ms-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transform: scale( 0.9 );
+    -moz-transform: scale( 0.9 );
+    -o-transform: scale( 0.9 );
+    -ms-transform: scale( 0.9 );
+    transform: scale( 0.9 );
+    -webkit-transition: all 0.75s ease-in-out;
+    -moz-transition: all 0.75s ease-in-out;
+    -o-transition: all 0.75s ease-in-out;
+    -ms-transition: all 0.75s ease-in-out;
+    transition: all 0.75s ease-in-out;
+    transform-origin:left top;
 }
 
 
@@ -406,25 +407,26 @@ paper-spinner-lite.blueSpinner{
     -o-transform: scale( 2.8 );
     -ms-transform: scale( 2.8 );
     transform: scale( 2.8 );
-    padding-left:15%;
-    padding-top:200px;
     z-index:1;
+    padding-top:20px;
+    transform-origin:left top;
     
     vertical-align: middle;
 }
 
 
 .act2 {
-    -webkit-transform: scale( 1 );
-    -moz-transform: scale( 1 );
-    -o-transform: scale( 1 );
-    -ms-transform: scale( 1 );
-    transform: scale( 1 );
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    -ms-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transform: scale( 0.9 );
+    -moz-transform: scale( 0.9 );
+    -o-transform: scale( 0.9 );
+    -ms-transform: scale( 0.9 );
+    transform: scale( 0.9 );
+    -webkit-transition: all 0.75s ease-in-out;
+    -moz-transition: all 0.75s ease-in-out;
+    -o-transition: all 0.75s ease-in-out;
+    -ms-transition: all 0.75s ease-in-out;
+    transition: all 0.75s ease-in-out;
+        transform-origin:center top;
 }
 
 .growact2{
@@ -433,25 +435,26 @@ paper-spinner-lite.blueSpinner{
     -o-transform: scale( 2.8 );
     -ms-transform: scale( 2.8 );
     transform: scale( 2.8 );
-    padding-left:6%;
-    padding-top:200px;
+    padding-top:20px;
     z-index:1;
+        transform-origin:center top;
     
     vertical-align: middle;
 }
 
 
 .act3 {
-    -webkit-transform: scale( 1 );
-    -moz-transform: scale( 1 );
-    -o-transform: scale( 1 );
-    -ms-transform: scale( 1 );
-    transform: scale( 1 );
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    -ms-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transform: scale( 0.9 );
+    -moz-transform: scale( 0.9 );
+    -o-transform: scale( 0.9 );
+    -ms-transform: scale( 0.9 );
+    transform: scale( 0.9 );
+    -webkit-transition: all 0.75s ease-in-out;
+    -moz-transition: all 0.75s ease-in-out;
+    -o-transition: all 0.75s ease-in-out;
+    -ms-transition: all 0.75s ease-in-out;
+    transition: all 0.75s ease-in-out;
+        transform-origin:right top;
 }
 .growact3{
     -webkit-transform: scale( 2.8 );
@@ -459,9 +462,9 @@ paper-spinner-lite.blueSpinner{
     -o-transform: scale( 2.8 );
     -ms-transform: scale( 2.8 );
     transform: scale( 2.8 );
-    padding-right:36%;
-    padding-top:200px;
+    padding-top:20px;
     z-index:1;
+        transform-origin:right top;
     
     vertical-align: middle;
 }
