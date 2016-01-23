@@ -15,6 +15,13 @@ angular.module('storyBoard.storyStateMachineService', ['storyBoard.videoPlayer']
     closureIsSingleStoryView = isSingleStoryView;
     parentControllerScope = scope;
     var storyFrames = story.frames;
+    // Start with last frame and go backwards
+    // because each player receives a play call
+    // from the player ahead of it.  There could
+    // be a race condition where the first player
+    // wants to start the second player before
+    // the second player is created.  So, we
+    // create them in reverse order.
     var lastFrame = storyFrames.length - 1;
     for(var i = lastFrame; i >= 0; i--) {
       var currentStoryFrame = storyFrames[i];
