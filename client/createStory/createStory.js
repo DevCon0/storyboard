@@ -52,21 +52,21 @@ angular.module('storyBoard.createStory', [])
 
     $scope.frame1MediaType = null;
     $scope.frame1YoutubeUrl = null;
-    $scope.frame1StartTime = null;
+    $scope.frame1StartTime = "0";
     $scope.frame1EndTime = null;
     $scope.frame1ImageUrl = null;
     $scope.frame1UrlDuration = null;
 
     $scope.frame2MediaType = null;
     $scope.frame2YoutubeUrl = null;
-    $scope.frame2StartTime = null;
+    $scope.frame2StartTime = "0";
     $scope.frame2EndTime = null;
     $scope.frame2ImageUrl = null;
     $scope.frame2UrlDuration = null;
 
     $scope.frame3MediaType = null;
     $scope.frame3YoutubeUrl = null;
-    $scope.frame3StartTime = null;
+    $scope.frame3StartTime = "0";
     $scope.frame3EndTime = null;
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
@@ -104,13 +104,10 @@ angular.module('storyBoard.createStory', [])
       $scope.storyDescription  &&
       $scope.storyThumbnailUrl &&
       $scope.frame1YoutubeUrl  &&
-      $scope.frame1StartTime   &&
       $scope.frame1EndTime     &&
       $scope.frame2YoutubeUrl  &&
-      $scope.frame2StartTime   &&
       $scope.frame2EndTime     &&
       $scope.frame3YoutubeUrl  &&
-      $scope.frame3StartTime   &&
       $scope.frame3EndTime;
     return allFieldsReady;
   }
