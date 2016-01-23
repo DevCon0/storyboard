@@ -9,6 +9,8 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.dashboard',
                                    'storyBoard.onUrlErrorDirective',
                                    'storyBoard.createStory',
+                                   'storyBoard.player',
+                                   'storyBoard.videoPlayer',
                                    'storyBoard.storyStateMachineService',
                                    'storyBoard.storyStorageService',
                                    'storyBoard.authService',

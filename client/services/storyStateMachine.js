@@ -1,158 +1,118 @@
-angular.module('storyBoard.storyStateMachineService', [])
+angular.module('storyBoard.storyStateMachineService', ['storyBoard.videoPlayer'])
 
-.factory('StoryStateMachine', function(){
+.factory('StoryStateMachine', function(VideoPlayer){
   var storyStateMachine = {};
+  storyStateMachine.story = null;
+  var closureIsSingleStoryView = false;
+  storyStateMachine.players = [];
   var parentControllerScope = null;
+  var FIRST = 0;
+  var SECOND = 1;
+  var THIRD = 2;
 
-  storyStateMachine.setStory = function(story, scope){
+  storyStateMachine.setStory = function(story, isSingleStoryView, scope){
     this.story = story;
+    closureIsSingleStoryView = isSingleStoryView;
     parentControllerScope = scope;
-    while( ! window.youtubeApiLoadedAndReady){}
-    var VIDEO_HEIGHT = 200;
-    var VIDEO_WIDTH = 356;
     var storyFrames = story.frames;
-    for(var i = 0; i < storyFrames.length; i++){
-      storyFrames[i].player =
-        new YT.Player(
-          storyFrames[i].playerDiv,
-          {
-            height: VIDEO_HEIGHT,
-            width: VIDEO_WIDTH,
-            videoId: storyFrames[i].videoId,
-            playerVars: {
-              controls: 0,
-              showinfo: 0,
-              start: storyFrames[i].start,
-              end: storyFrames[i].end
-            },
-            events: {
-              'onReady': storyStateMachine.onPlayerReady.bind(storyStateMachine),
-              'onStateChange': storyStateMachine.playerStateListener.bind(storyStateMachine)
-            }
-          }
-        );
+    var lastFrame = storyFrames.length - 1;
+    for(var i = lastFrame; i >= 0; i--) {
+      var currentStoryFrame = storyFrames[i];
+      var readyCallback = this._determineReadyCallback(i);
+      var endPlayBackCallback = this._determineEndPlaybackCallback(i);
+      var newFramePlayer = new VideoPlayer();
+      newFramePlayer.create(
+        currentStoryFrame,
+        readyCallback,
+        endPlayBackCallback);
+      this.players.unshift(newFramePlayer);
     }
   };
 
   storyStateMachine.endStory = function(){
-    var storyFrames = this.story.frames;
-    storyFrames.forEach(function(storyFrame){
-      storyFrame.player.destroy();
+    var storyPlayers = this.players;
+    storyPlayers.forEach(function(player){
+      player.destroy();
     });
-  }
-
-  storyStateMachine.playerStateListener = function(event){
-    var state = null;
-    switch(event.data){
-      case -1:
-        state = 'unstarted';
-        break;
-      case YT.PlayerState.ENDED:
-        state = 'ended';
-        break;
-      case YT.PlayerState.PLAYING:
-        state = 'playing';
-        break;
-      case YT.PlayerState.PAUSED:
-        state = 'paused';
-        this.playNextVideo(event);
-        this.recueCurrentVideo(event);
-        break;
-      case YT.PlayerState.BUFFERING:
-        state = 'buffering';
-        break;
-      case YT.PlayerState.CUED:
-        state = 'cued';
-        break;
-    }
-    var playerDivId = event.target.f.id;
-    console.log(playerDivId);
-    console.log('Current url: ' + event.target.B.videoUrl);
-    console.log('Current State: ' + state);
+    storyStateMachine.story = null;
+    storyStateMachine.players = [];
+    parentControllerScope = null;
   };
 
-  storyStateMachine.playNextVideo = function(event){
-    var pausedPlayerDivId = event.target.f.id;
-    switch(pausedPlayerDivId){
-      case 'player1':
-        parentControllerScope.$apply(function () {
-          parentControllerScope.act1divclass = 'a';
-          parentControllerScope.act2divclass = 'growact2';
-
-        })
-        this.story.frames[this.story.FRAME2].player.playVideo();
-        break;
-      case 'player2':
-        parentControllerScope.$apply(function () {
-          parentControllerScope.act2divclass = 'a';
-          parentControllerScope.act3divclass = 'growact3';
-        })
-        this.story.frames[this.story.FRAME3].player.playVideo();
-        break;
-      case 'player3':
-        parentControllerScope.$apply(function () {
-          parentControllerScope.act3divclass = 'a';
-        })
-        break;
+  storyStateMachine._determineReadyCallback = function(frameNum){
+    var readyCallback = function(){};
+    var isFirstFrame = frameNum === FIRST;
+    if(isFirstFrame){
+      readyCallback = this._firstFrameReady;
     }
+
+    return readyCallback;
   };
 
-  storyStateMachine.recueCurrentVideo = function(event){
-    var currentVideoId    = null;
-    var currentVideoStart = null;
-    var currentVideoEnd   = null;
-    var currentIframe = event.target.getIframe();
-    var currentPlayerDiv = currentIframe.getAttribute('id');
-    switch(currentPlayerDiv){
-      case 'player1':
-        currentVideoId = this.story.frames[this.story.FRAME1].videoId;
-        currentVideoStart = this.story.frames[this.story.FRAME1].start;
-        currentVideoEnd = this.story.frames[this.story.FRAME1].end;
-        break;
-      case 'player2':
-        currentVideoId = this.story.frames[this.story.FRAME2].videoId;
-        currentVideoStart = this.story.frames[this.story.FRAME2].start;
-        currentVideoEnd = this.story.frames[this.story.FRAME2].end;
-        break;
-      case 'player3':
-        currentVideoId = this.story.frames[this.story.FRAME3].videoId;
-        currentVideoStart = this.story.frames[this.story.FRAME3].start;
-        currentVideoEnd = this.story.frames[this.story.FRAME3].end;
-        break;
+  storyStateMachine._firstFrameReady = function(){
+    if(closureIsSingleStoryView) {
+      _growAct1();
     }
-    event.target.cueVideoById(
-      {
-        'videoId': currentVideoId,
-        'startSeconds': currentVideoStart,
-        'endSeconds': currentVideoEnd
-      }
-    );
+    // Here, *this* will refer to the first frame player
+    this.play();
   };
 
-  storyStateMachine.onPlayerReady = function(event){
-    var readyPlayer = event.target;
-    var readyPlayerDivId = event.target.f.id;
-    switch(readyPlayerDivId){
-      case 'player1':
-        parentControllerScope.$apply(function () {
-          parentControllerScope.act1divclass = 'growact1';
-        })
-        readyPlayer.playVideo();
-        break;
-      case 'player2':
-      case 'player3':
-        readyPlayer.playVideo();
-        readyPlayer.pauseVideo();
-        break;
+  storyStateMachine._determineEndPlaybackCallback = function(frameNum){
+    var endPlayBackCallback = function(){};
+    var isFirstFrame  = frameNum === FIRST;
+    var isSecondFrame = frameNum === SECOND;
+    var isThirdFrame  = frameNum === THIRD;
+    var storyStateMachine = this;
+    if(isFirstFrame) {
+      endPlayBackCallback = function(){
+        if(closureIsSingleStoryView) {
+          _shrinkAct1AndGrowAct2();
+        }
+        storyStateMachine.players[SECOND].play();
+      };
+    } else if(isSecondFrame) {
+      endPlayBackCallback = function(){
+        if(closureIsSingleStoryView) {
+          _shrinkAct2AndGrowAct3();
+        }
+        storyStateMachine.players[THIRD].play();
+      };
+    } else if(isThirdFrame) {
+      endPlayBackCallback = function(){
+        if(closureIsSingleStoryView) {
+          _shrinkAct3();
+        }
+      };
     }
+
+    return endPlayBackCallback;
+  };
+
+  function _growAct1() {
+    parentControllerScope.$apply(function () {
+      parentControllerScope.act1divclass = 'growact1';
+    });
+  };
+
+  function _shrinkAct1AndGrowAct2() {
+    parentControllerScope.$apply(function () {
+      parentControllerScope.act1divclass = 'a';
+      parentControllerScope.act2divclass = 'growact2';
+    });
+  };
+
+  function _shrinkAct2AndGrowAct3() {
+    parentControllerScope.$apply(function () {
+      parentControllerScope.act2divclass = 'a';
+      parentControllerScope.act3divclass = 'growact3';
+    });
+  };
+
+  function _shrinkAct3() {
+    parentControllerScope.$apply(function () {
+      parentControllerScope.act3divclass = 'a';
+    });
   };
 
   return storyStateMachine;
-})
-
-
-
-
-
-
-
+});
