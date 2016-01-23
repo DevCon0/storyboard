@@ -286,7 +286,7 @@ body {
   padding: 20px;
 }
 
-paper-spinner.blue{
+paper-spinner-lite.blueSpinner{
   --paper-spinner-color: var(--google-blue-500);
 }
 
@@ -302,7 +302,6 @@ paper-spinner.blue{
 
 .blue {
   background-color: #4285F4;
-  /*var(--paper-light-blue-500);*/
 }
 
 .create-page-btn {
