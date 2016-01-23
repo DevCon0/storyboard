@@ -188,7 +188,9 @@ angular.module('storyBoard.createStory', [])
         }
       ]
     }
-    StoryStateMachine.setStory(story);
+    var isSingleStoryView = false;
+    var scope = null;
+    StoryStateMachine.setStory(story, isSingleStoryView, scope);
   }
 
   $scope.destoryFrames = function(){
