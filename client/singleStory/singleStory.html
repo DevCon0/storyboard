@@ -1,19 +1,18 @@
 <div class="single-story-outer">
-  <div class="single-story-inner">
-    <paper-header-panel class="single-story-paper-header-panel">
-      <div class="single-story-paper-header blue">{{storyTitle}}  <button class="btn btn-success active btn-lg" ng-click="voteUp()">Cheer</button> <button class="btn btn-danger active btn-lg" ng-click="voteDown()">Hiss</button><span style="float: right; padding-right: 5px;">Made with<iron-icon icon="icons:favorite" class="icon-margin-left"></iron-icon> by {{storyUsername}}</span></div>
-      <div class="single-story-paper-header-panel-content">
-          <paper-card heading="Act I" elevation="3" class="single-story-paper-card">
-            <div class="card-content"><div id="player1"></div></div>
-          </paper-card>
-          <paper-card heading="Act II" elevation="3" class="single-story-paper-card">
-            <div class="card-content"><div id="player2"></div></div>
-          </paper-card>
-          <paper-card heading="Act III" elevation="3" class="single-story-paper-card">
-            <div class="card-content"><div id="player3"></div></div>
-          </paper-card>
-      </div>
-    </paper-header-panel>
-  </div>
+    <div class="single-story-inner">
+        <div class="row">
+            <div class="act1 col-md-3" ng-class="act1divclass">
+                <div id="player1"></div>
+            </div>
+
+            <div class="act2 col-md-3" ng-class="act2divclass">
+                <div id="player2"></div>
+            </div>
+
+            <div class="act3 col-md-3" ng-class="act3divclass">
+                <div id="player3"></div>
+            </div>
+        </div>
+    </div>
 </div>
 

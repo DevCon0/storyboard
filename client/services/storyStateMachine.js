@@ -1,10 +1,12 @@
 angular.module('storyBoard.storyStateMachineService', [])
 
-.factory('StoryStateMachine', function($window){
+.factory('StoryStateMachine', function(){
   var storyStateMachine = {};
+  var parentControllerScope = null;
 
-  storyStateMachine.setStory = function(story){
+  storyStateMachine.setStory = function(story, scope){
     this.story = story;
+    parentControllerScope = scope;
     while( ! window.youtubeApiLoadedAndReady){}
     var VIDEO_HEIGHT = 200;
     var VIDEO_WIDTH = 356;
@@ -73,12 +75,24 @@ angular.module('storyBoard.storyStateMachineService', [])
     var pausedPlayerDivId = event.target.f.id;
     switch(pausedPlayerDivId){
       case 'player1':
+        parentControllerScope.$apply(function () {
+          parentControllerScope.act1divclass = 'a';
+          parentControllerScope.act2divclass = 'growact2';
+
+        })
         this.story.frames[this.story.FRAME2].player.playVideo();
         break;
       case 'player2':
+        parentControllerScope.$apply(function () {
+          parentControllerScope.act2divclass = 'a';
+          parentControllerScope.act3divclass = 'growact3';
+        })
         this.story.frames[this.story.FRAME3].player.playVideo();
         break;
       case 'player3':
+        parentControllerScope.$apply(function () {
+          parentControllerScope.act3divclass = 'a';
+        })
         break;
     }
   };
@@ -120,6 +134,9 @@ angular.module('storyBoard.storyStateMachineService', [])
     var readyPlayerDivId = event.target.f.id;
     switch(readyPlayerDivId){
       case 'player1':
+        parentControllerScope.$apply(function () {
+          parentControllerScope.act1divclass = 'growact1';
+        })
         readyPlayer.playVideo();
         break;
       case 'player2':

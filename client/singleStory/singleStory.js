@@ -3,6 +3,10 @@ angular.module('storyBoard.singleStory', [])
 .controller('singleStoryCtrl', function ($scope, StoryStorage, StoryStateMachine, $stateParams, localStorageService) {
   $scope.storyTitle = null;
   $scope.storyUsername = null;
+  $scope.act1divclass = '';
+  $scope.act2divclass = '';
+  $scope.act3divclass = '';
+
   var storyID = $stateParams.storyId;
   var token = localStorageService.get('sessionToken');
 
@@ -10,7 +14,7 @@ angular.module('storyBoard.singleStory', [])
   .then(function (story) {
     $scope.storyTitle = story.data.title;
     $scope.storyUsername = story.data.username;
-    StoryStateMachine.setStory(story.data);
+    StoryStateMachine.setStory(story.data, $scope);
   });
 
   $scope.voteUp = function () {
