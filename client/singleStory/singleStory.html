@@ -1,18 +1,25 @@
 <div class="single-story-outer">
+    <div class="panel panel-default">
+        <div class="panel-body created-bar">
+            <span class="story-title">{{storyTitle}} </span>created by: <span>{{storyUsername}}</span>
+        </div>
+    </div>
+
     <div class="single-story-inner">
         <div class="row">
-            <div class="act1 col-md-3" ng-class="act1divclass">
-                <div id="player1"></div>
+            <div class="act1 col-md-3 player-video" ng-class="act1divclass">
+                <div id="player1" class="center-it"></div>
             </div>
 
-            <div class="act2 col-md-3" ng-class="act2divclass">
-                <div id="player2"></div>
+            <div class="act2 col-md-3 player-video" ng-class="act2divclass">
+                <div id="player2" class="center-it"></div>
             </div>
 
-            <div class="act3 col-md-3" ng-class="act3divclass">
-                <div id="player3"></div>
+            <div class="act3 col-md-3 player-video" ng-class="act3divclass">
+                <div id="player3" class="center-it"></div>
             </div>
         </div>
     </div>
 </div>
+
 
