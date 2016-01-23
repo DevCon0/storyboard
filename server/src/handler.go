@@ -27,6 +27,10 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handle requests to "/api/users/..."
 func usersHandler(w http.ResponseWriter, r *http.Request) {
+	// If reconnecting to the database,
+	//   wait until a connection is established.
+	verifyDbConnection()
+
 	err, status := func() (error, int) {
 		location := strings.Split(r.URL.Path, "/")[3]
 
@@ -52,6 +56,10 @@ func usersHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func storyHandler(w http.ResponseWriter, r *http.Request) {
+	// If reconnecting to the database,
+	//   wait until a connection is established.
+	verifyDbConnection()
+
 	baseLocation := "/api/stories/"
 	routeAndId := strings.TrimPrefix(r.URL.Path, baseLocation)
 	split := strings.Split(routeAndId, "/")
@@ -69,6 +77,10 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 		case "showcase":
 			// return showCase(w, r)
 			return showCaseRandom(w, r)
+		case "search":
+			return searchStories(w, r, id)
+		case "votes":
+			return postVote(w, r)
 		default:
 			return fmt.Errorf("Unknown stories api location: %v\n", location),
 				http.StatusBadRequest

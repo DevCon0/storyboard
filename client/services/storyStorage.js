@@ -80,5 +80,20 @@ angular.module('storyBoard.storyStorageService', [])
     })
   };
 
+  storyStorage.voteStory = function (id, token, vote) {
+    console.log('voteStory (Factory) called with', vote,id);
+    return $http({
+      method: 'POST',
+      url: '/api/stories/votes',
+      headers: {
+        'token': token
+    },
+      data: {
+        storyId: id,
+        direction: vote
+      }
+    })
+  };
+
   return storyStorage;
 })

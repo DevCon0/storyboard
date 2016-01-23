@@ -78,44 +78,59 @@ func getStory(w http.ResponseWriter, r *http.Request, storyId string) (error, in
 // POST request to 'api/stories/story'.
 // Respond with the full data for the story specified in the url.
 func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Grab the JSON object in the response body
-	story := Story{}
+	user := User{}
+	var err error
+	status := http.StatusOK
 
-	err := json.NewDecoder(r.Body).Decode(&story)
+	chanErrGetUserInfoFromHeader := make(chan error, 1)
+	chanHttpStatus := make(chan int, 1)
+
+	// Spawn a new thread to find user info from the header.
+	go func() {
+		// Get user info from the token in the header.
+		user, err, status = getUserInfoFromHeader(r)
+		chanErrGetUserInfoFromHeader <- err
+		chanHttpStatus <- status
+	}()
+
+	// Concurrently, decode the JSON object in the request body.
+	story := Story{}
+	err = json.NewDecoder(r.Body).Decode(&story)
 	if err != nil {
 		return fmt.Errorf("Invalid JSON object in request body \n%v\n", err),
 			http.StatusBadRequest
 	}
 
-	if len(story.Frames) <= 0 {
+	if len(story.Frames) == 0 {
 		return fmt.Errorf("Incomplete JSON data\n"),
 			http.StatusBadRequest
-	}
-
-	// Get user info from the token in the header.
-	user := User{}
-	user.Token = r.Header.Get("token")
-	err, status := user.verifyToken()
-	if err != nil {
-		return err, status
-	}
-
-	// Get user info from the database, using the token in the header.
-	err = usersCollection.Find(bson.M{"token": user.Token}).One(&user)
-	if err != nil {
-		return err,
-			http.StatusNotFound
 	}
 
 	// Set mongo values "_id" and "created_at" (cf. 'schema.go').
 	story.Id = bson.NewObjectId()
 	story.CreatedAt = time.Now()
 
+	// Wait for both threads to complete.
+	// Return an error if one was found.
+	if err = <-chanErrGetUserInfoFromHeader; err != nil {
+		return err, <-chanHttpStatus
+	}
+
 	// Set default values.
 	story.Views = 0
 	if story.Author == "" {
 		story.Author = user.Username
 	}
+
+	// Spawn a new thread to add the storyId
+	//   to the current user's array of stories.
+	chanErrUserStoriesUpdate := make(chan error, 1)
+	go func() {
+		chanErrUserStoriesUpdate <- usersCollection.Update(
+			bson.M{"username": user.Username},
+			bson.M{"$push": bson.M{"stories": story.Id.Hex()}},
+		)
+	}()
 
 	// Add the new story to the database.
 	err = storiesCollection.Insert(&story)
@@ -124,27 +139,25 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusInternalServerError
 	}
 
-	// Save storyId to current users' array of stories
-	err = usersCollection.Update(
-		bson.M{"username": user.Username},
-		bson.M{"$push": bson.M{"stories": story.Id.Hex()}},
-	)
+	// Start building the http response data.
+	// Stringify the story data into JSON format.
+	jsonStoryResponseData, err := json.Marshal(story)
 	if err != nil {
-		return fmt.Errorf("Failed to add story to user's stories\n%v\n", err),
+		return err,
 			http.StatusInternalServerError
 	}
 
-	// Stringify the story data into JSON format.
-	js, err := json.Marshal(story)
-	if err != nil {
-		return err,
+	// Wait for both threads to complete.
+	// Return an error if one was found.
+	if err = <-chanErrUserStoriesUpdate; err != nil {
+		return fmt.Errorf("Failed to add story to user's stories\n%v\n", err),
 			http.StatusInternalServerError
 	}
 
 	// Send the new story JSON object with status 201.
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	w.Write(js)
+	w.Write(jsonStoryResponseData)
 
 	return nil, http.StatusCreated
 }
@@ -237,12 +250,14 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 		return err, http.StatusNotFound
 	}
 
-	max := len(stories)
+	limit := len(stories)
+	targetTotal := 15
 	randomNumbers := []int{}
-	randomStories := make([]Story, 3)
+	randomStories := make([]Story, targetTotal)
+
 	i := 0
 	for {
-		n := rand.Intn(max)
+		n := rand.Intn(limit)
 		if intSlcContains(randomNumbers, n) {
 			continue
 		}
@@ -250,7 +265,7 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 		randomStories[i] = stories[n]
 
 		i++
-		if i >= 3 {
+		if i == targetTotal || i == limit {
 			break
 		}
 	}
@@ -279,7 +294,7 @@ func intSlcContains(slc []int, q int) bool {
 }
 
 // PUT request to 'api/stories/story'.
-// Respond with the full data for the story specified in the url.
+// Update a story's information in the database.
 func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Grab the JSON object in the response body
 	story := Story{}
@@ -315,6 +330,7 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			"title":       story.Title,
 			"description": story.Description,
 			"thumbnail":   story.Thumbnail,
+			"tags":        story.Tags,
 			"frames":      story.Frames,
 		}})
 	if err != nil {
@@ -396,4 +412,240 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	w.Write([]byte("Story deleted"))
 
 	return nil, http.StatusOK
+}
+
+// GET request to 'api/stories/search/<search_tag>'.
+// Respond with an array of stories which contain the search tag.
+func searchStories(w http.ResponseWriter, r *http.Request, searchTag string) (error, int) {
+	// Make sure a story id was given in the url.
+	if len(searchTag) <= 0 {
+		return fmt.Errorf("Search tag not specified in the url\n"),
+			http.StatusBadRequest
+	}
+
+	// Search the stories collection for stories which contain the search tag.
+	stories := []Story{}
+	err := storiesCollection.Find(bson.M{"tags": searchTag}).All(&stories)
+	if err != nil {
+		return fmt.Errorf("Failed to find matching stories\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// Prepare JSON response data by stringify the data for 'stories'
+	//   into JSON string format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return fmt.Errorf("Failed to stringify stories\n%v\n", err),
+			http.StatusInternalServerError
+	}
+
+	// Send the story with status 200;
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// POST request to 'api/stories/votes'.
+func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Get user info from the token in the request header.
+	user := User{}
+	var err error
+	status := http.StatusCreated
+
+	chanErrGetUserInfoFromHeader := make(chan error, 1)
+	chanHttpStatus := make(chan int, 1)
+
+	// Spawn a new thread to find user info from the header.
+	go func() {
+		// Get user info from the token in the header.
+		user, err, status = getUserInfoFromHeader(r)
+		chanErrGetUserInfoFromHeader <- err
+		chanHttpStatus <- status
+	}()
+
+	// Concurrently, decode the JSON object in the request body.
+	vote := Vote{}
+	err = json.NewDecoder(r.Body).Decode(&vote)
+	if err != nil {
+		return fmt.Errorf("Invalid JSON object in request body \n%v\n", err),
+			http.StatusBadRequest
+	}
+
+	// Verify that the request provided required fields.
+	if vote.StoryId == "" {
+		return fmt.Errorf("storyId field required in request body\n"),
+			http.StatusBadRequest
+	}
+	switch vote.Direction {
+	case "up", "down":
+		// Good
+	default:
+		return fmt.Errorf("direction field required in request body\n"),
+			http.StatusBadRequest
+	}
+
+	// fmt.Printf("vote:\n  %#v\n", vote)
+
+	// Search the stories collection for stories which contain the search tag.
+	story := Story{}
+	storyObjectId := bson.ObjectIdHex(vote.StoryId)
+
+	err = storiesCollection.Find(bson.M{"_id": storyObjectId}).One(&story)
+	if err != nil {
+		return fmt.Errorf("Failed to find matching story\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// Wait for both threads to complete.
+	// Return an error if one was found.
+	if err = <-chanErrGetUserInfoFromHeader; err != nil {
+		return err, <-chanHttpStatus
+	}
+
+	vote.Username = user.Username
+
+	userAlreadyVoted := false
+	totalVotes := len(story.Votes)
+
+	for i := totalVotes - 1; i >= 0; i-- {
+		currVote := &story.Votes[i]
+
+		if currVote.Username != user.Username {
+			continue
+		}
+
+		userAlreadyVoted = true
+
+		if currVote.Direction == vote.Direction {
+			return fmt.Errorf("%v has already %vvoted %v\n",
+					user.Username, vote.Direction, story.Title),
+				http.StatusUnauthorized
+		} else {
+			(*currVote).Direction = vote.Direction
+			break
+		}
+
+	}
+
+	switch vote.Direction {
+	case "up":
+		if userAlreadyVoted {
+			story.VoteCount += 2
+		} else {
+			story.VoteCount++
+		}
+	case "down":
+		if userAlreadyVoted {
+			story.VoteCount -= 2
+		} else {
+			story.VoteCount--
+		}
+	}
+
+	// fmt.Printf("story:\n  %#v\n", story)
+
+	// userAlreadyVoted := false
+	// err = storiesCollection.Find(bson.M{
+	// 	"_id": storyObjectId,
+	// }).Select(bson.M{
+	// 	"votes": bson.M{
+	// 		"$elemMatch": bson.M{
+	// 			"username": user.Username,
+	// 		},
+	// 	},
+	// }).One(&story)
+	// if err == nil {
+	// 	userAlreadyVoted = true
+	// }
+
+	switch userAlreadyVoted {
+	case true:
+		// _, err = storiesCollection.Find(bson.M{
+		// 	"_id": storyObjectId,
+		// }).Select(bson.M{
+		// 	"votes": bson.M{
+		// 		"$elemMatch": bson.M{
+		// 			"username": user.Username,
+		// 		},
+		// 	},
+		// }).Apply(mgo.Change{
+		// 	Update: bson.M{
+		// 		"$set": bson.M{
+		// 			"votes":     story.Votes,
+		// 			"voteCount": story.VoteCount,
+		// 		},
+		// 	},
+		// 	Upsert:    true,
+		// 	ReturnNew: true,
+		// }, &story.Votes)
+		err = storiesCollection.Update(bson.M{
+			"_id":            storyObjectId,
+			"votes.username": user.Username,
+		}, bson.M{
+			"$set": bson.M{
+				"votes.$.direction": vote.Direction,
+				"voteCount":         story.VoteCount,
+			},
+		})
+	default:
+		// err = storiesCollection.Update(bson.M{
+		// 	"_id": storyObjectId,
+		// }, bson.M{
+		// 		"$push": bson.M{
+		// 			"votes":     vote,
+		// 		},
+		// })
+		//
+		// err = storiesCollection.Update(bson.M{
+		// 	"_id": storyObjectId,
+		// }, bson.M{
+		// 		"$set": bson.M{
+		// 			"voteCount": story.VoteCount,
+		// 		},
+		// })
+		//
+		err = storiesCollection.Update(bson.M{
+			"_id": storyObjectId,
+		}, bson.M{
+			"$set": bson.M{
+				"votes":     story.Votes,
+				"voteCount": story.VoteCount,
+			},
+		})
+	}
+
+	// fmt.Printf("story:\n  %#v\n", story)
+
+	// err = storiesCollection.Update(bson.M{
+	// 	"_id": storyObjectId,
+	// }, bson.M{
+	// 	"$set": bson.M{
+	// 		"votes":     story.Votes,
+	// 		"voteCount": story.VoteCount,
+	// 	},
+	// })
+	if err != nil {
+		return fmt.Errorf(
+				"Failed to update story votes in the database\n%v\n", err,
+			),
+			http.StatusNotFound
+	}
+
+	// Prepare JSON response data by stringify the data for 'story'
+	//   into JSON string format.
+	js, err := json.Marshal(story)
+	if err != nil {
+		return fmt.Errorf("Failed to stringify story\n%v\n", err),
+			http.StatusInternalServerError
+	}
+
+	// Send the story with status 200;
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	// w.Write(js)
+	w.Write(js)
+
+	return nil, http.StatusCreated
 }

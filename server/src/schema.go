@@ -6,7 +6,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// Create User Model
+// User Model - separate collection
 type User struct {
 	Id        bson.ObjectId `json:"userId" bson:"_id,omitempty"`
 	CreatedAt time.Time     `json:"createdAt" bson:"created_at"`
@@ -17,7 +17,7 @@ type User struct {
 	Token     string        `json:"token"`
 }
 
-// Story Model
+// Story Model - separate collection
 type Story struct {
 	Id          bson.ObjectId `json:"storyId" bson:"_id,omitempty"`
 	CreatedAt   time.Time     `json:"createdAt" bson:"created_at"`
@@ -27,6 +27,9 @@ type Story struct {
 	Username    string        `json:"username"`
 	Author      string        `json:"author"`
 	Views       int           `json:"views"`
+	Tags        []string      `json:"tags"`
+	Votes       []Vote        `json:"votes"`
+	VoteCount   int           `json:"voteCount" bson:"voteCount"`
 	Frames      []Frame       `json:"frames"`
 	FRAME1      int
 	FRAME2      int
@@ -41,3 +44,13 @@ type Frame struct {
 	Start     float32  `json:"start"`
 	End       float32  `json:"end"`
 }
+
+// Vote Model - separate collection
+type Vote struct {
+	StoryId   string `json:"storyId" bson:"-"`
+	Username  string `json:"username"`
+	Direction string `json:"direction"`
+}
+
+// JSON object
+type Object map[string]interface{}

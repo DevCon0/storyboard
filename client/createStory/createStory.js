@@ -6,6 +6,15 @@ angular.module('storyBoard.createStory', [])
     $state.go('login')
   }
 
+  $scope.showSpinner1 = false;
+  $scope.addFrame1ImagePreview = false;
+
+  $scope.showSpinner2 = false;
+  $scope.addFrame2ImagePreview = false;
+
+  $scope.showSpinner3 = false;
+  $scope.addFrame3ImagePreview = false;
+
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
   var wasPassed = Object.keys($stateParams.story).length !== 0;
@@ -16,59 +25,77 @@ angular.module('storyBoard.createStory', [])
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
 
+    $scope.frame1MediaType = null; //TODO: fill in
     $scope.frame1YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
     $scope.frame1StartTime = editStory.frames[0].start;
     $scope.frame1EndTime = editStory.frames[0].end;
-    $scope.showSpinner1 = false;
+    $scope.frame1ImageUrl = null; //TODO: fill in
+    $scope.frame1UrlDuration = null; //TODO: fill in
 
+    $scope.frame2MediaType = null; //TODO: fill in
     $scope.frame2YoutubeUrl = recreateVideoUrl(editStory.frames[1].videoId);
     $scope.frame2StartTime = editStory.frames[1].start;
     $scope.frame2EndTime = editStory.frames[1].end;
-    $scope.showSpinner2 = false;
+    $scope.frame2ImageUrl = null; //TODO: fill in
+    $scope.frame2UrlDuration = null; //TODO: fill in
 
+    $scope.frame3MediaType = null; //TODO: fill in
     $scope.frame3YoutubeUrl = recreateVideoUrl(editStory.frames[2].videoId);
     $scope.frame3StartTime = editStory.frames[2].start;
     $scope.frame3EndTime = editStory.frames[2].end;
-    $scope.showSpinner3 = false;
-
-  } else{
+    $scope.frame3ImageUrl = null; //TODO: fill in
+    $scope.frame3UrlDuration = null; //TODO: fill in
+  } else {
     $scope.storyTitle = null;
     $scope.storyDescription = null;
     $scope.storyThumbnailUrl = null;
 
+    $scope.frame1MediaType = null;
     $scope.frame1YoutubeUrl = null;
-   $scope.frame1StartTime = null;
-   $scope.frame1EndTime = null;
-    $scope.showSpinner1 = false;
+    $scope.frame1StartTime = null;
+    $scope.frame1EndTime = null;
+    $scope.frame1ImageUrl = null;
+    $scope.frame1UrlDuration = null;
 
-  $scope.frame2YoutubeUrl = null;
-  $scope.frame2StartTime = null;
-  $scope.frame2EndTime = null;
-  $scope.showSpinner2 = false;
+    $scope.frame2MediaType = null;
+    $scope.frame2YoutubeUrl = null;
+    $scope.frame2StartTime = null;
+    $scope.frame2EndTime = null;
+    $scope.frame2ImageUrl = null;
+    $scope.frame2UrlDuration = null;
 
-  $scope.frame3YoutubeUrl = null;
-  $scope.frame3StartTime = null;
-  $scope.frame3EndTime = null;
-  $scope.showSpinner3 = false;
-}
+    $scope.frame3MediaType = null;
+    $scope.frame3YoutubeUrl = null;
+    $scope.frame3StartTime = null;
+    $scope.frame3EndTime = null;
+    $scope.frame3ImageUrl = null;
+    $scope.frame3UrlDuration = null;
+  }
 
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
-    $scope.storyTitle = "Testing Title";
-    $scope.storyDescription = "Testing description";
-    $scope.storyThumbnailUrl = "http://vignette1.wikia.nocookie.net/mlp/images/2/23/Grumpy_cat_'good'.jpg"
+    $scope.storyTitle = "Danger Zone";
+    $scope.storyDescription = "You're in the ....";
+    $scope.storyThumbnailUrl = "http://www.foodsafetymagazine.com/fsm/cache/file/3B40D087-FDF9-43B7-9353CE2E6C9CC945.jpg"
 
-    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=yViIi3gie2c";
-    $scope.frame1StartTime = "32";
-    $scope.frame1EndTime = "37";
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=siwpn14IE7E";
+    $scope.frame1StartTime = "29";
+    $scope.frame1EndTime = "33";
+    $scope.frame1ImageUrl = "http://i.imgur.com/7j15tXU.jpg";
+    $scope.frame1UrlDuration = 2;
 
-    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=PLLQK9la6Go";
-    $scope.frame2StartTime = "174";
-    $scope.frame2EndTime = "179";
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=8vuZ8jSVNUI";
+    $scope.frame2StartTime = "21";
+    $scope.frame2EndTime = "26";
+    $scope.frame2ImageUrl = "http://gifstumblr.com/images/bird-vs-action-figure_1509.gif";
+    $scope.frame2UrlDuration = 3;
 
-    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=COvnHv42T-A";
-    $scope.frame3StartTime = "104";
-    $scope.frame3EndTime = "106";
+
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=8vuZ8jSVNUI";
+    $scope.frame3StartTime = "35";
+    $scope.frame3EndTime = "45";
+    $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
+    $scope.frame3UrlDuration = 1;
   }
 
   $scope.checkRequiredFields = function(){
@@ -264,15 +291,11 @@ angular.module('storyBoard.createStory', [])
             //TODO: move into shared Youtube functionality service
             switch(event.data){
               case YT.PlayerState.PAUSED:
-                var currentVideoInfo = event.target.h.h;
-                var currentVideoId = currentVideoInfo.videoId;
-                var currentVideoStart = currentVideoInfo.playerVars.start;
-                var currentVideoEnd = currentVideoInfo.playerVars.end;
                 event.target.cueVideoById(
                   {
-                    'videoId': currentVideoId,
-                    'startSeconds': currentVideoStart,
-                    'endSeconds': currentVideoEnd
+                    'videoId': videoId,
+                    'startSeconds': start,
+                    'endSeconds': end
                   }
                 );
                 break;
@@ -297,6 +320,20 @@ angular.module('storyBoard.createStory', [])
   function recreateVideoUrl(youtubeID) {
     var header = "https://www.youtube.com/watch?v=";
     return header + youtubeID;
+  }
+
+  $scope.previewImageFrame = function(frameId){
+    switch(frameId){
+      case 1:
+        $scope.addFrame1ImagePreview = true;
+        break;
+      case 2:
+        $scope.addFrame2ImagePreview = true;
+        break;
+      case 3:
+        $scope.addFrame3ImagePreview = true;
+        break;
+    }
   }
 
 });
