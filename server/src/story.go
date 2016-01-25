@@ -109,6 +109,27 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	story.Id = bson.NewObjectId()
 	story.CreatedAt = time.Now()
 
+	// Set defaults for 'story.Frames'.
+	for i := 0; i < 3; i++ {
+		frame := &story.Frames[i]
+		// Skip if the previewUrl is already set.
+		if frame.PreviewUrl != "" {
+			continue
+		}
+
+		if frame.MediaType == 1 {
+			// If the frame is an image,
+			//   set the PreviewUrl to the ImageUrl.
+			frame.PreviewUrl = frame.ImageUrl
+		} else {
+			// If the frame is a video,
+			//   set the thumbnail to the first frame in the YouTube video.
+			videoId := frame.VideoId
+			previewUrl := concat("https://img.youtube.com/vi/", videoId, "/1.jpg")
+			frame.PreviewUrl = previewUrl
+		}
+	}
+
 	// Wait for both threads to complete.
 	// Return an error if one was found.
 	if err = <-chanErrGetUserInfoFromHeader; err != nil {
@@ -344,7 +365,9 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Stringify story data into JSON string format.
 	js, err := json.Marshal(story)
 	if err != nil {
-		return fmt.Errorf("Failed to stringify %v\n%v\n", story.Id.Hex(), err),
+		return fmt.Errorf(
+				"Failed to stringify %v: %v\n", story.Id.Hex(), err,
+			),
 			http.StatusInternalServerError
 	}
 
