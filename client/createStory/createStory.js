@@ -25,26 +25,41 @@ angular.module('storyBoard.createStory', [])
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
 
-    $scope.frame1MediaType = null; //TODO: fill in
+    // TODO: remove backwards compatibility
+    if(editStory.frames[0].mediaType !== undefined) {
+      $scope.frame1MediaType = editStory.frames[0].mediaType;
+    } else {
+      $scope.frame1MediaType = null;
+    }
     $scope.frame1YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
     $scope.frame1StartTime = editStory.frames[0].start;
     $scope.frame1EndTime = editStory.frames[0].end;
-    $scope.frame1ImageUrl = null; //TODO: fill in
-    $scope.frame1UrlDuration = null; //TODO: fill in
+    $scope.frame1ImageUrl = editStory.frames[0].imageUrl;
+    $scope.frame1UrlDuration = editStory.frames[0].imageDuration;
 
-    $scope.frame2MediaType = null; //TODO: fill in
+    // TODO: remove backwards compatibility
+    if(editStory.frames[1].mediaType !== undefined) {
+      $scope.frame2MediaType = editStory.frames[1].mediaType;
+    } else {
+      $scope.frame2MediaType = null;
+    }
     $scope.frame2YoutubeUrl = recreateVideoUrl(editStory.frames[1].videoId);
     $scope.frame2StartTime = editStory.frames[1].start;
     $scope.frame2EndTime = editStory.frames[1].end;
-    $scope.frame2ImageUrl = null; //TODO: fill in
-    $scope.frame2UrlDuration = null; //TODO: fill in
+    $scope.frame2ImageUrl = editStory.frames[1].imageUrl;
+    $scope.frame2UrlDuration = editStory.frames[1].imageDuration;
 
-    $scope.frame3MediaType = null; //TODO: fill in
+    // TODO: remove backwards compatibility
+    if(editStory.frames[2].mediaType !== undefined) {
+      $scope.frame3MediaType = editStory.frames[2].mediaType;
+    } else {
+      $scope.frame3MediaType = null;
+    }
     $scope.frame3YoutubeUrl = recreateVideoUrl(editStory.frames[2].videoId);
     $scope.frame3StartTime = editStory.frames[2].start;
     $scope.frame3EndTime = editStory.frames[2].end;
-    $scope.frame3ImageUrl = null; //TODO: fill in
-    $scope.frame3UrlDuration = null; //TODO: fill in
+    $scope.frame3ImageUrl = editStory.frames[2].imageUrl;
+    $scope.frame3UrlDuration = editStory.frames[2].imageDuration;
   } else {
     $scope.storyTitle = null;
     $scope.storyDescription = null;
@@ -99,16 +114,53 @@ angular.module('storyBoard.createStory', [])
   }
 
   $scope.checkRequiredFields = function(){
-    var allFieldsReady =
+    var storyMetaInfoReady =
       $scope.storyTitle        &&
       $scope.storyDescription  &&
-      $scope.storyThumbnailUrl &&
-      $scope.frame1YoutubeUrl  &&
-      $scope.frame1EndTime     &&
-      $scope.frame2YoutubeUrl  &&
-      $scope.frame2EndTime     &&
-      $scope.frame3YoutubeUrl  &&
+      $scope.storyThumbnailUrl;
+
+    var video1InfoReady =
+      $scope.frame1YoutubeUrl &&
+      $scope.frame1EndTime;
+
+    var image1InfoReady =
+      $scope.frame1ImageUrl &&
+      $scope.frame1UrlDuration;
+
+    var frame1Ready =
+      video1InfoReady ||
+      image1InfoReady;
+
+    var video2InfoReady =
+      $scope.frame2YoutubeUrl &&
+      $scope.frame2EndTime;
+
+    var image2InfoReady =
+      $scope.frame2ImageUrl &&
+      $scope.frame2UrlDuration;
+
+    var frame2Ready =
+      video2InfoReady ||
+      image2InfoReady;
+
+    var video3InfoReady =
+      $scope.frame3YoutubeUrl &&
       $scope.frame3EndTime;
+
+    var image3InfoReady =
+      $scope.frame3ImageUrl &&
+      $scope.frame3UrlDuration;
+
+    var frame3Ready =
+      video3InfoReady ||
+      image3InfoReady;
+
+    var allFieldsReady =
+      storyMetaInfoReady &&
+      frame1Ready        &&
+      frame2Ready        &&
+      frame3Ready;
+
     return allFieldsReady;
   }
 
@@ -124,25 +176,34 @@ angular.module('storyBoard.createStory', [])
       FRAME3: 2,
       frames: [
         {
+          mediaType: $scope.frame1MediaType,
           player: null,
           playerDiv: 'player1',
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
           start: parseInt($scope.frame1StartTime),
-          end: parseInt($scope.frame1EndTime)
+          end: parseInt($scope.frame1EndTime),
+          imageUrl: $scope.frame1ImageUrl,
+          imageDuration: $scope.frame1UrlDuration
         },
         {
+          mediaType: $scope.frame2MediaType,
           player: null,
           playerDiv: 'player2',
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
           start: parseInt($scope.frame2StartTime),
-          end: parseInt($scope.frame2EndTime)
+          end: parseInt($scope.frame2EndTime),
+          imageUrl: $scope.frame2ImageUrl,
+          imageDuration: $scope.frame2UrlDuration
         },
         {
+          mediaType: $scope.frame3MediaType,
           player: null,
           playerDiv: 'player3',
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
           start: parseInt($scope.frame3StartTime),
-          end: parseInt($scope.frame3EndTime)
+          end: parseInt($scope.frame3EndTime),
+          imageUrl: $scope.frame3ImageUrl,
+          imageDuration: $scope.frame3UrlDuration
         }
       ]
     }
@@ -166,25 +227,34 @@ angular.module('storyBoard.createStory', [])
       FRAME3: 2,
       frames: [
         {
+          mediaType: $scope.frame1MediaType,
           player: null,
           playerDiv: 'player1',
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
           start: $scope.frame1StartTime,
-          end: $scope.frame1EndTime
+          end: $scope.frame1EndTime,
+          imageUrl: $scope.frame1ImageUrl,
+          imageDuration: $scope.frame1UrlDuration
         },
         {
+          mediaType: $scope.frame2MediaType,
           player: null,
           playerDiv: 'player2',
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
           start: $scope.frame2StartTime,
-          end: $scope.frame2EndTime
+          end: $scope.frame2EndTime,
+          imageUrl: $scope.frame2ImageUrl,
+          imageDuration: $scope.frame2UrlDuration
         },
         {
+          mediaType: $scope.frame3MediaType,
           player: null,
           playerDiv: 'player3',
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
           start: $scope.frame3StartTime,
-          end: $scope.frame3EndTime
+          end: $scope.frame3EndTime,
+          imageUrl: $scope.frame3ImageUrl,
+          imageDuration: $scope.frame3UrlDuration
         }
       ]
     }

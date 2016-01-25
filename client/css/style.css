@@ -80,6 +80,10 @@ body {
     color: white;
 }
 
+.showImageFrame {
+  visibility: visible !important;
+  vertical-align: baseline !important;
+}
 
 .row {
   margin-left: 0px;

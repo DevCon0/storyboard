@@ -11,6 +11,7 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.createStory',
                                    'storyBoard.player',
                                    'storyBoard.videoPlayer',
+                                   'storyBoard.imagePlayer',
                                    'storyBoard.storyStateMachineService',
                                    'storyBoard.storyStorageService',
                                    'storyBoard.authService',
