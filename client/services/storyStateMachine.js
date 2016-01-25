@@ -8,9 +8,10 @@ angular.module('storyBoard.storyStateMachineService',
   var closureIsSingleStoryView = false;
   storyStateMachine.players = [];
   var parentControllerScope = null;
-  var FIRST = 0;
-  var SECOND = 1;
-  var THIRD = 2;
+  var AUDIO = 0;
+  var FIRST = 1;
+  var SECOND = 2;
+  var THIRD = 3;
 
   storyStateMachine.setStory = function(story, isSingleStoryView, scope){
     this.story = story;

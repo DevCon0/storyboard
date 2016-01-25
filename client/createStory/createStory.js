@@ -5,6 +5,8 @@ angular.module('storyBoard.createStory', [])
   if ( ! (Auth.isAuth()) ) {
     $state.go('login')
   }
+  $scope.showSpinner0 = false;
+  $scope.addFrame0ImagePreview = false;
 
   $scope.showSpinner1 = false;
   $scope.addFrame1ImagePreview = false;
@@ -14,6 +16,7 @@ angular.module('storyBoard.createStory', [])
 
   $scope.showSpinner3 = false;
   $scope.addFrame3ImagePreview = false;
+
 
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
@@ -27,43 +30,62 @@ angular.module('storyBoard.createStory', [])
 
     // TODO: remove backwards compatibility
     if(editStory.frames[0].mediaType !== undefined) {
-      $scope.frame1MediaType = editStory.frames[0].mediaType;
+      $scope.frame0MediaType = editStory.frames[0].mediaType;
     } else {
-      $scope.frame1MediaType = null;
+      $scope.frame0MediaType = null;
     }
-    $scope.frame1YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
-    $scope.frame1StartTime = editStory.frames[0].start;
-    $scope.frame1EndTime = editStory.frames[0].end;
-    $scope.frame1ImageUrl = editStory.frames[0].imageUrl;
-    $scope.frame1UrlDuration = editStory.frames[0].imageDuration;
+    $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
+    $scope.frame0StartTime = editStory.frames[0].start;
+    $scope.frame0EndTime = editStory.frames[0].end;
+    $scope.frame0ImageUrl = editStory.frames[0].imageUrl;
+    $scope.frame0UrlDuration = editStory.frames[0].imageDuration;
 
     // TODO: remove backwards compatibility
     if(editStory.frames[1].mediaType !== undefined) {
-      $scope.frame2MediaType = editStory.frames[1].mediaType;
+      $scope.frame1MediaType = editStory.frames[1].mediaType;
     } else {
-      $scope.frame2MediaType = null;
+      $scope.frame1MediaType = null;
     }
-    $scope.frame2YoutubeUrl = recreateVideoUrl(editStory.frames[1].videoId);
-    $scope.frame2StartTime = editStory.frames[1].start;
-    $scope.frame2EndTime = editStory.frames[1].end;
-    $scope.frame2ImageUrl = editStory.frames[1].imageUrl;
-    $scope.frame2UrlDuration = editStory.frames[1].imageDuration;
+    $scope.frame1YoutubeUrl = recreateVideoUrl(editStory.frames[1].videoId);
+    $scope.frame1StartTime = editStory.frames[1].start;
+    $scope.frame1EndTime = editStory.frames[1].end;
+    $scope.frame1ImageUrl = editStory.frames[1].imageUrl;
+    $scope.frame1UrlDuration = editStory.frames[1].imageDuration;
 
     // TODO: remove backwards compatibility
     if(editStory.frames[2].mediaType !== undefined) {
-      $scope.frame3MediaType = editStory.frames[2].mediaType;
+      $scope.frame2MediaType = editStory.frames[2].mediaType;
+    } else {
+      $scope.frame2MediaType = null;
+    }
+    $scope.frame2YoutubeUrl = recreateVideoUrl(editStory.frames[2].videoId);
+    $scope.frame2StartTime = editStory.frames[2].start;
+    $scope.frame2EndTime = editStory.frames[2].end;
+    $scope.frame2ImageUrl = editStory.frames[2].imageUrl;
+    $scope.frame2UrlDuration = editStory.frames[2].imageDuration;
+
+    // TODO: remove backwards compatibility
+    if(editStory.frames[3].mediaType !== undefined) {
+      $scope.frame3MediaType = editStory.frames[3].mediaType;
     } else {
       $scope.frame3MediaType = null;
     }
-    $scope.frame3YoutubeUrl = recreateVideoUrl(editStory.frames[2].videoId);
-    $scope.frame3StartTime = editStory.frames[2].start;
-    $scope.frame3EndTime = editStory.frames[2].end;
-    $scope.frame3ImageUrl = editStory.frames[2].imageUrl;
-    $scope.frame3UrlDuration = editStory.frames[2].imageDuration;
+    $scope.frame3YoutubeUrl = recreateVideoUrl(editStory.frames[3].videoId);
+    $scope.frame3StartTime = editStory.frames[3].start;
+    $scope.frame3EndTime = editStory.frames[3].end;
+    $scope.frame3ImageUrl = editStory.frames[3].imageUrl;
+    $scope.frame3UrlDuration = editStory.frames[3].imageDuration;
   } else {
     $scope.storyTitle = null;
     $scope.storyDescription = null;
     $scope.storyThumbnailUrl = null;
+
+    $scope.frame0MediaType = null;
+    $scope.frame0YoutubeUrl = null;
+    $scope.frame0StartTime = "0";
+    $scope.frame0EndTime = null;
+    $scope.frame0ImageUrl = null;
+    $scope.frame0UrlDuration = null;
 
     $scope.frame1MediaType = null;
     $scope.frame1YoutubeUrl = null;
@@ -85,6 +107,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3EndTime = null;
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
+
   }
 
   $scope.prepopulateInputs = function(){
@@ -92,6 +115,12 @@ angular.module('storyBoard.createStory', [])
     $scope.storyTitle = "Danger Zone";
     $scope.storyDescription = "You're in the ....";
     $scope.storyThumbnailUrl = "http://www.foodsafetymagazine.com/fsm/cache/file/3B40D087-FDF9-43B7-9353CE2E6C9CC945.jpg"
+
+    $scope.frame0YoutubeUrl = "https://www.youtube.com/watch?v=siwpn14IE7E";
+    $scope.frame0StartTime = "29";
+    $scope.frame0EndTime = "33";
+    $scope.frame0ImageUrl = "http://i.imgur.com/7j15tXU.jpg";
+    $scope.frame0UrlDuration = 2;
 
     $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=siwpn14IE7E";
     $scope.frame1StartTime = "29";
@@ -119,6 +148,12 @@ angular.module('storyBoard.createStory', [])
       $scope.storyDescription  &&
       $scope.storyThumbnailUrl;
 
+    var video0InfoReady =
+    $scope.frame0YoutubeUrl;
+
+    var image1InfoReady =
+      $scope.frame1ImageUrl &&
+      $scope.frame1UrlDuration;
     var video1InfoReady =
       $scope.frame1YoutubeUrl &&
       $scope.frame1EndTime;
@@ -157,6 +192,7 @@ angular.module('storyBoard.createStory', [])
 
     var allFieldsReady =
       storyMetaInfoReady &&
+      frame0Ready        &&
       frame1Ready        &&
       frame2Ready        &&
       frame3Ready;
@@ -171,10 +207,21 @@ angular.module('storyBoard.createStory', [])
       thumbnail: $scope.storyThumbnailUrl,
       username: $scope.user,
       author: "hardcoded author name",
-      FRAME1: 0,
-      FRAME2: 1,
-      FRAME3: 2,
+      AUDIO0: 0,
+      FRAME1: 1,
+      FRAME2: 2,
+      FRAME3: 3,
       frames: [
+        {
+          mediaType: $scope.frame0MediaType,
+          player: null,
+          playerDiv: 'player0',
+          videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
+          start: $scope.frame0StartTime ? parseInt($scope.frame0StartTime) : 0,
+          end: $scope.frame0EndTime ? parseInt($scope.frame0EndTime) : 0,
+          imageUrl: $scope.frame0ImageUrl,
+          imageDuration: $scope.frame0UrlDuration ? parseInt($scope.frame0UrlDuration) : 0
+        },
         {
           mediaType: $scope.frame1MediaType,
           player: null,
@@ -222,10 +269,21 @@ angular.module('storyBoard.createStory', [])
 
   $scope.previewStory = function () {
     var story = {
-      FRAME1: 0,
-      FRAME2: 1,
-      FRAME3: 2,
+      AUDIO0: 0,
+      FRAME1: 1,
+      FRAME2: 2,
+      FRAME3: 3,
       frames: [
+        {
+          mediaType: $scope.frame0MediaType,
+          player: null,
+          playerDiv: 'player0',
+          videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
+          start: $scope.frame0StartTime ? parseInt($scope.frame0StartTime) : 0,
+          end: $scope.frame0EndTime ? parseInt($scope.frame0EndTime) : 0,
+          imageUrl: $scope.frame0ImageUrl,
+          imageDuration: $scope.frame0UrlDuration ? parseInt($scope.frame0UrlDuration) : 0
+        },
         {
           mediaType: $scope.frame1MediaType,
           player: null,
@@ -268,6 +326,7 @@ angular.module('storyBoard.createStory', [])
   }
 
   var framePlayers = {
+    frame0: null,
     frame1: null,
     frame2: null,
     frame3: null
@@ -280,6 +339,14 @@ angular.module('storyBoard.createStory', [])
     var frameDivId = null;
     var framePlayerName = null;
     switch(frameId){
+      case 0:
+        frameYoutubeUrl = $scope.frame0YoutubeUrl;
+        frameStartTime = $scope.frame0StartTime;
+        frameEndTime = $scope.frame0EndTime;
+        frameDivId = 'frame0Preview';
+        framePlayerName = 'frame0';
+        $scope.showSpinner0 = true;
+        break;
       case 1:
         frameYoutubeUrl = $scope.frame1YoutubeUrl;
         frameStartTime = $scope.frame1StartTime;
@@ -339,6 +406,11 @@ angular.module('storyBoard.createStory', [])
         events: {
           'onReady': function(){
             switch(framePlayerName){
+              case 'frame0':
+                $scope.$apply(function () {
+                        $scope.showSpinner0 = false;
+                });
+              break;
               case 'frame1':
                 $scope.$apply(function () {
                         $scope.showSpinner1 = false;
@@ -395,6 +467,9 @@ angular.module('storyBoard.createStory', [])
 
   $scope.previewImageFrame = function(frameId){
     switch(frameId){
+      case 0:
+        $scope.addFrame0ImagePreview = true;
+        break;
       case 1:
         $scope.addFrame1ImagePreview = true;
         break;
