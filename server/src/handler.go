@@ -11,16 +11,15 @@ import (
 func clientHandler(w http.ResponseWriter, r *http.Request) {
 	fileRequested := r.URL.Path[1:]
 
-	// "/" => "/index.html"
+	// If no file is named, send the initial client file: "index.html".
 	if fileRequested == "" {
 		fileRequested = concat(fileRequested, "index.html")
 	}
 
+	// Append the present working directory to the filename.
 	//    "/bower_components/mithril/mithril.min.js"
 	// => "/$PWD/client/bower_components/mithril/mithril.min.js"
 	title := concat(rootDir, slash, "client", slash, fileRequested)
-
-	// fmt.Printf("Serving file:\n    %q\n", title)
 
 	http.ServeFile(w, r, title)
 }
