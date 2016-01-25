@@ -18,7 +18,7 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
     var divId = '#' + storyFrame.playerDiv;
     this.playerDiv = angular.element(document.querySelector(divId));
     var imageURL = storyFrame.imageUrl;
-    var imgTagStr = '<img src=\"' + imageURL + '\" style=\"visibility:hidden; vertical-align: baseline;\" height=\"200\" width=\"356\">';
+    var imgTagStr = '<img src=\"' + imageURL + '\" class=\"hiddenImagePlayerFrame\">';
     this.playerDiv.append(imgTagStr);
 
     readyCallback.call(this);
@@ -30,7 +30,7 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
 
   ImagePlayer.prototype.play = function(){
     var imgTag = this.playerDiv.children();
-    imgTag.addClass('showImageFrame');
+    imgTag.addClass('showImagePlayerFrame');
     var durationInMilliseconds = this.imageDuration * 1000;
     var boundEndPlaybackCallback = this.endPlaybackCallback.bind(this);
     setTimeout(function(){

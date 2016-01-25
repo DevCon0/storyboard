@@ -80,7 +80,15 @@ body {
     color: white;
 }
 
-.showImageFrame {
+.hiddenImagePlayerFrame {
+  visibility: hidden;
+  vertical-align: baseline;
+  /* Same size as youtube player */
+  height: 200px;
+  width: 356px;
+}
+
+.showImagePlayerFrame {
   visibility: visible !important;
 }
 
@@ -339,7 +347,7 @@ paper-spinner-lite.blueSpinner{
     z-index:1;
     padding-top:10px;
     transform-origin:left top;
-    
+
     vertical-align: middle;
 }
 
@@ -367,7 +375,7 @@ paper-spinner-lite.blueSpinner{
     padding-top:10px;
     z-index:1;
         transform-origin:center top;
-    
+
     vertical-align: middle;
 }
 
@@ -394,7 +402,7 @@ paper-spinner-lite.blueSpinner{
     padding-top:10px;
     z-index:1;
         transform-origin:right top;
-    
+
     vertical-align: middle;
 }
 
@@ -408,6 +416,6 @@ paper-spinner-lite.blueSpinner{
 }
 
 .story-title{
-    font-weight:bold; 
+    font-weight:bold;
 }
 
