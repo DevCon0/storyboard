@@ -207,7 +207,7 @@ body {
   transition-property: top;
   transition-duration: 0.2s;
   width: 100%;
-  z-index: 10;x
+  z-index: 10;
   border-top: hidden;
   border-bottom: solid;
   border-color: black;
