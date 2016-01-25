@@ -18,7 +18,7 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
     var divId = '#' + storyFrame.playerDiv;
     this.playerDiv = angular.element(document.querySelector(divId));
     var imageURL = storyFrame.imageUrl;
-    var imgTagStr = '<img src=\"' + imageURL + '\" style=\"visibility:hidden;\" height=\"200\" width=\"356\">';
+    var imgTagStr = '<img src=\"' + imageURL + '\" style=\"visibility:hidden; vertical-align: baseline;\" height=\"200\" width=\"356\">';
     this.playerDiv.append(imgTagStr);
 
     readyCallback.call(this);

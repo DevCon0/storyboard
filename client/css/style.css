@@ -82,7 +82,6 @@ body {
 
 .showImageFrame {
   visibility: visible !important;
-  vertical-align: baseline !important;
 }
 
 .row {
@@ -250,7 +249,7 @@ paper-spinner-lite.blueSpinner{
 .frameImagePreviewDiv {
   overflow: hidden;
   height: 160px;
-  width: 160px;
+  width: 100%;
 }
 
 .single-story-outer {
