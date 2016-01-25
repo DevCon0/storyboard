@@ -84,6 +84,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame0YoutubeUrl = null;
     $scope.frame0StartTime = "0";
     $scope.frame0EndTime = null;
+    $scope.frame0Volume = "100";
     $scope.frame0ImageUrl = null;
     $scope.frame0UrlDuration = null;
 
@@ -91,6 +92,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1YoutubeUrl = null;
     $scope.frame1StartTime = "0";
     $scope.frame1EndTime = null;
+    $scope.frame1Volume = "100";
     $scope.frame1ImageUrl = null;
     $scope.frame1UrlDuration = null;
 
@@ -98,6 +100,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2YoutubeUrl = null;
     $scope.frame2StartTime = "0";
     $scope.frame2EndTime = null;
+    $scope.frame2Volume = "100";
     $scope.frame2ImageUrl = null;
     $scope.frame2UrlDuration = null;
 
@@ -105,6 +108,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3YoutubeUrl = null;
     $scope.frame3StartTime = "0";
     $scope.frame3EndTime = null;
+    $scope.frame3Volume = "100";
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
 
@@ -112,32 +116,36 @@ angular.module('storyBoard.createStory', [])
 
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
-    $scope.storyTitle = "Danger Zone";
-    $scope.storyDescription = "You're in the ....";
-    $scope.storyThumbnailUrl = "http://www.foodsafetymagazine.com/fsm/cache/file/3B40D087-FDF9-43B7-9353CE2E6C9CC945.jpg"
+    $scope.storyTitle = "Panama ....";
+    $scope.storyDescription = "Reach down ...";
+    $scope.storyThumbnailUrl = "http://assets.rollingstone.com/assets/images/artists/van-halen.jpg"
 
-    $scope.frame0YoutubeUrl = "https://www.youtube.com/watch?v=siwpn14IE7E";
-    $scope.frame0StartTime = "29";
-    $scope.frame0EndTime = "33";
-    $scope.frame0ImageUrl = "http://i.imgur.com/7j15tXU.jpg";
-    $scope.frame0UrlDuration = 2;
+    $scope.frame0YoutubeUrl = "https://www.youtube.com/watch?v=fuKDBPw8wQA";
+    $scope.frame0StartTime = "0";
+    $scope.frame0EndTime = "180";
+    $scope.frame0Volume = "100";
+    $scope.frame0ImageUrl = null;
+    $scope.frame0UrlDuration = null;
 
-    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=siwpn14IE7E";
-    $scope.frame1StartTime = "29";
-    $scope.frame1EndTime = "33";
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=S7_Hr3iCPls";
+    $scope.frame1StartTime = "14";
+    $scope.frame1EndTime = "24";
+    $scope.frame1Volume = "0";
     $scope.frame1ImageUrl = "http://i.imgur.com/7j15tXU.jpg";
     $scope.frame1UrlDuration = 2;
 
-    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=8vuZ8jSVNUI";
-    $scope.frame2StartTime = "21";
-    $scope.frame2EndTime = "26";
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=b8cCsUBYSkw";
+    $scope.frame2StartTime = "870";
+    $scope.frame2EndTime = "885";
+    $scope.frame2Volume = "30";
     $scope.frame2ImageUrl = "http://gifstumblr.com/images/bird-vs-action-figure_1509.gif";
     $scope.frame2UrlDuration = 3;
 
 
-    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=8vuZ8jSVNUI";
-    $scope.frame3StartTime = "35";
-    $scope.frame3EndTime = "45";
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
+    $scope.frame3StartTime = "0";
+    $scope.frame3EndTime = "13";
+    $scope.frame3Volume = "60"
     $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
     $scope.frame3UrlDuration = 1;
   }
@@ -150,6 +158,9 @@ angular.module('storyBoard.createStory', [])
 
     var video0InfoReady =
     $scope.frame0YoutubeUrl;
+    var frame0Ready =
+      video1InfoReady;
+
 
     var image1InfoReady =
       $scope.frame1ImageUrl &&
