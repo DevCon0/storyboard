@@ -180,30 +180,30 @@ angular.module('storyBoard.createStory', [])
           player: null,
           playerDiv: 'player1',
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
-          start: parseInt($scope.frame1StartTime),
-          end: parseInt($scope.frame1EndTime),
+          start: $scope.frame1StartTime ? parseInt($scope.frame1StartTime) : 0,
+          end: $scope.frame1EndTime ? parseInt($scope.frame1EndTime) : 0,
           imageUrl: $scope.frame1ImageUrl,
-          imageDuration: $scope.frame1UrlDuration
+          imageDuration: $scope.frame1UrlDuration ? parseInt($scope.frame1UrlDuration) : 0
         },
         {
           mediaType: $scope.frame2MediaType,
           player: null,
           playerDiv: 'player2',
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
-          start: parseInt($scope.frame2StartTime),
-          end: parseInt($scope.frame2EndTime),
+          start: $scope.frame2StartTime ? parseInt($scope.frame2StartTime) : 0,
+          end: $scope.frame2EndTime ? parseInt($scope.frame2EndTime) : 0,
           imageUrl: $scope.frame2ImageUrl,
-          imageDuration: $scope.frame2UrlDuration
+          imageDuration: $scope.frame2UrlDuration ? parseInt($scope.frame2UrlDuration) : 0
         },
         {
           mediaType: $scope.frame3MediaType,
           player: null,
           playerDiv: 'player3',
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
-          start: parseInt($scope.frame3StartTime),
-          end: parseInt($scope.frame3EndTime),
+          start: $scope.frame3StartTime ? parseInt($scope.frame3StartTime) : 0,
+          end: $scope.frame3EndTime ? parseInt($scope.frame3EndTime) : 0,
           imageUrl: $scope.frame3ImageUrl,
-          imageDuration: $scope.frame3UrlDuration
+          imageDuration: $scope.frame3UrlDuration ? parseInt($scope.frame3UrlDuration) : 0
         }
       ]
     }
@@ -376,6 +376,8 @@ angular.module('storyBoard.createStory', [])
   }
 
   var stripOutVideoIdFromUrl = function(url){
+    if( ! url) return url;
+
     var videoId = url.split('v=')[1];
     var ampersandIndex = videoId.indexOf('&');
     if(ampersandIndex !== -1){
