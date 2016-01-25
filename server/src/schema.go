@@ -38,11 +38,14 @@ type Story struct {
 
 // Frame model for Acts/Scenes
 type Frame struct {
-	Player    struct{} `json:"player"`
-	PlayerDiv string   `json:"playerDiv"`
-	VideoId   string   `json:"videoId"`
-	Start     float32  `json:"start"`
-	End       float32  `json:"end"`
+	MediaType     int      `json:"mediaType"`
+	Player        struct{} `json:"player"`
+	PlayerDiv     string   `json:"playerDiv"`
+	VideoId       string   `json:"videoId"`
+	Start         float32  `json:"start"`
+	End           float32  `json:"end"`
+	ImageUrl      string   `json:"imageUrl"`
+	ImageDuration int      `json:"imageDuration"`
 }
 
 // Vote Model - separate collection
