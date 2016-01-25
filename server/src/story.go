@@ -37,7 +37,6 @@ func getStory(w http.ResponseWriter, r *http.Request, storyId string) (error, in
 	storyObjectId := bson.ObjectIdHex(storyId)
 
 	// Update the views in the database.
-	// story.Views++
 	err := storiesCollection.Update(bson.M{
 		"_id": storyObjectId,
 	}, bson.M{
@@ -109,6 +108,27 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Set mongo values "_id" and "created_at" (cf. 'schema.go').
 	story.Id = bson.NewObjectId()
 	story.CreatedAt = time.Now()
+
+	// Set defaults for 'story.Frames'.
+	for i := 0; i < 3; i++ {
+		frame := &story.Frames[i]
+		// Skip if the previewUrl is already set.
+		if frame.PreviewUrl != "" {
+			continue
+		}
+
+		if frame.MediaType == 1 {
+			// If the frame is an image,
+			//   set the PreviewUrl to the ImageUrl.
+			frame.PreviewUrl = frame.ImageUrl
+		} else {
+			// If the frame is a video,
+			//   set the thumbnail to the first frame in the YouTube video.
+			videoId := frame.VideoId
+			previewUrl := concat("https://img.youtube.com/vi/", videoId, "/1.jpg")
+			frame.PreviewUrl = previewUrl
+		}
+	}
 
 	// Wait for both threads to complete.
 	// Return an error if one was found.
@@ -243,29 +263,33 @@ func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
 // GET request to 'api/stories/showcase'.
 // Respond with the full data for 3 random stories.
 func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Get all stories from the database.
 	stories := []Story{}
-
 	err := storiesCollection.Find(nil).All(&stories)
 	if err != nil {
 		return err, http.StatusNotFound
 	}
 
-	limit := len(stories)
-	targetTotal := 15
+	// Randomize the stories.
+	numberOfStories := len(stories)
+	// Declare a slice which will contain the random numbers used.
 	randomNumbers := []int{}
-	randomStories := make([]Story, targetTotal)
+	// Make an array which will serve as a randomized copy of 'stories'.
+	limit := 15
+	randomStories := make([]Story, limit)
 
 	i := 0
 	for {
-		n := rand.Intn(limit)
-		if intSlcContains(randomNumbers, n) {
+		// Get a random number between 0 and the number of stories.
+		randomIndex := rand.Intn(numberOfStories)
+		if intSlcContains(randomNumbers, randomIndex) {
 			continue
 		}
-		randomNumbers = append(randomNumbers, n)
-		randomStories[i] = stories[n]
+		randomNumbers = append(randomNumbers, randomIndex)
+		randomStories[i] = stories[randomIndex]
 
 		i++
-		if i == targetTotal || i == limit {
+		if i == limit || i == numberOfStories {
 			break
 		}
 	}
@@ -341,7 +365,9 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Stringify story data into JSON string format.
 	js, err := json.Marshal(story)
 	if err != nil {
-		return fmt.Errorf("Failed to stringify %v\n%v\n", story.Id.Hex(), err),
+		return fmt.Errorf(
+				"Failed to stringify %v: %v\n", story.Id.Hex(), err,
+			),
 			http.StatusInternalServerError
 	}
 
@@ -475,18 +501,16 @@ func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	// Verify that the request provided required fields.
 	if vote.StoryId == "" {
-		return fmt.Errorf("storyId field required in request body\n"),
+		return fmt.Errorf("'storyId' field required in request body\n"),
 			http.StatusBadRequest
 	}
 	switch vote.Direction {
 	case "up", "down":
 		// Good
 	default:
-		return fmt.Errorf("direction field required in request body\n"),
+		return fmt.Errorf("'direction' field required in request body\n"),
 			http.StatusBadRequest
 	}
-
-	// fmt.Printf("vote:\n  %#v\n", vote)
 
 	// Search the stories collection for stories which contain the search tag.
 	story := Story{}
@@ -544,42 +568,8 @@ func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
 		}
 	}
 
-	// fmt.Printf("story:\n  %#v\n", story)
-
-	// userAlreadyVoted := false
-	// err = storiesCollection.Find(bson.M{
-	// 	"_id": storyObjectId,
-	// }).Select(bson.M{
-	// 	"votes": bson.M{
-	// 		"$elemMatch": bson.M{
-	// 			"username": user.Username,
-	// 		},
-	// 	},
-	// }).One(&story)
-	// if err == nil {
-	// 	userAlreadyVoted = true
-	// }
-
 	switch userAlreadyVoted {
 	case true:
-		// _, err = storiesCollection.Find(bson.M{
-		// 	"_id": storyObjectId,
-		// }).Select(bson.M{
-		// 	"votes": bson.M{
-		// 		"$elemMatch": bson.M{
-		// 			"username": user.Username,
-		// 		},
-		// 	},
-		// }).Apply(mgo.Change{
-		// 	Update: bson.M{
-		// 		"$set": bson.M{
-		// 			"votes":     story.Votes,
-		// 			"voteCount": story.VoteCount,
-		// 		},
-		// 	},
-		// 	Upsert:    true,
-		// 	ReturnNew: true,
-		// }, &story.Votes)
 		err = storiesCollection.Update(bson.M{
 			"_id":            storyObjectId,
 			"votes.username": user.Username,
@@ -590,22 +580,6 @@ func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
 			},
 		})
 	default:
-		// err = storiesCollection.Update(bson.M{
-		// 	"_id": storyObjectId,
-		// }, bson.M{
-		// 		"$push": bson.M{
-		// 			"votes":     vote,
-		// 		},
-		// })
-		//
-		// err = storiesCollection.Update(bson.M{
-		// 	"_id": storyObjectId,
-		// }, bson.M{
-		// 		"$set": bson.M{
-		// 			"voteCount": story.VoteCount,
-		// 		},
-		// })
-		//
 		err = storiesCollection.Update(bson.M{
 			"_id": storyObjectId,
 		}, bson.M{
@@ -616,16 +590,6 @@ func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
 		})
 	}
 
-	// fmt.Printf("story:\n  %#v\n", story)
-
-	// err = storiesCollection.Update(bson.M{
-	// 	"_id": storyObjectId,
-	// }, bson.M{
-	// 	"$set": bson.M{
-	// 		"votes":     story.Votes,
-	// 		"voteCount": story.VoteCount,
-	// 	},
-	// })
 	if err != nil {
 		return fmt.Errorf(
 				"Failed to update story votes in the database\n%v\n", err,
@@ -641,10 +605,9 @@ func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusInternalServerError
 	}
 
-	// Send the story with status 200;
+	// Send the story with status 201;
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	// w.Write(js)
 	w.Write(js)
 
 	return nil, http.StatusCreated

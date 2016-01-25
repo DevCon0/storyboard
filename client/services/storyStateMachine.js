@@ -1,6 +1,8 @@
-angular.module('storyBoard.storyStateMachineService', ['storyBoard.videoPlayer'])
+angular.module('storyBoard.storyStateMachineService',
+  ['storyBoard.videoPlayer',
+   'storyBoard.imagePlayer'])
 
-.factory('StoryStateMachine', function(VideoPlayer){
+.factory('StoryStateMachine', function(VideoPlayer, ImagePlayer){
   var storyStateMachine = {};
   storyStateMachine.story = null;
   var closureIsSingleStoryView = false;
@@ -27,7 +29,7 @@ angular.module('storyBoard.storyStateMachineService', ['storyBoard.videoPlayer']
       var currentStoryFrame = storyFrames[i];
       var readyCallback = this._determineReadyCallback(i);
       var endPlayBackCallback = this._determineEndPlaybackCallback(i);
-      var newFramePlayer = new VideoPlayer();
+      var newFramePlayer = this._createPlayer(currentStoryFrame.mediaType);
       newFramePlayer.create(
         currentStoryFrame,
         readyCallback,
@@ -45,6 +47,29 @@ angular.module('storyBoard.storyStateMachineService', ['storyBoard.videoPlayer']
     storyStateMachine.players = [];
     parentControllerScope = null;
   };
+
+  storyStateMachine._createPlayer = function(mediaType){
+    var player = null;
+    // TODO: Old story backwards compatibility
+    if(mediaType === undefined){
+      mediaType = 0;
+    }
+    // End backwards compatiblity
+
+    switch(mediaType){
+      case 0:
+        player = new VideoPlayer();
+        break;
+      case 1:
+        player = new ImagePlayer();
+        break;
+      default:
+        throw "Unrecognized media type in storyStateMachine.js";
+        break;
+    }
+
+    return player;
+  }
 
   storyStateMachine._determineReadyCallback = function(frameNum){
     var readyCallback = function(){};
@@ -96,30 +121,56 @@ angular.module('storyBoard.storyStateMachineService', ['storyBoard.videoPlayer']
   };
 
   function _growAct1() {
-    parentControllerScope.$apply(function () {
+    if(_isAngularAlreadyMonitoringDOM()) {
       parentControllerScope.act1divclass = 'growact1';
-    });
+    } else {
+      // Force Angular to re-render
+      parentControllerScope.$apply(function () {
+        parentControllerScope.act1divclass = 'growact1';
+      });
+    }
   };
 
   function _shrinkAct1AndGrowAct2() {
-    parentControllerScope.$apply(function () {
+    if(_isAngularAlreadyMonitoringDOM()) {
       parentControllerScope.act1divclass = 'a';
       parentControllerScope.act2divclass = 'growact2';
-    });
+    } else {
+      // Force Angular to re-render
+      parentControllerScope.$apply(function () {
+        parentControllerScope.act1divclass = 'a';
+        parentControllerScope.act2divclass = 'growact2';
+      });
+    }
   };
 
   function _shrinkAct2AndGrowAct3() {
-    parentControllerScope.$apply(function () {
+    if(_isAngularAlreadyMonitoringDOM()) {
       parentControllerScope.act2divclass = 'a';
       parentControllerScope.act3divclass = 'growact3';
-    });
+    } else {
+      // Force Angular to re-render
+      parentControllerScope.$apply(function () {
+        parentControllerScope.act2divclass = 'a';
+        parentControllerScope.act3divclass = 'growact3';
+      });
+    }
   };
 
   function _shrinkAct3() {
-    parentControllerScope.$apply(function () {
+    if(_isAngularAlreadyMonitoringDOM()) {
       parentControllerScope.act3divclass = 'a';
-    });
+    } else {
+      // Force Angular to re-render
+      parentControllerScope.$apply(function () {
+        parentControllerScope.act3divclass = 'a';
+      });
+    }
   };
+
+  function _isAngularAlreadyMonitoringDOM() {
+    return parentControllerScope.$$phase;
+  }
 
   return storyStateMachine;
 });
