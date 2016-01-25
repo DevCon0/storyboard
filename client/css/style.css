@@ -347,7 +347,6 @@ paper-spinner-lite.blueSpinner{
     z-index:1;
     padding-top:10px;
     transform-origin:left top;
-
     vertical-align: middle;
 }
 
@@ -375,7 +374,6 @@ paper-spinner-lite.blueSpinner{
     padding-top:10px;
     z-index:1;
         transform-origin:center top;
-
     vertical-align: middle;
 }
 
