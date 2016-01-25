@@ -111,19 +111,23 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	// Set defaults for 'story.Frames'.
 	for i := 0; i < 3; i++ {
-		frame := story.Frames[i]
-		// Skip if the frame is not a video frame.
-		if frame.MediaType != 0 {
+		frame := &story.Frames[i]
+		// Skip if the previewUrl is already set.
+		if frame.PreviewUrl != "" {
 			continue
 		}
-		// Skip if the ImageUrl is already set.
-		if frame.ImageUrl != "" {
-			continue
+
+		if frame.MediaType == 1 {
+			// If the frame is an image,
+			//   set the PreviewUrl to the ImageUrl.
+			frame.PreviewUrl = frame.ImageUrl
+		} else {
+			// If the frame is a video,
+			//   set the thumbnail to the first frame in the YouTube video.
+			videoId := frame.VideoId
+			previewUrl := concat("https://img.youtube.com/vi/", videoId, "/1.jpg")
+			frame.PreviewUrl = previewUrl
 		}
-		// Set the thumbnail to the first frame in the YouTube video.
-		videoId := frame.VideoId
-		imageUrl := concat("https://img.youtube.com/vi/", videoId, "/1.jpg")
-		story.Frames[i].ImageUrl = imageUrl
 	}
 
 	// Wait for both threads to complete.
