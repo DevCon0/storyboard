@@ -12,8 +12,13 @@ angular.module('storyBoard.singleStory', [])
 
   StoryStorage.getStory(storyID)
   .then(function (story) {
+    var createdAtData = story.data.createdAt.substring(0,story.data.createdAt.indexOf('T')).split('-');
+    console.log(createdAtData);
+    var createdAtString = createdAtData[1] + '/' + createdAtData[2] + '/' + createdAtData[0];
     $scope.storyTitle = story.data.title;
     $scope.storyUsername = story.data.username;
+    $scope.storyDescription = story.data.description;
+    $scope.storyCreatedAt = createdAtString;
     var isSingleStoryView = true;
     StoryStateMachine.setStory(story.data, isSingleStoryView, $scope);
   });
