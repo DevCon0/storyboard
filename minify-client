@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# CSS
+cat $(find client -type f -name "*.css" ! -path "*lib*" ! -name "*min*") |
+    minify --mime=text/css -o client/min/css_min.css;
+
+# HTML
+# for f in $(find client -type f -name "*.html" ! -path "*lib*" ! -name "*min*" ! -name "*index.html*"); do
+#     minify --mime=text/html $f -o ${f%.*}_min.html;
+# done
+
+# JavaScript
+cat $(find client -type f -name "*.js" ! -path "*lib*" ! -name "*min*") |
+    minify --mime=text/javascript -o client/min/js_min.js;
