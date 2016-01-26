@@ -132,6 +132,7 @@ func saveNonAnimatedGif(imageUrl string) (string, error) {
 	// Return the url path which the client can use
 	//   to request the new PNG image.
 	previewUrl := concat("/api/images/", dbFileIdHex)
+	fmt.Printf("previewUrl: %v\n", previewUrl)
 	return previewUrl, nil
 }
 
@@ -158,4 +159,26 @@ func getGifDimensions(gif *gif.GIF) (x, y int) {
 	}
 
 	return highestX - lowestX, highestY - lowestY
+}
+
+// Delete a non-animated version of a GIF in the database.
+// 'imageUrl' will look like '/api/images/<image_id>'
+func deleteNonAnimatedGif(imageUrl string) (error, int) {
+	// Get the imageId from the endpoint of the imageUrl.
+	imageId := filepath.Base(imageUrl)
+
+	// Convert the imageId to an Mongo ObjectId.
+	imageObjectId := bson.ObjectIdHex(imageId)
+
+	// Remove the image file with this id from the database.
+	err := dbFs.RemoveId(imageObjectId)
+	if err != nil {
+		return fmt.Errorf(
+				"Failed to remove image %v in the database: %v",
+				imageId, err,
+			),
+			http.StatusInternalServerError
+	}
+
+	return nil, http.StatusOK
 }
