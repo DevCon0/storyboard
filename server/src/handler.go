@@ -91,3 +91,17 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// Handle requests to "/api/images/..."
+func imageHandler(w http.ResponseWriter, r *http.Request) {
+	verifyDbConnection()
+	err, status := func() (error, int) {
+		return getImage(w, r)
+	}()
+
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), status)
+		return
+	}
+}

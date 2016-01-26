@@ -67,6 +67,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   VideoPlayer.prototype._onPausedListener = function(event){
     switch(event.data){
       case YT.PlayerState.PAUSED:
+      case YT.PlayerState.ENDED:
         this.endPlaybackCallback();
         this._reset();
         break;

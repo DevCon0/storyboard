@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"path/filepath"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
@@ -108,6 +109,54 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Set mongo values "_id" and "created_at" (cf. 'schema.go').
 	story.Id = bson.NewObjectId()
 	story.CreatedAt = time.Now()
+
+	// Set defaults for 'story.Frames'.
+	for i := 0; i < 3; i++ {
+		frame := &story.Frames[i]
+		// Skip if the previewUrl is already set.
+		if frame.PreviewUrl != "" {
+			continue
+		}
+
+		// Set the frame's PreviewUrl (for the home/splash page).
+		// Handle images and videos differently.
+		switch frame.MediaType {
+		// Set an image's PreviewUrl.
+		case 1:
+
+			// Handle GIF images differently than other images.
+			switch filepath.Ext(frame.ImageUrl) {
+			case ".gif":
+				// Save a non-animated version of the GIF in the database.
+				previewUrl, err := saveNonAnimatedGif(frame.ImageUrl)
+				if err != nil {
+					fmt.Printf(
+						"Failed to create a non-imaged version of %v: %v\n",
+						frame.ImageUrl, err,
+					)
+					// If an error occurred, just set the PreviewUrl
+					//   to the animated GIF.
+					frame.PreviewUrl = frame.ImageUrl
+				} else {
+					// If a non-animated copy of the GIF
+					//   was saved successfully, use it as the PreviewUrl.
+					frame.PreviewUrl = previewUrl
+				}
+			default:
+				// For non-GIF images,
+				//   just use the ImageUrl as the PreviewUrl.
+				frame.PreviewUrl = frame.ImageUrl
+			}
+
+		// Set a video's PreviewUrl.
+		default:
+			// If the frame is a video,
+			//   set the thumbnail to the first frame in the YouTube video.
+			videoId := frame.VideoId
+			previewUrl := concat("https://img.youtube.com/vi/", videoId, "/1.jpg")
+			frame.PreviewUrl = previewUrl
+		}
+	}
 
 	// Wait for both threads to complete.
 	// Return an error if one was found.
@@ -344,7 +393,9 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Stringify story data into JSON string format.
 	js, err := json.Marshal(story)
 	if err != nil {
-		return fmt.Errorf("Failed to stringify %v\n%v\n", story.Id.Hex(), err),
+		return fmt.Errorf(
+				"Failed to stringify %v: %v\n", story.Id.Hex(), err,
+			),
 			http.StatusInternalServerError
 	}
 
