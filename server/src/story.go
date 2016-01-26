@@ -138,7 +138,7 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	// Prepare to watch multi-threaded goroutines.
 	var wg sync.WaitGroup
-	wg.Add(numberOfFrames)
+	wg.Add(numberOfFrames - 1)
 
 	for i := 1; i < numberOfFrames; i++ {
 		// Set each frame's PreviewUrl concurrently.
@@ -408,7 +408,7 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	// Prepare to watch multi-threaded goroutines.
 	var wg sync.WaitGroup
-	wg.Add(numberOfFrames)
+	wg.Add(numberOfFrames - 1)
 
 	for i := 1; i < numberOfFrames; i++ {
 		// Set each frame's PreviewUrl concurrently.
