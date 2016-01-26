@@ -24,6 +24,7 @@ angular.module('storyBoard.createStory', [])
 
   if (wasPassed) {
     var editStory = $stateParams.story;
+    console.log('showing edit story', editStory)
     $scope.storyTitle = editStory.title;
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
@@ -37,6 +38,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
     $scope.frame0StartTime = editStory.frames[0].start;
     $scope.frame0EndTime = editStory.frames[0].end;
+    $scope.frame0Volume = editStory.frames[0].volume;
     $scope.frame0ImageUrl = editStory.frames[0].imageUrl;
     $scope.frame0UrlDuration = editStory.frames[0].imageDuration;
 
@@ -49,6 +51,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1YoutubeUrl = recreateVideoUrl(editStory.frames[1].videoId);
     $scope.frame1StartTime = editStory.frames[1].start;
     $scope.frame1EndTime = editStory.frames[1].end;
+    $scope.frame1Volume = editStory.frames[1].volume;
     $scope.frame1ImageUrl = editStory.frames[1].imageUrl;
     $scope.frame1UrlDuration = editStory.frames[1].imageDuration;
 
@@ -61,6 +64,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2YoutubeUrl = recreateVideoUrl(editStory.frames[2].videoId);
     $scope.frame2StartTime = editStory.frames[2].start;
     $scope.frame2EndTime = editStory.frames[2].end;
+    $scope.frame2Volume = editStory.frames[2].volume;
     $scope.frame2ImageUrl = editStory.frames[2].imageUrl;
     $scope.frame2UrlDuration = editStory.frames[2].imageDuration;
 
@@ -73,6 +77,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3YoutubeUrl = recreateVideoUrl(editStory.frames[3].videoId);
     $scope.frame3StartTime = editStory.frames[3].start;
     $scope.frame3EndTime = editStory.frames[3].end;
+    $scope.frame3Volume = editStory.frames[3].volume;
     $scope.frame3ImageUrl = editStory.frames[3].imageUrl;
     $scope.frame3UrlDuration = editStory.frames[3].imageDuration;
   } else {
@@ -156,12 +161,6 @@ angular.module('storyBoard.createStory', [])
       $scope.storyDescription  &&
       $scope.storyThumbnailUrl;
 
-    var video0InfoReady =
-    $scope.frame0YoutubeUrl;
-    var frame0Ready =
-      video1InfoReady;
-
-
     var image1InfoReady =
       $scope.frame1ImageUrl &&
       $scope.frame1UrlDuration;
@@ -203,7 +202,6 @@ angular.module('storyBoard.createStory', [])
 
     var allFieldsReady =
       storyMetaInfoReady &&
-      frame0Ready        &&
       frame1Ready        &&
       frame2Ready        &&
       frame3Ready;
@@ -228,40 +226,44 @@ angular.module('storyBoard.createStory', [])
           player: null,
           playerDiv: 'player0',
           videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
-          start: $scope.frame0StartTime ? parseInt($scope.frame0StartTime) : 0,
-          end: $scope.frame0EndTime ? parseInt($scope.frame0EndTime) : 0,
+          start: $scope.frame0StartTime ? parseFloat($scope.frame0StartTime) : 0,
+          end: $scope.frame0EndTime ? parseFloat($scope.frame0EndTime) : 0,
+          volume: $scope.frame0Volume ? parseInt($scope.frame0Volume) : 100,
           imageUrl: $scope.frame0ImageUrl,
-          imageDuration: $scope.frame0UrlDuration ? parseInt($scope.frame0UrlDuration) : 0
+          imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0
         },
         {
           mediaType: $scope.frame1MediaType,
           player: null,
           playerDiv: 'player1',
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
-          start: $scope.frame1StartTime ? parseInt($scope.frame1StartTime) : 0,
-          end: $scope.frame1EndTime ? parseInt($scope.frame1EndTime) : 0,
+          start: $scope.frame1StartTime ? parseFloat($scope.frame1StartTime) : 0,
+          end: $scope.frame1EndTime ? parseFloat($scope.frame1EndTime) : 0,
+          volume: $scope.frame1Volume ? parseInt($scope.frame1Volume) : 100,
           imageUrl: $scope.frame1ImageUrl,
-          imageDuration: $scope.frame1UrlDuration ? parseInt($scope.frame1UrlDuration) : 0
+          imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0
         },
         {
           mediaType: $scope.frame2MediaType,
           player: null,
           playerDiv: 'player2',
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
-          start: $scope.frame2StartTime ? parseInt($scope.frame2StartTime) : 0,
-          end: $scope.frame2EndTime ? parseInt($scope.frame2EndTime) : 0,
+          start: $scope.frame2StartTime ? parseFloat($scope.frame2StartTime) : 0,
+          end: $scope.frame2EndTime ? parseFloat($scope.frame2EndTime) : 0,
+          volume: $scope.frame2Volume ? parseInt($scope.frame2Volume) : 100,
           imageUrl: $scope.frame2ImageUrl,
-          imageDuration: $scope.frame2UrlDuration ? parseInt($scope.frame2UrlDuration) : 0
+          imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0
         },
         {
           mediaType: $scope.frame3MediaType,
           player: null,
           playerDiv: 'player3',
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
-          start: $scope.frame3StartTime ? parseInt($scope.frame3StartTime) : 0,
-          end: $scope.frame3EndTime ? parseInt($scope.frame3EndTime) : 0,
+          start: $scope.frame3StartTime ? parseFloat($scope.frame3StartTime) : 0,
+          end: $scope.frame3EndTime ? parseFloat($scope.frame3EndTime) : 0,
+          volume: $scope.frame3Volume ? parseInt($scope.frame3Volume) : 100,
           imageUrl: $scope.frame3ImageUrl,
-          imageDuration: $scope.frame3UrlDuration ? parseInt($scope.frame3UrlDuration) : 0
+          imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0
         }
       ]
     }
@@ -290,10 +292,11 @@ angular.module('storyBoard.createStory', [])
           player: null,
           playerDiv: 'player0',
           videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
-          start: $scope.frame0StartTime ? parseInt($scope.frame0StartTime) : 0,
-          end: $scope.frame0EndTime ? parseInt($scope.frame0EndTime) : 0,
+          start: $scope.frame0StartTime,
+          end: $scope.frame0EndTime,
+          volume: $scope.frame0Volume,
           imageUrl: $scope.frame0ImageUrl,
-          imageDuration: $scope.frame0UrlDuration ? parseInt($scope.frame0UrlDuration) : 0
+          imageDuration: $scope.frame0UrlDuration
         },
         {
           mediaType: $scope.frame1MediaType,
@@ -302,6 +305,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
           start: $scope.frame1StartTime,
           end: $scope.frame1EndTime,
+          volume: $scope.frame1Volume,
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration
         },
@@ -312,6 +316,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
           start: $scope.frame2StartTime,
           end: $scope.frame2EndTime,
+          volume: $scope.frame2Volume,
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration
         },
@@ -322,6 +327,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
           start: $scope.frame3StartTime,
           end: $scope.frame3EndTime,
+          volume: $scope.frame3Volume,
           imageUrl: $scope.frame3ImageUrl,
           imageDuration: $scope.frame3UrlDuration
         }
@@ -346,7 +352,8 @@ angular.module('storyBoard.createStory', [])
   $scope.previewFrame = function(frameId){
     var frameYoutubeUrl = null;
     var frameStartTime = null;
-    var frameEndTime = null
+    var frameEndTime = null;
+    var frameVolume = null;
     var frameDivId = null;
     var framePlayerName = null;
     switch(frameId){
@@ -354,6 +361,7 @@ angular.module('storyBoard.createStory', [])
         frameYoutubeUrl = $scope.frame0YoutubeUrl;
         frameStartTime = $scope.frame0StartTime;
         frameEndTime = $scope.frame0EndTime;
+        frameVolume = $scope.frame0Volume;
         frameDivId = 'frame0Preview';
         framePlayerName = 'frame0';
         $scope.showSpinner0 = true;
@@ -362,6 +370,7 @@ angular.module('storyBoard.createStory', [])
         frameYoutubeUrl = $scope.frame1YoutubeUrl;
         frameStartTime = $scope.frame1StartTime;
         frameEndTime = $scope.frame1EndTime;
+        frameVolume = $scope.frame1Volume;
         frameDivId = 'frame1Preview';
         framePlayerName = 'frame1';
         $scope.showSpinner1 = true;
@@ -370,6 +379,7 @@ angular.module('storyBoard.createStory', [])
         frameYoutubeUrl = $scope.frame2YoutubeUrl;
         frameStartTime = $scope.frame2StartTime;
         frameEndTime = $scope.frame2EndTime;
+        frameVolume = $scope.frame2Volume;
         frameDivId = 'frame2Preview';
         framePlayerName = 'frame2';
         $scope.showSpinner2 = true;
@@ -378,6 +388,7 @@ angular.module('storyBoard.createStory', [])
         frameYoutubeUrl = $scope.frame3YoutubeUrl;
         frameStartTime = $scope.frame3StartTime;
         frameEndTime = $scope.frame3EndTime;
+        frameVolume = $scope.frame3Volume;
         frameDivId = 'frame3Preview';
         framePlayerName = 'frame3';
         $scope.showSpinner3 = true;
@@ -391,10 +402,11 @@ angular.module('storyBoard.createStory', [])
       frameDivId,
       videoId,
       frameStartTime,
-      frameEndTime);
+      frameEndTime,
+      frameVolume);
   };
 
-  var createPreview = function(framePlayerName, domDiv, videoId, start, end){
+  var createPreview = function(framePlayerName, domDiv, videoId, start, end, volume){
     while( ! window.youtubeApiLoadedAndReady){};
 
     if(framePlayers[framePlayerName]){
@@ -456,6 +468,7 @@ angular.module('storyBoard.createStory', [])
         } //events
       } //player config
     ); //new player
+    this.volume = volume;
   }
 
   var stripOutVideoIdFromUrl = function(url){

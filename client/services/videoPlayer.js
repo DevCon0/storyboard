@@ -4,11 +4,13 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   function VideoPlayer(){
     this.storyFrame = null;
     this.endPlaybackCallback = null;
+    this.volume = null;
   }
 
   VideoPlayer.prototype = Object.create(Player.prototype);
 
   VideoPlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
+    console.log('storyframe in vp.create', storyFrame)
     var VIDEO_HEIGHT = 200;
     var VIDEO_WIDTH = 356;
     while( ! window.youtubeApiLoadedAndReady){}
@@ -33,6 +35,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
       );
     this.storyFrame = storyFrame;
     this.endPlaybackCallback = endPlaybackCallback;
+    this.volume = storyFrame.volume;
   };
 
   VideoPlayer.prototype.destroy = function(){
@@ -40,7 +43,17 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype.play = function(){
+    console.log('vid player.js volume', this.volume)
+    this.storyFrame.player.setVolume(this.volume);
     this.storyFrame.player.playVideo();
+  };
+
+  VideoPlayer.prototype.stop = function(){
+    this.storyFrame.player.stopVideo();
+  };
+
+  VideoPlayer.prototype.pause = function(){
+    this.storyFrame.player.pauseVideo();
   };
 
   VideoPlayer.prototype._reset = function(){

@@ -228,10 +228,10 @@
         <div class="modal-content">
             <div class="modal-header preview-modal-header">
                 <h1>Preview</h1>
-                <div id="player0" style="display:inline;"></div>
                 <div id="player1" style="display:inline;"></div>
                 <div id="player2" style="display:inline;"></div>
                 <div id="player3" style="display:inline;"></div>
+                <div ng-show="!!$parent.frame0YoutubeUrl" id="player0" style="display:inline;"></div>
                 <div class="modal-footer preview-modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal"  data-target="#myModal" ng-click="saveStory()">Save your story<iron-icon icon="icons:save" class="icon-margin-left"></iron-icon></button>
                     <button type="button" class="btn btn-danger" ng-click="destoryFrames()" data-dismiss="modal">Close<iron-icon icon="icons:close" class="icon-margin-left"></iron-icon></button>

@@ -44,6 +44,7 @@ type Frame struct {
 	VideoId       string   `json:"videoId"`
 	Start         float32  `json:"start"`
 	End           float32  `json:"end"`
+	Volume        int      `json:"volume"`
 	ImageUrl      string   `json:"imageUrl"`
 	ImageDuration int      `json:"imageDuration"`
 }

@@ -74,12 +74,22 @@ angular.module('storyBoard.storyStateMachineService',
 
   storyStateMachine._determineReadyCallback = function(frameNum){
     var readyCallback = function(){};
+
+    var isZeroFrame = frameNum === AUDIO;
     var isFirstFrame = frameNum === FIRST;
-    if(isFirstFrame){
+
+    if (isZeroFrame) {
+      readyCallback = this._zeroFrameReady;
+    } else if (isFirstFrame) {
       readyCallback = this._firstFrameReady;
     }
 
     return readyCallback;
+  };
+
+  storyStateMachine._zeroFrameReady = function(){
+    //immediately play soundtrack if exists
+    this.play();
   };
 
   storyStateMachine._firstFrameReady = function(){
@@ -114,6 +124,7 @@ angular.module('storyBoard.storyStateMachineService',
       endPlayBackCallback = function(){
         if(closureIsSingleStoryView) {
           _shrinkAct3();
+          storyStateMachine.players[AUDIO].pause()
         }
       };
     }
