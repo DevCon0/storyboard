@@ -467,7 +467,6 @@ angular.module('storyBoard.createStory', [])
         } //events
       } //player config
     ); //new player
-    this.volume = volume;
   }
 
   var stripOutVideoIdFromUrl = function(url){
