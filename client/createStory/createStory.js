@@ -17,7 +17,6 @@ angular.module('storyBoard.createStory', [])
   $scope.showSpinner3 = false;
   $scope.addFrame3ImagePreview = false;
 
-
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
   var wasPassed = Object.keys($stateParams.story).length !== 0;
@@ -116,7 +115,6 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3Volume = "100";
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
-
   }
 
   $scope.prepopulateInputs = function(){
@@ -161,9 +159,6 @@ angular.module('storyBoard.createStory', [])
       $scope.storyDescription  &&
       $scope.storyThumbnailUrl;
 
-    var image1InfoReady =
-      $scope.frame1ImageUrl &&
-      $scope.frame1UrlDuration;
     var video1InfoReady =
       $scope.frame1YoutubeUrl &&
       $scope.frame1EndTime;
@@ -240,6 +235,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame1StartTime ? parseFloat($scope.frame1StartTime) : 0,
           end: $scope.frame1EndTime ? parseFloat($scope.frame1EndTime) : 0,
           volume: parseInt($scope.frame1Volume),
+          previewUrl: (wasPassed)? $stateParams.story.frames[1].previewUrl: "",
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0
         },
@@ -251,6 +247,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame2StartTime ? parseFloat($scope.frame2StartTime) : 0,
           end: $scope.frame2EndTime ? parseFloat($scope.frame2EndTime) : 0,
           volume: parseInt($scope.frame2Volume),
+          previewUrl: (wasPassed)? $stateParams.story.frames[2].previewUrl: "",
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0
         },
@@ -262,6 +259,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame3StartTime ? parseFloat($scope.frame3StartTime) : 0,
           end: $scope.frame3EndTime ? parseFloat($scope.frame3EndTime) : 0,
           volume: parseInt($scope.frame3Volume),
+          previewUrl: (wasPassed)? $stateParams.story.frames[3].previewUrl: "",
           imageUrl: $scope.frame3ImageUrl,
           imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0
         }
@@ -484,7 +482,6 @@ angular.module('storyBoard.createStory', [])
     return videoId;
   }
 
-
   function recreateVideoUrl(youtubeID) {
     var header = "https://www.youtube.com/watch?v=";
     return header + youtubeID;
@@ -493,7 +490,7 @@ angular.module('storyBoard.createStory', [])
   $scope.previewImageFrame = function(frameId){
     switch(frameId){
       case 0:
-        $scope.addFrame0ImagePreview = true;
+        throw('Whoa, amazing, you put an image in an audio track');
         break;
       case 1:
         $scope.addFrame1ImagePreview = true;

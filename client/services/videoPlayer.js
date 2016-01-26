@@ -46,10 +46,6 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     this.storyFrame.player.playVideo();
   };
 
-  VideoPlayer.prototype.stop = function(){
-    this.storyFrame.player.stopVideo();
-  };
-
   VideoPlayer.prototype.pause = function(){
     this.storyFrame.player.pauseVideo();
   };
