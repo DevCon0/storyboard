@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"path/filepath"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
@@ -117,11 +118,38 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			continue
 		}
 
-		if frame.MediaType == 1 {
-			// If the frame is an image,
-			//   set the PreviewUrl to the ImageUrl.
-			frame.PreviewUrl = frame.ImageUrl
-		} else {
+		// Set the frame's PreviewUrl (for the home/splash page).
+		// Handle images and videos differently.
+		switch frame.MediaType {
+		// Set an image's PreviewUrl.
+		case 1:
+
+			// Handle GIF images differently than other images.
+			switch filepath.Ext(frame.ImageUrl) {
+			case ".gif":
+				// Save a non-animated version of the GIF in the database.
+				previewUrl, err := saveNonAnimatedGif(frame.ImageUrl)
+				if err != nil {
+					fmt.Printf(
+						"Failed to create a non-imaged version of %v: %v\n",
+						frame.ImageUrl, err,
+					)
+					// If an error occurred, just set the PreviewUrl
+					//   to the animated GIF.
+					frame.PreviewUrl = frame.ImageUrl
+				} else {
+					// If a non-animated copy of the GIF
+					//   was saved successfully, use it as the PreviewUrl.
+					frame.PreviewUrl = previewUrl
+				}
+			default:
+				// For non-GIF images,
+				//   just use the ImageUrl as the PreviewUrl.
+				frame.PreviewUrl = frame.ImageUrl
+			}
+
+		// Set a video's PreviewUrl.
+		default:
 			// If the frame is a video,
 			//   set the thumbnail to the first frame in the YouTube video.
 			videoId := frame.VideoId
