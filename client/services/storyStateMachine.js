@@ -38,6 +38,11 @@ angular.module('storyBoard.storyStateMachineService',
     }
   };
 
+  storyStateMachine.restartStory = function () {
+    var firstStoryPlayer = this.players[FIRST];
+    this._firstFrameReady.call(firstStoryPlayer);
+  }
+
   storyStateMachine.endStory = function(){
     var storyPlayers = this.players;
     storyPlayers.forEach(function(player){
@@ -160,10 +165,12 @@ angular.module('storyBoard.storyStateMachineService',
   function _shrinkAct3() {
     if(_isAngularAlreadyMonitoringDOM()) {
       parentControllerScope.act3divclass = 'a';
+      parentControllerScope.replaybutton = 'single-story-replay-button-after';
     } else {
       // Force Angular to re-render
       parentControllerScope.$apply(function () {
         parentControllerScope.act3divclass = 'a';
+        parentControllerScope.replaybutton = 'single-story-replay-button-after';
       });
     }
   };
