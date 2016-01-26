@@ -9,29 +9,25 @@ angular.module('storyBoard.storyStorageService', [])
       url: 'api/stories/showcase'
     })
     .then(function (resp) {
-      console.log('resp from getShowcase', resp.data);
       return resp.data;
     })
   }
 
 
   storyStorage.getUserLibrary = function (token) {
-    console.log('Getuser Library run with token', token);
     return $http({
       method: 'GET',
       url: '/api/stories/library/',
       headers: {
         'token': token
-      }      
+      }
     })
     .then(function (resp) {
-      console.log('resp.data from getuserLibrary', resp.data);
       return resp.data;
     });
   };
 
   storyStorage.saveStory = function (story,token) {
-    console.log('saveStory called with', story);
     return $http({
      method: 'POST',
      url: '/api/stories/story',
@@ -41,7 +37,6 @@ angular.module('storyBoard.storyStorageService', [])
      data: story
     })
     .then(function (resp) {
-      console.log('ran saveStory, got response: ', resp);
       return resp.body;
     });
   }
@@ -57,7 +52,6 @@ angular.module('storyBoard.storyStorageService', [])
 
   storyStorage.editStory = function (story, storyId, token) {
     story['storyId'] = storyId;
-    console.log('editStory called with', story);
     return $http({
       method: 'PUT',
       url: '/api/stories/story',
@@ -69,7 +63,6 @@ angular.module('storyBoard.storyStorageService', [])
   };
 
   storyStorage.deleteStory = function (id,token) {
-    console.log('deleteStory (Factory) called with', id);
     return $http({
       method: 'DELETE',
       url: '/api/stories/story/' + id,
@@ -81,7 +74,6 @@ angular.module('storyBoard.storyStorageService', [])
   };
 
   storyStorage.voteStory = function (id, token, vote) {
-    console.log('voteStory (Factory) called with', vote,id);
     return $http({
       method: 'POST',
       url: '/api/stories/votes',

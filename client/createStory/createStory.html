@@ -2,7 +2,7 @@
 <div class="create-story-paper-header blue">{{user}}, create your own story!<span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO Pre-populate inputs DEMO</button></span></div>
 <div class="create-story-paper-header-panel-content">
 <div class="row">
-  <div class="col-md-offset-1 col-md-3">
+  <div class="col-md-3">
     <paper-card heading="Story Info" elevation="3" class="create-story-paper-card">
       <form>
           <div class="form-group">
@@ -24,6 +24,41 @@
         <button type="button" class="btn btn-success create-page-btn" ng-click="previewStory()" data-toggle="modal" data-target="#myModal">Preview Story<iron-icon icon="av:play-circle-outline" class="icon-margin-left"></iron-icon></button>
         <div class="row clean"></div>
         <button type="button" class="btn btn-success saveButton create-page-btn" ng-click="saveStory()">Save your story<iron-icon icon="icons:save" class="icon-margin-left"></iron-icon></button>
+      </div>
+    </paper-card>
+  </div>
+  <!-- Act Zero AUDIO /////////////////////////////////////////////////////////////////////// -->
+  <div class="creationFrameDiv col-md-2">
+    <paper-card heading="Audio Track" elevation="3" class="create-story-paper-card">
+      <paper-dropdown-menu label="Media Type">
+        <paper-menu ng-model="frame0MediaType" class="dropdown-content">
+          <paper-item>Video</paper-item>
+        </paper-menu>
+      </paper-dropdown-menu>
+ <!-- Act Zero AUDIO  ******************************** -->
+      <div ng-if="frame0MediaType == 0">
+        <form ng-submit="previewFrame(0)">
+          <div class="form-group">
+            <label for="youtubeUrl0">Youtube URL</label>
+            <input type="url" ng-model="$parent.frame0YoutubeUrl" class="form-control" id="youtubeUrl0" placeholder="https://www.youtube.com">
+          </div>
+          <div class="form-group">
+            <label for="startTime0">Start Time (sec)</label>
+            <input type="text" ng-model="$parent.frame0StartTime" class="form-control" id="startTime0" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="endTime0">End Time (sec)</label>
+            <input type="text" ng-model="$parent.frame0EndTime" class="form-control" id="endTime0" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="volume0">Volume (0-100%)</label>
+            <input type="text" ng-model="$parent.frame0Volume" class="form-control" id="volume0" placeholder="100">
+          </div>
+          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <span><paper-spinner-lite ng-if="showSpinner0" class="blueSpinner" active></paper-spinner-lite></span>
+        </form>
+        <div class="col-md-12 clean"></div>
+        <div id="frame0Preview" class="col-md-12"></div>
       </div>
     </paper-card>
   </div>
@@ -50,6 +85,10 @@
           <div class="form-group">
             <label for="endTime1">End Time (sec)</label>
             <input type="text" ng-model="$parent.frame1EndTime" class="form-control" id="endTime1" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="volume1">Volume (0-100%)</label>
+            <input type="text" ng-model="$parent.frame1Volume" class="form-control" id="volume1" placeholder="100">
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
@@ -99,6 +138,10 @@
             <label for="endTime2">End Time (sec)</label>
             <input type="text" ng-model="$parent.frame2EndTime" class="form-control" id="endTime2" placeholder="0">
           </div>
+          <div class="form-group">
+            <label for="volume2">Volume (0-100%)</label>
+            <input type="text" ng-model="$parent.frame2Volume" class="form-control" id="volume2" placeholder="100">
+          </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner2" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
@@ -147,6 +190,10 @@
             <label for="endTime3">End Time (sec)</label>
             <input type="text" ng-model="$parent.frame3EndTime" class="form-control" id="endTime3" placeholder="0">
           </div>
+          <div class="form-group">
+            <label for="volume3">Volume (0-100%)</label>
+            <input type="text" ng-model="$parent.frame3Volume" class="form-control" id="volume3" placeholder="100">
+          </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner3" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
@@ -184,6 +231,7 @@
                 <div id="player1" style="display:inline;"></div>
                 <div id="player2" style="display:inline;"></div>
                 <div id="player3" style="display:inline;"></div>
+                <div ng-show="!!$parent.frame0YoutubeUrl" id="player0" style="display:inline;"></div>
                 <div class="modal-footer preview-modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal"  data-target="#myModal" ng-click="saveStory()">Save your story<iron-icon icon="icons:save" class="icon-margin-left"></iron-icon></button>
                     <button type="button" class="btn btn-danger" ng-click="destoryFrames()" data-dismiss="modal">Close<iron-icon icon="icons:close" class="icon-margin-left"></iron-icon></button>
