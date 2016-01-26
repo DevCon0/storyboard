@@ -161,9 +161,8 @@ func getGifDimensions(gif *gif.GIF) (x, y int) {
 	return highestX - lowestX, highestY - lowestY
 }
 
-// Save a non-animated version of a GIF in the database.
-// The stored image will be a PNG.
-// Return a url path which can the client can use to request the stored image.
+// Delete a non-animated version of a GIF in the database.
+// 'imageUrl' will look like '/api/images/<image_id>'
 func deleteNonAnimatedGif(imageUrl string) (error, int) {
 	// Get the imageId from the endpoint of the imageUrl.
 	imageId := filepath.Base(imageUrl)
