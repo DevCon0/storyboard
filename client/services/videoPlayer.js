@@ -10,7 +10,6 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   VideoPlayer.prototype = Object.create(Player.prototype);
 
   VideoPlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
-    console.log('storyframe in vp.create', storyFrame)
     var VIDEO_HEIGHT = 200;
     var VIDEO_WIDTH = 356;
     while( ! window.youtubeApiLoadedAndReady){}
@@ -43,7 +42,6 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype.play = function(){
-    console.log('vid player.js volume', this.volume)
     this.storyFrame.player.setVolume(this.volume);
     this.storyFrame.player.playVideo();
   };

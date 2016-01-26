@@ -24,7 +24,6 @@ angular.module('storyBoard.createStory', [])
 
   if (wasPassed) {
     var editStory = $stateParams.story;
-    console.log('showing edit story', editStory)
     $scope.storyTitle = editStory.title;
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
@@ -52,6 +51,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1StartTime = editStory.frames[1].start;
     $scope.frame1EndTime = editStory.frames[1].end;
     $scope.frame1Volume = editStory.frames[1].volume;
+
     $scope.frame1ImageUrl = editStory.frames[1].imageUrl;
     $scope.frame1UrlDuration = editStory.frames[1].imageDuration;
 
@@ -228,7 +228,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
           start: $scope.frame0StartTime ? parseFloat($scope.frame0StartTime) : 0,
           end: $scope.frame0EndTime ? parseFloat($scope.frame0EndTime) : 0,
-          volume: $scope.frame0Volume ? parseInt($scope.frame0Volume) : 100,
+          volume: parseInt($scope.frame0Volume),
           imageUrl: $scope.frame0ImageUrl,
           imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0
         },
@@ -239,7 +239,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
           start: $scope.frame1StartTime ? parseFloat($scope.frame1StartTime) : 0,
           end: $scope.frame1EndTime ? parseFloat($scope.frame1EndTime) : 0,
-          volume: $scope.frame1Volume ? parseInt($scope.frame1Volume) : 100,
+          volume: parseInt($scope.frame1Volume),
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0
         },
@@ -250,7 +250,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
           start: $scope.frame2StartTime ? parseFloat($scope.frame2StartTime) : 0,
           end: $scope.frame2EndTime ? parseFloat($scope.frame2EndTime) : 0,
-          volume: $scope.frame2Volume ? parseInt($scope.frame2Volume) : 100,
+          volume: parseInt($scope.frame2Volume),
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0
         },
@@ -261,12 +261,13 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
           start: $scope.frame3StartTime ? parseFloat($scope.frame3StartTime) : 0,
           end: $scope.frame3EndTime ? parseFloat($scope.frame3EndTime) : 0,
-          volume: $scope.frame3Volume ? parseInt($scope.frame3Volume) : 100,
+          volume: parseInt($scope.frame3Volume),
           imageUrl: $scope.frame3ImageUrl,
           imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0
         }
       ]
     }
+
     if (wasPassed) {
       StoryStorage.editStory(story, editStory.storyId, token)
         .then(function (data) {
