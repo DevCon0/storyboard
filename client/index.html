@@ -10,7 +10,14 @@
     window.onYouTubeIframeAPIReady = function(){
       window.youtubeApiLoadedAndReady = true;
     }
+    // Preload voices for text-to-speech capability.
     window.speechSynthesis.onvoiceschanged = function(){
+      // After the first time we are notified
+      // that the voices have loaded,
+      // we null out the callback so we don't execute
+      // this code twice.  The getVoices() call within
+      // this block will cause the 'onvoiceschange' event
+      // to happen again.
       window.speechSynthesis.onvoiceschanged = null;
       window.voices = window.speechSynthesis.getVoices();
     }
