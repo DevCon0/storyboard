@@ -254,7 +254,8 @@ angular.module('storyBoard.createStory', [])
           end: $scope.frame0EndTime ? parseFloat($scope.frame0EndTime) : 0,
           volume: parseInt($scope.frame0Volume),
           imageUrl: $scope.frame0ImageUrl,
-          imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0
+          imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0,
+          narrationText: null /* Not applicable $scope.frame0NarrationText*/
         },
         {
           mediaType: $scope.frame1MediaType,
@@ -327,7 +328,8 @@ angular.module('storyBoard.createStory', [])
           end: $scope.frame0EndTime,
           volume: $scope.frame0Volume,
           imageUrl: $scope.frame0ImageUrl,
-          imageDuration: $scope.frame0UrlDuration
+          imageDuration: $scope.frame0UrlDuration,
+          narrationText: null /* Not applicable $scope.frame0NarrationText*/
         },
         {
           mediaType: $scope.frame1MediaType,
