@@ -249,6 +249,10 @@ paper-spinner-lite.blueSpinner{
   margin-left: 5px;
 }
 
+.textToSpeechTextArea {
+  resize: none;
+}
+
 .frameImageUrlPreview {
   height: 160px;
   width: auto;

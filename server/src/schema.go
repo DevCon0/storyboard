@@ -48,6 +48,7 @@ type Frame struct {
 	PreviewUrl    string   `json:"previewUrl"`
 	ImageUrl      string   `json:"imageUrl"`
 	ImageDuration int      `json:"imageDuration"`
+	NarrationText string   `json:"narrationText"`
 }
 
 // Vote Model - separate collection

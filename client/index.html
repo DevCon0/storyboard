@@ -10,6 +10,11 @@
     window.onYouTubeIframeAPIReady = function(){
       window.youtubeApiLoadedAndReady = true;
     }
+    window.speechSynthesis.onvoiceschanged = function(){
+      window.speechSynthesis.onvoiceschanged = null;
+      window.voices = window.speechSynthesis.getVoices();
+    }
+    window.speechSynthesis.getVoices();
   </script>
   <script src="https://www.youtube.com/iframe_api"></script>
 
@@ -42,6 +47,7 @@
   <script src="/services/player.js"></script>
   <script src="/services/videoPlayer.js"></script>
   <script src="/services/imagePlayer.js"></script>
+  <script src="/services/textToSpeechPlayer.js"></script>
   <script src="/services/storyStateMachine.js"></script>
   <script src="/services/storyStorage.js"></script>
   <script src="/services/authServices.js"></script>

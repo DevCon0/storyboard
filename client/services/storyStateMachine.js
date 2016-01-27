@@ -1,8 +1,9 @@
 angular.module('storyBoard.storyStateMachineService',
   ['storyBoard.videoPlayer',
-   'storyBoard.imagePlayer'])
+   'storyBoard.imagePlayer',
+   'storyBoard.textToSpeechPlayer'])
 
-.factory('StoryStateMachine', function(VideoPlayer, ImagePlayer){
+.factory('StoryStateMachine', function(VideoPlayer, ImagePlayer, TextToSpeechPlayer){
   var storyStateMachine = {};
   storyStateMachine.story = null;
   var closureIsSingleStoryView = false;
@@ -62,6 +63,9 @@ angular.module('storyBoard.storyStateMachineService',
         break;
       case 1:
         player = new ImagePlayer();
+        break;
+      case 2:
+        player = new TextToSpeechPlayer();
         break;
       default:
         throw "Unrecognized media type in storyStateMachine.js";

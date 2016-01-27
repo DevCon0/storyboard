@@ -4,6 +4,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   function VideoPlayer(){
     this.storyFrame = null;
     this.endPlaybackCallback = null;
+    this.alreadyStopped = false;
   }
 
   VideoPlayer.prototype = Object.create(Player.prototype);
@@ -44,6 +45,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype._reset = function(){
+    this.alreadyStopped = false;
     this.storyFrame.player.cueVideoById(
       {
         'videoId': this.storyFrame.videoId,
@@ -54,12 +56,20 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype._onPausedListener = function(event){
-    switch(event.data){
-      case YT.PlayerState.PAUSED:
-      case YT.PlayerState.ENDED:
-        this.endPlaybackCallback();
-        this._reset();
-        break;
+    if( ! this.alreadyStopped) {
+      switch(event.data) {
+        case YT.PlayerState.PAUSED:
+        case YT.PlayerState.ENDED:
+          this.endPlaybackCallback();
+          this._reset();
+          // Use the following boolean to cover
+          // the case where a video *pauses*
+          // and then *ends*.
+          // We do not want to call the callback
+          // twice.
+          this.alreadyStopped = true;
+          break;
+      }
     }
   }
 
