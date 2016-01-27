@@ -13,6 +13,7 @@ angular.module('storyBoard.createStory', [])
   if ( ! (Auth.isAuth()) ) {
     $state.go('login')
   }
+
   $scope.showSpinner0 = false;
   $scope.addFrame0ImagePreview = false;
 
@@ -50,6 +51,10 @@ angular.module('storyBoard.createStory', [])
     $scope.frame0ImageUrl = editStory.frames[0].imageUrl;
     $scope.frame0UrlDuration = editStory.frames[0].imageDuration;
     // Not applicable $scope.frame0NarrationText
+    // hide backing track if has default value
+    if ($scope.frame0YoutubeUrl !== "https://www.youtube.com/watch?v=") {
+      $scope.addBackingTrack = true;
+    }
 
     // TODO: remove backwards compatibility
     if(editStory.frames[1].mediaType !== undefined) {
@@ -97,7 +102,7 @@ angular.module('storyBoard.createStory', [])
     $scope.storyDescription = null;
     $scope.storyThumbnailUrl = null;
 
-    $scope.frame0MediaType = null;
+    $scope.frame0MediaType = 3;
     $scope.frame0YoutubeUrl = null;
     $scope.frame0StartTime = "0";
     $scope.frame0EndTime = null;
@@ -542,7 +547,6 @@ angular.module('storyBoard.createStory', [])
     }
   }
 
-
   $scope.previewTextToSpeech = function(frameId){
     var frameNarrationText = null;
     switch(frameId){
@@ -568,11 +572,11 @@ angular.module('storyBoard.createStory', [])
     previewTextToSpeechPlayer.create(tempStoryFrame,
                                      readyCallback,
                                      playbackFinishedCallback);
+  }
 
   $scope.backingTrack = function () {
     console.log('tracked!')
     $scope.addBackingTrack = ! $scope.addBackingTrack;
-
   }
 
 });

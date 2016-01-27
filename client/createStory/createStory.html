@@ -224,38 +224,35 @@
   <div ng-show="addBackingTrack" class="creationFrameDiv col-md-2">
     <paper-card heading="Audio Track" elevation="3" class="create-story-paper-card">
       <paper-dropdown-menu label="Media Type">
-        <paper-menu ng-model="frame0MediaType" class="dropdown-content">
-          <paper-item>Video</paper-item>
+        <paper-menu selected="0" class="dropdown-content">
+          <paper-item  >Audio</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
  <!-- Act Zero AUDIO  ******************************** -->
-      <div ng-if="frame0MediaType == 0">
         <form ng-submit="previewFrame(0)">
           <div class="form-group">
             <label for="youtubeUrl0">Youtube URL</label>
-            <input type="url" ng-model="$parent.frame0YoutubeUrl" class="form-control" id="youtubeUrl0" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="frame0YoutubeUrl" class="form-control" id="youtubeUrl0" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <label for="startTime0">Start Time (sec)</label>
-            <input type="text" ng-model="$parent.frame0StartTime" class="form-control" id="startTime0" placeholder="0">
+            <input type="text" ng-model="frame0StartTime" class="form-control" id="startTime0" placeholder="0">
           </div>
           <div class="form-group">
             <label for="endTime0">End Time (sec)</label>
-            <input type="text" ng-model="$parent.frame0EndTime" class="form-control" id="endTime0" placeholder="0">
+            <input type="text" ng-model="frame0EndTime" class="form-control" id="endTime0" placeholder="0">
           </div>
           <div class="form-group">
             <label for="volume0">Volume (0-100%)</label>
-            <input type="text" ng-model="$parent.frame0Volume" class="form-control" id="volume0" placeholder="100">
+            <input type="text" ng-model="frame0Volume" class="form-control" id="volume0" placeholder="100">
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner0" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
         <div id="frame0Preview" class="col-md-12"></div>
-      </div>
     </paper-card>
   </div>
-</div>
 </div> <!--content-->
 </paper-header-panel>
 

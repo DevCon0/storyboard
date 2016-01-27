@@ -13,7 +13,6 @@ angular.module('storyBoard.storyStorageService', [])
     })
   }
 
-
   storyStorage.getUserLibrary = function (token) {
     return $http({
       method: 'GET',

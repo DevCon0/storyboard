@@ -75,6 +75,9 @@ angular.module('storyBoard.storyStateMachineService',
       case 2:
         player = new TextToSpeechPlayer();
         break;
+      case 3:
+        player = new VideoPlayer();  //Audio only version of VidPlayer
+      break;
       default:
         throw "Unrecognized media type in storyStateMachine.js";
         break;
