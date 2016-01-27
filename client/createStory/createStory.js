@@ -25,6 +25,8 @@ angular.module('storyBoard.createStory', [])
   $scope.showSpinner3 = false;
   $scope.addFrame3ImagePreview = false;
 
+  $scope.addBackingTrack = false;
+
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
   var wasPassed = Object.keys($stateParams.story).length !== 0;
@@ -540,6 +542,7 @@ angular.module('storyBoard.createStory', [])
     }
   }
 
+
   $scope.previewTextToSpeech = function(frameId){
     var frameNarrationText = null;
     switch(frameId){
@@ -565,6 +568,11 @@ angular.module('storyBoard.createStory', [])
     previewTextToSpeechPlayer.create(tempStoryFrame,
                                      readyCallback,
                                      playbackFinishedCallback);
+
+  $scope.backingTrack = function () {
+    console.log('tracked!')
+    $scope.addBackingTrack = ! $scope.addBackingTrack;
+
   }
 
 });
