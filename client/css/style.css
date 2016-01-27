@@ -433,3 +433,8 @@ paper-spinner-lite.blueSpinner{
      visibility: visible !important;
      opacity: 1; 
 }
+
+#player0 {
+    height:10px;
+    width:10px;
+}
