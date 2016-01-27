@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -396,6 +397,49 @@ func getUserInfoFromHeader(r *http.Request) (User, error, int) {
 	return user, nil, http.StatusOK
 }
 
+// Get user info from the token in the header.
+// Query the database for the token,
+//   and return the data received.
+func (u *User) getInfoFromHeaderSync(r *http.Request) (error, int) {
+	// Get user info from the token in the header.
+	u.Token = r.Header.Get("token")
+	err, status := u.verifyToken()
+	if err != nil {
+		return err, status
+	}
+
+	// Get user info from the database, using the token in the header.
+	err = usersCollection.Find(bson.M{"token": u.Token}).One(&u)
+	if err != nil {
+		return fmt.Errorf("Failed to find token in the database\n%v\n", err),
+			http.StatusUnauthorized
+	}
+
+	return nil, http.StatusOK
+}
+
+// Get user info from the token in the header.
+// Query the database for the token,
+//   and return the data received.
+func (u *User) getInfoFromHeader(r *http.Request) (*sync.WaitGroup, chan error, chan int) {
+	// Set goroutine variables.
+	var wg sync.WaitGroup
+	chanErr := make(chan error, 1)
+	chanHttpStatus := make(chan int, 1)
+	wg.Add(1)
+
+	// Spawn a goroutine to find user info from the header.
+	go func() {
+		defer wg.Done()
+		// Get user info from the database, using the token in the header.
+		err, status := u.getInfoFromHeaderSync(r)
+		chanErr <- err
+		chanHttpStatus <- status
+	}()
+
+	return &wg, chanErr, chanHttpStatus
+}
+
 // Verify whether this user is the author of story
 //   by using the string version of a story id.
 // Return an error and an http status code if the user is not the author.
@@ -406,6 +450,6 @@ func (u *User) verifyAuthorship(storyId string) (error, int) {
 		}
 	}
 
-	return fmt.Errorf("User is not a creator of this story\n"),
+	return fmt.Errorf("User is not a creator of this story"),
 		http.StatusUnauthorized
 }
