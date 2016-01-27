@@ -42,7 +42,8 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     this.storyFrame.player.destroy();
   };
 
-  VideoPlayer.prototype.play = function(){
+  VideoPlayer.prototype.play = function () {
+    this.alreadyStopped = false;
     this.storyFrame.player.setVolume(this.volume);
     this.storyFrame.player.playVideo();
   };
@@ -52,7 +53,6 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype._reset = function(){
-    this.alreadyStopped = false;
     this.storyFrame.player.cueVideoById(
       {
         'videoId': this.storyFrame.videoId,
