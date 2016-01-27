@@ -9,9 +9,10 @@ angular.module('storyBoard.storyStateMachineService',
   var closureIsSingleStoryView = false;
   storyStateMachine.players = [];
   var parentControllerScope = null;
-  var FIRST = 0;
-  var SECOND = 1;
-  var THIRD = 2;
+  var AUDIO = 0;
+  var FIRST = 1;
+  var SECOND = 2;
+  var THIRD = 3;
 
   storyStateMachine.setStory = function(story, isSingleStoryView, scope){
     this.story = story;
@@ -38,6 +39,11 @@ angular.module('storyBoard.storyStateMachineService',
       this.players.unshift(newFramePlayer);
     }
   };
+
+  storyStateMachine.restartStory = function () {
+    var firstStoryPlayer = this.players[FIRST];
+    this._firstFrameReady.call(firstStoryPlayer);
+  }
 
   storyStateMachine.endStory = function(){
     var storyPlayers = this.players;
@@ -77,12 +83,22 @@ angular.module('storyBoard.storyStateMachineService',
 
   storyStateMachine._determineReadyCallback = function(frameNum){
     var readyCallback = function(){};
+
+    var isZeroFrame = frameNum === AUDIO;
     var isFirstFrame = frameNum === FIRST;
-    if(isFirstFrame){
+
+    if (isZeroFrame) {
+      readyCallback = this._zeroFrameReady;
+    } else if (isFirstFrame) {
       readyCallback = this._firstFrameReady;
     }
 
     return readyCallback;
+  };
+
+  storyStateMachine._zeroFrameReady = function(){
+    //immediately play soundtrack if exists
+    this.play();
   };
 
   storyStateMachine._firstFrameReady = function(){
@@ -117,6 +133,7 @@ angular.module('storyBoard.storyStateMachineService',
       endPlayBackCallback = function(){
         if(closureIsSingleStoryView) {
           _shrinkAct3();
+          storyStateMachine.players[AUDIO].pause()
         }
       };
     }
@@ -164,10 +181,12 @@ angular.module('storyBoard.storyStateMachineService',
   function _shrinkAct3() {
     if(_isAngularAlreadyMonitoringDOM()) {
       parentControllerScope.act3divclass = 'a';
+      parentControllerScope.replaybutton = 'single-story-replay-button-after';
     } else {
       // Force Angular to re-render
       parentControllerScope.$apply(function () {
         parentControllerScope.act3divclass = 'a';
+        parentControllerScope.replaybutton = 'single-story-replay-button-after';
       });
     }
   };

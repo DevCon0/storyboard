@@ -34,4 +34,7 @@ angular.module('storyBoard.singleStory', [])
     StoryStorage.voteStory(storyID, token, 'down');
 
   }
+  $scope.replay = function () {
+    StoryStateMachine.restartStory();
+  }
 });

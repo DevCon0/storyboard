@@ -4,6 +4,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   function VideoPlayer(){
     this.storyFrame = null;
     this.endPlaybackCallback = null;
+    this.volume = null;
     this.alreadyStopped = false;
   }
 
@@ -34,6 +35,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
       );
     this.storyFrame = storyFrame;
     this.endPlaybackCallback = endPlaybackCallback;
+    this.volume = storyFrame.volume;
   };
 
   VideoPlayer.prototype.destroy = function(){
@@ -41,7 +43,12 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype.play = function(){
+    this.storyFrame.player.setVolume(this.volume);
     this.storyFrame.player.playVideo();
+  };
+
+  VideoPlayer.prototype.pause = function(){
+    this.storyFrame.player.pauseVideo();
   };
 
   VideoPlayer.prototype._reset = function(){
