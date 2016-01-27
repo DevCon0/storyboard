@@ -135,8 +135,8 @@ angular.module('storyBoard.storyStateMachineService',
       endPlayBackCallback = function(){
         if(closureIsSingleStoryView) {
           _shrinkAct3();
-          storyStateMachine.players[AUDIO].pause()
         }
+        storyStateMachine.players[AUDIO].pause();
       };
     }
 
