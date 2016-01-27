@@ -442,3 +442,7 @@ paper-spinner-lite.blueSpinner{
     height:10px;
     width:10px;
 }
+
+.view-count{
+    float:right;
+}
