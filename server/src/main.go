@@ -19,6 +19,7 @@ var (
 	db                *mgo.Database
 	usersCollection   *mgo.Collection
 	storiesCollection *mgo.Collection
+	dbFs              *mgo.GridFS
 	connectedToDb     bool
 )
 
@@ -48,6 +49,7 @@ func main() {
 	http.HandleFunc("/", clientHandler)
 	http.HandleFunc("/api/users/", usersHandler)
 	http.HandleFunc("/api/stories/", storyHandler)
+	http.HandleFunc("/api/images/", imageHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -85,6 +87,7 @@ func initDb() {
 	db = session.DB("devcon0")
 	usersCollection = db.C("users")
 	storiesCollection = db.C("stories")
+	dbFs = db.GridFS("fs")
 
 	connectedToDb = true
 }

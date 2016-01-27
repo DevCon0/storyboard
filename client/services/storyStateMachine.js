@@ -1,16 +1,18 @@
 angular.module('storyBoard.storyStateMachineService',
   ['storyBoard.videoPlayer',
-   'storyBoard.imagePlayer'])
+   'storyBoard.imagePlayer',
+   'storyBoard.textToSpeechPlayer'])
 
-.factory('StoryStateMachine', function(VideoPlayer, ImagePlayer){
+.factory('StoryStateMachine', function(VideoPlayer, ImagePlayer, TextToSpeechPlayer){
   var storyStateMachine = {};
   storyStateMachine.story = null;
   var closureIsSingleStoryView = false;
   storyStateMachine.players = [];
   var parentControllerScope = null;
-  var FIRST = 0;
-  var SECOND = 1;
-  var THIRD = 2;
+  var AUDIO = 0;
+  var FIRST = 1;
+  var SECOND = 2;
+  var THIRD = 3;
 
   storyStateMachine.setStory = function(story, isSingleStoryView, scope){
     this.story = story;
@@ -39,6 +41,8 @@ angular.module('storyBoard.storyStateMachineService',
   };
 
   storyStateMachine.restartStory = function () {
+    var audioStoryPlayer = this.players[AUDIO];
+    this._zeroFrameReady.call(audioStoryPlayer);
     var firstStoryPlayer = this.players[FIRST];
     this._firstFrameReady.call(firstStoryPlayer);
   }
@@ -68,6 +72,9 @@ angular.module('storyBoard.storyStateMachineService',
       case 1:
         player = new ImagePlayer();
         break;
+      case 2:
+        player = new TextToSpeechPlayer();
+        break;
       default:
         throw "Unrecognized media type in storyStateMachine.js";
         break;
@@ -78,12 +85,22 @@ angular.module('storyBoard.storyStateMachineService',
 
   storyStateMachine._determineReadyCallback = function(frameNum){
     var readyCallback = function(){};
+
+    var isZeroFrame = frameNum === AUDIO;
     var isFirstFrame = frameNum === FIRST;
-    if(isFirstFrame){
+
+    if (isZeroFrame) {
+      readyCallback = this._zeroFrameReady;
+    } else if (isFirstFrame) {
       readyCallback = this._firstFrameReady;
     }
 
     return readyCallback;
+  };
+
+  storyStateMachine._zeroFrameReady = function(){
+    //immediately play soundtrack if exists
+    this.play();
   };
 
   storyStateMachine._firstFrameReady = function(){
@@ -118,6 +135,7 @@ angular.module('storyBoard.storyStateMachineService',
       endPlayBackCallback = function(){
         if(closureIsSingleStoryView) {
           _shrinkAct3();
+          storyStateMachine.players[AUDIO].pause()
         }
       };
     }

@@ -45,9 +45,11 @@ type Frame struct {
 	VideoId       string   `json:"videoId"`
 	Start         float32  `json:"start"`
 	End           float32  `json:"end"`
-	PreviewUrl    string   `json:"previewUrl"`
-	ImageUrl      string   `json:"imageUrl"`
+	Volume        int      `json:"volume"`
+	PreviewUrl    string   `json:"previewUrl" bson:"previewurl"`
+	ImageUrl      string   `json:"imageUrl" bson:"imageurl"`
 	ImageDuration int      `json:"imageDuration"`
+	NarrationText string   `json:"narrationText"`
 }
 
 // Vote Model - separate collection

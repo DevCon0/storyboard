@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"path/filepath"
+	"sync"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
@@ -109,37 +111,10 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	story.Id = bson.NewObjectId()
 	story.CreatedAt = time.Now()
 
-	// Set defaults for 'story.Frames'.
-	for i := 0; i < 3; i++ {
-		frame := &story.Frames[i]
-		// Skip if the previewUrl is already set.
-		if frame.PreviewUrl != "" {
-			continue
-		}
-
-		if frame.MediaType == 1 {
-			// If the frame is an image,
-			//   set the PreviewUrl to the ImageUrl.
-			frame.PreviewUrl = frame.ImageUrl
-		} else {
-			// If the frame is a video,
-			//   set the thumbnail to the first frame in the YouTube video.
-			videoId := frame.VideoId
-			previewUrl := concat("https://img.youtube.com/vi/", videoId, "/1.jpg")
-			frame.PreviewUrl = previewUrl
-		}
-	}
-
 	// Wait for both threads to complete.
 	// Return an error if one was found.
 	if err = <-chanErrGetUserInfoFromHeader; err != nil {
 		return err, <-chanHttpStatus
-	}
-
-	// Set default values.
-	story.Views = 0
-	if story.Author == "" {
-		story.Author = user.Username
 	}
 
 	// Spawn a new thread to add the storyId
@@ -151,6 +126,76 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			bson.M{"$push": bson.M{"stories": story.Id.Hex()}},
 		)
 	}()
+
+	// Set default values.
+	story.Views = 0
+	if story.Author == "" {
+		story.Author = user.Username
+	}
+
+	// Set defaults for 'story.Frames'.
+	numberOfFrames := len(story.Frames)
+
+	// Prepare to watch multi-threaded goroutines.
+	var wg sync.WaitGroup
+	wg.Add(numberOfFrames - 1)
+
+	for i := 1; i < numberOfFrames; i++ {
+		// Set each frame's PreviewUrl concurrently.
+		go func(i int) {
+			// At the end of this goroutine,
+			//   tell 'wg' that another goroutine is done.
+			defer wg.Done()
+			frame := &story.Frames[i]
+
+			// Skip if the previewUrl is already set.
+			if frame.PreviewUrl != "" {
+				return
+			}
+
+			// Set the frame's PreviewUrl (for the home/splash page).
+			// Handle images and videos differently.
+			switch frame.MediaType {
+
+			// Set a video's PreviewUrl.
+			case 0:
+				// Set the PreviewUrl to the first frame in the YouTube video.
+				videoId := frame.VideoId
+				previewUrl := concat("https://img.youtube.com/vi/", videoId, "/1.jpg")
+				frame.PreviewUrl = previewUrl
+
+			// Set an image's PreviewUrl.
+			case 1:
+
+				// Handle GIF images differently than other images.
+				switch filepath.Ext(frame.ImageUrl) {
+				case ".gif":
+					// Save a non-animated version of the GIF in the database.
+					previewUrl, err := saveNonAnimatedGif(frame.ImageUrl)
+					if err != nil {
+						fmt.Printf(
+							"Failed to create motionless image for %v: %v\n",
+							frame.ImageUrl, err,
+						)
+						// If an error occurred, just set the PreviewUrl
+						//   to the animated GIF.
+						frame.PreviewUrl = frame.ImageUrl
+					} else {
+						// If a non-animated copy of the GIF
+						//   was saved successfully, use it as the PreviewUrl.
+						frame.PreviewUrl = previewUrl
+					}
+				default:
+					// For non-GIF images,
+					//   just use the ImageUrl as the PreviewUrl.
+					frame.PreviewUrl = frame.ImageUrl
+				}
+			}
+		}(i)
+	}
+
+	// Wait for goroutines to finish.
+	wg.Wait()
 
 	// Add the new story to the database.
 	err = storiesCollection.Insert(&story)
@@ -347,6 +392,96 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 		return err, status
 	}
 
+	// Fetch the unedited story data from the database.
+	originalStory := Story{}
+	err = storiesCollection.Find(bson.M{
+		"_id": story.Id,
+	}).One(&originalStory)
+	if err != nil {
+		return fmt.Errorf("Original story not found in the database\n"),
+			http.StatusNotFound
+	}
+
+	// If the story contains GIF's,
+	//   remove the non-animated versions of them in the database.
+	numberOfFrames := len(story.Frames)
+
+	// Prepare to watch multi-threaded goroutines.
+	var wg sync.WaitGroup
+	wg.Add(numberOfFrames - 1)
+
+	for i := 1; i < numberOfFrames; i++ {
+		// Set each frame's PreviewUrl concurrently.
+		go func(i int) {
+			// At the end of this goroutine,
+			//   tell 'wg' that another goroutine is done.
+			defer wg.Done()
+
+			editedFrame := &story.Frames[i]
+			originalFrame := originalStory.Frames[i]
+
+			// Set the editedFrame's PreviewUrl (for the home/splash page).
+			// Handle images and videos differently.
+			switch editedFrame.MediaType {
+
+			// Set a video's PreviewUrl.
+			case 0:
+				// Set the PreviewUrl to the first frame in the YouTube video.
+				videoId := editedFrame.VideoId
+				previewUrl := concat(
+					"https://img.youtube.com/vi/", videoId, "/1.jpg",
+				)
+				(*editedFrame).PreviewUrl = previewUrl
+
+			// Set an image's PreviewUrl.
+			case 1:
+
+				editedImageUrl := editedFrame.ImageUrl
+
+				// Handle GIF images differently than other images.
+				switch filepath.Ext(editedImageUrl) {
+				case ".gif":
+					// Skip if the ImageUrl has not been edited.
+					if editedImageUrl == originalFrame.ImageUrl {
+						return
+					}
+
+					// Save a non-animated version of the GIF in the database.
+					nonAnimatedPreviewUrl, err := saveNonAnimatedGif(
+						editedImageUrl,
+					)
+
+					// Note the '==' here instead of the usual '!='.
+					if err == nil {
+						// If a non-animated copy of the GIF
+						//   was saved successfully,
+						//   remove the old image from the database.
+						go deleteNonAnimatedGif(editedFrame.PreviewUrl)
+
+						// Use the non-animated version of the GIF
+						//   as the PreviewUrl.
+						(*editedFrame).PreviewUrl = nonAnimatedPreviewUrl
+						break
+					}
+
+					// If an error occurred, treat the GIF as a normal image.
+					fmt.Printf(
+						"Failed to create a non-animated version of %v: %v\n",
+						editedImageUrl, err,
+					)
+					fallthrough
+
+				// For non-GIF images, set the PreviewUrl to the ImageUrl.
+				default:
+					(*editedFrame).PreviewUrl = editedImageUrl
+				}
+			}
+		}(i)
+	}
+
+	// Wait for goroutines to finish.
+	wg.Wait()
+
 	// Fetch story data from the database.
 	err = storiesCollection.Update(
 		bson.M{"_id": story.Id},
@@ -412,6 +547,34 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	err, status = user.verifyAuthorship(storyId)
 	if err != nil {
 		return err, status
+	}
+
+	// If the story contains GIF's,
+	//   remove the non-animated versions of them in the database.
+	numberOfFrames := len(story.Frames)
+	for i := 1; i < numberOfFrames; i++ {
+		frame := &story.Frames[i]
+
+		// Skip is the frame is not an image.
+		if frame.MediaType != 1 {
+			continue
+		}
+
+		// Skip is the frame is not a GIF.
+		if filepath.Ext(frame.ImageUrl) != ".gif" {
+			continue
+		}
+
+		// Skip if the PreviewUrl does not point to an image in the database.
+		if filepath.Dir(frame.PreviewUrl) != "/api/images" {
+			continue
+		}
+
+		// Remove the file from the database.
+		err, status := deleteNonAnimatedGif(frame.PreviewUrl)
+		if err != nil {
+			return err, status
+		}
 	}
 
 	// Remove story data from the database.
