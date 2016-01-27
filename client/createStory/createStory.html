@@ -69,6 +69,7 @@
         <paper-menu ng-model="frame1MediaType" class="dropdown-content">
           <paper-item>Video</paper-item>
           <paper-item>Image</paper-item>
+          <paper-item>Text-to-Speech</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
  <!-- Act I VIDEO  ******************************** -->
@@ -112,6 +113,17 @@
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
+ <!-- Act I NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+      <div ng-if="frame1MediaType == 2">
+        <form ng-submit="previewTextToSpeech(1)">
+          <div class="form-group">
+            <label for="textToSpeechNarration1">Narration</label>
+            <textarea ng-model="$parent.frame1NarrationText" id="textToSpeechNarration1" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+        </form>
+        <div class="col-md-12 clean"></div>
+      </div>
     </paper-card>
   </div>
  <!-- Act II ///////////////////////////////////////////////////////////////////////////// -->
@@ -121,6 +133,7 @@
         <paper-menu ng-model="frame2MediaType" class="dropdown-content">
           <paper-item>Video</paper-item>
           <paper-item>Image</paper-item>
+          <paper-item>Text-to-Speech</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
  <!-- Act II VIDEO  ******************************** -->
@@ -164,6 +177,17 @@
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
+ <!-- Act II NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+      <div ng-if="frame2MediaType == 2">
+        <form ng-submit="previewTextToSpeech(2)">
+          <div class="form-group">
+            <label for="textToSpeechNarration2">Narration</label>
+            <textarea ng-model="$parent.frame2NarrationText" id="textToSpeechNarration2" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+        </form>
+        <div class="col-md-12 clean"></div>
+      </div>
     </paper-card>
   </div>
  <!-- Act III ///////////////////////////////////////////////////////////////////////////// -->
@@ -173,6 +197,7 @@
         <paper-menu ng-model="frame3MediaType" class="dropdown-content">
           <paper-item>Video</paper-item>
           <paper-item>Image</paper-item>
+          <paper-item>Text-to-Speech</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
  <!-- Act III VIDEO  ******************************** -->
@@ -215,6 +240,17 @@
         </form>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame3ImagePreview"><img ng-src="{{$parent.frame3ImageUrl}}" class="frameImageUrlPreview"></div>
+      </div>
+ <!-- Act III NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+      <div ng-if="frame3MediaType == 2">
+        <form ng-submit="previewTextToSpeech(3)">
+          <div class="form-group">
+            <label for="textToSpeechNarration3">Narration</label>
+            <textarea ng-model="$parent.frame3NarrationText" id="textToSpeechNarration3" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+        </form>
+        <div class="col-md-12 clean"></div>
       </div>
     </paper-card>
   </div>

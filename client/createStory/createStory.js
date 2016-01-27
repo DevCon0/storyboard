@@ -1,6 +1,14 @@
 angular.module('storyBoard.createStory', [])
 
-.controller('createStoryCtrl', function ($scope, $state, StoryStorage, StoryStateMachine, localStorageService, $window, Auth, $stateParams) {
+.controller('createStoryCtrl', function ($scope,
+                                         $state,
+                                         StoryStorage,
+                                         StoryStateMachine,
+                                         localStorageService,
+                                         $window,
+                                         Auth,
+                                         $stateParams,
+                                         TextToSpeechPlayer) {
 
   if ( ! (Auth.isAuth()) ) {
     $state.go('login')
@@ -39,6 +47,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame0Volume = editStory.frames[0].volume;
     $scope.frame0ImageUrl = editStory.frames[0].imageUrl;
     $scope.frame0UrlDuration = editStory.frames[0].imageDuration;
+    // Not applicable $scope.frame0NarrationText
 
     // TODO: remove backwards compatibility
     if(editStory.frames[1].mediaType !== undefined) {
@@ -50,9 +59,9 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1StartTime = editStory.frames[1].start;
     $scope.frame1EndTime = editStory.frames[1].end;
     $scope.frame1Volume = editStory.frames[1].volume;
-
     $scope.frame1ImageUrl = editStory.frames[1].imageUrl;
     $scope.frame1UrlDuration = editStory.frames[1].imageDuration;
+    $scope.frame1NarrationText = editStory.frames[1].narrationText;
 
     // TODO: remove backwards compatibility
     if(editStory.frames[2].mediaType !== undefined) {
@@ -66,6 +75,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2Volume = editStory.frames[2].volume;
     $scope.frame2ImageUrl = editStory.frames[2].imageUrl;
     $scope.frame2UrlDuration = editStory.frames[2].imageDuration;
+    $scope.frame2NarrationText = editStory.frames[2].narrationText;
 
     // TODO: remove backwards compatibility
     if(editStory.frames[3].mediaType !== undefined) {
@@ -79,6 +89,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3Volume = editStory.frames[3].volume;
     $scope.frame3ImageUrl = editStory.frames[3].imageUrl;
     $scope.frame3UrlDuration = editStory.frames[3].imageDuration;
+    $scope.frame3NarrationText = editStory.frames[3].narrationText;
   } else {
     $scope.storyTitle = null;
     $scope.storyDescription = null;
@@ -91,6 +102,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame0Volume = "100";
     $scope.frame0ImageUrl = null;
     $scope.frame0UrlDuration = null;
+    // Not applicable $scope.frame0NarrationText
 
     $scope.frame1MediaType = null;
     $scope.frame1YoutubeUrl = null;
@@ -99,6 +111,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1Volume = "100";
     $scope.frame1ImageUrl = null;
     $scope.frame1UrlDuration = null;
+    $scope.frame1NarrationText = null;
 
     $scope.frame2MediaType = null;
     $scope.frame2YoutubeUrl = null;
@@ -107,6 +120,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2Volume = "100";
     $scope.frame2ImageUrl = null;
     $scope.frame2UrlDuration = null;
+    $scope.frame2NarrationText = null;
 
     $scope.frame3MediaType = null;
     $scope.frame3YoutubeUrl = null;
@@ -115,6 +129,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3Volume = "100";
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
+    $scope.frame3NarrationText = null;
   }
 
   $scope.prepopulateInputs = function(){
@@ -136,6 +151,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1Volume = "0";
     $scope.frame1ImageUrl = "http://i.imgur.com/7j15tXU.jpg";
     $scope.frame1UrlDuration = 2;
+    $scope.frame1NarrationText = 'A long time ago, in a galaxy far, far away';
 
     $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=b8cCsUBYSkw";
     $scope.frame2StartTime = "870";
@@ -143,7 +159,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2Volume = "30";
     $scope.frame2ImageUrl = "http://gifstumblr.com/images/bird-vs-action-figure_1509.gif";
     $scope.frame2UrlDuration = 3;
-
+    $scope.frame2NarrationText = 'Why don\'t you just tell me what movie you want to see!';
 
     $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
     $scope.frame3StartTime = "0";
@@ -151,6 +167,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3Volume = "60"
     $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
     $scope.frame3UrlDuration = 1;
+    $scope.frame3NarrationText = 'By Jove, I\'ve got a cheeky idea, let\'s have Milco solve the matrix.';
   }
 
   $scope.checkRequiredFields = function(){
@@ -167,9 +184,13 @@ angular.module('storyBoard.createStory', [])
       $scope.frame1ImageUrl &&
       $scope.frame1UrlDuration;
 
+    var textToSpeech1Ready =
+      $scope.frame1NarrationText;
+
     var frame1Ready =
       video1InfoReady ||
-      image1InfoReady;
+      image1InfoReady ||
+      textToSpeech1Ready;
 
     var video2InfoReady =
       $scope.frame2YoutubeUrl &&
@@ -179,9 +200,13 @@ angular.module('storyBoard.createStory', [])
       $scope.frame2ImageUrl &&
       $scope.frame2UrlDuration;
 
+    var textToSpeech2Ready =
+      $scope.frame2NarrationText;
+
     var frame2Ready =
       video2InfoReady ||
-      image2InfoReady;
+      image2InfoReady ||
+      textToSpeech2Ready;
 
     var video3InfoReady =
       $scope.frame3YoutubeUrl &&
@@ -191,9 +216,13 @@ angular.module('storyBoard.createStory', [])
       $scope.frame3ImageUrl &&
       $scope.frame3UrlDuration;
 
+    var textToSpeech3Ready =
+      $scope.frame3NarrationText;
+
     var frame3Ready =
       video3InfoReady ||
-      image3InfoReady;
+      image3InfoReady ||
+      textToSpeech3Ready;
 
     var allFieldsReady =
       storyMetaInfoReady &&
@@ -225,7 +254,8 @@ angular.module('storyBoard.createStory', [])
           end: $scope.frame0EndTime ? parseFloat($scope.frame0EndTime) : 0,
           volume: parseInt($scope.frame0Volume),
           imageUrl: $scope.frame0ImageUrl,
-          imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0
+          imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0,
+          narrationText: null /* Not applicable $scope.frame0NarrationText*/
         },
         {
           mediaType: $scope.frame1MediaType,
@@ -237,7 +267,8 @@ angular.module('storyBoard.createStory', [])
           volume: parseInt($scope.frame1Volume),
           previewUrl: (wasPassed)? $stateParams.story.frames[1].previewUrl: "",
           imageUrl: $scope.frame1ImageUrl,
-          imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0
+          imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0,
+          narrationText: $scope.frame1NarrationText
         },
         {
           mediaType: $scope.frame2MediaType,
@@ -249,7 +280,8 @@ angular.module('storyBoard.createStory', [])
           volume: parseInt($scope.frame2Volume),
           previewUrl: (wasPassed)? $stateParams.story.frames[2].previewUrl: "",
           imageUrl: $scope.frame2ImageUrl,
-          imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0
+          imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0,
+          narrationText: $scope.frame2NarrationText
         },
         {
           mediaType: $scope.frame3MediaType,
@@ -261,7 +293,8 @@ angular.module('storyBoard.createStory', [])
           volume: parseInt($scope.frame3Volume),
           previewUrl: (wasPassed)? $stateParams.story.frames[3].previewUrl: "",
           imageUrl: $scope.frame3ImageUrl,
-          imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0
+          imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0,
+          narrationText: $scope.frame3NarrationText
         }
       ]
     }
@@ -295,7 +328,8 @@ angular.module('storyBoard.createStory', [])
           end: $scope.frame0EndTime,
           volume: $scope.frame0Volume,
           imageUrl: $scope.frame0ImageUrl,
-          imageDuration: $scope.frame0UrlDuration
+          imageDuration: $scope.frame0UrlDuration,
+          narrationText: null /* Not applicable $scope.frame0NarrationText*/
         },
         {
           mediaType: $scope.frame1MediaType,
@@ -306,7 +340,8 @@ angular.module('storyBoard.createStory', [])
           end: $scope.frame1EndTime,
           volume: $scope.frame1Volume,
           imageUrl: $scope.frame1ImageUrl,
-          imageDuration: $scope.frame1UrlDuration
+          imageDuration: $scope.frame1UrlDuration,
+          narrationText: $scope.frame1NarrationText
         },
         {
           mediaType: $scope.frame2MediaType,
@@ -317,7 +352,8 @@ angular.module('storyBoard.createStory', [])
           end: $scope.frame2EndTime,
           volume: $scope.frame2Volume,
           imageUrl: $scope.frame2ImageUrl,
-          imageDuration: $scope.frame2UrlDuration
+          imageDuration: $scope.frame2UrlDuration,
+          narrationText: $scope.frame2NarrationText
         },
         {
           mediaType: $scope.frame3MediaType,
@@ -328,7 +364,8 @@ angular.module('storyBoard.createStory', [])
           end: $scope.frame3EndTime,
           volume: $scope.frame3Volume,
           imageUrl: $scope.frame3ImageUrl,
-          imageDuration: $scope.frame3UrlDuration
+          imageDuration: $scope.frame3UrlDuration,
+          narrationText: $scope.frame3NarrationText
         }
       ]
     }
@@ -501,6 +538,33 @@ angular.module('storyBoard.createStory', [])
         $scope.addFrame3ImagePreview = true;
         break;
     }
+  }
+
+  $scope.previewTextToSpeech = function(frameId){
+    var frameNarrationText = null;
+    switch(frameId){
+      case 1:
+        frameNarrationText = $scope.frame1NarrationText;
+        break;
+      case 2:
+        frameNarrationText = $scope.frame2NarrationText;
+        break;
+      case 3:
+        frameNarrationText = $scope.frame3NarrationText;
+        break;
+    }
+    var tempStoryFrame = {
+      narrationText: frameNarrationText
+    };
+    var previewTextToSpeechPlayer = new TextToSpeechPlayer();
+    var readyCallback =
+      previewTextToSpeechPlayer.play.bind(previewTextToSpeechPlayer);
+    var playbackFinishedCallback =
+      previewTextToSpeechPlayer.destroy.bind(previewTextToSpeechPlayer);
+
+    previewTextToSpeechPlayer.create(tempStoryFrame,
+                                     readyCallback,
+                                     playbackFinishedCallback);
   }
 
 });
