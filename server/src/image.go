@@ -33,6 +33,10 @@ func getImage(w http.ResponseWriter, r *http.Request) (error, int) {
 	}
 
 	// Find the image file in the database.
+	if !bson.IsObjectIdHex(imageId) {
+		return fmt.Errorf("Invalid image id: %v\n", imageId),
+			http.StatusBadRequest
+	}
 	imageObjectId := bson.ObjectIdHex(imageId)
 	imageFile, err := dbFs.OpenId(imageObjectId)
 	if err != nil {
@@ -62,6 +66,8 @@ func getImage(w http.ResponseWriter, r *http.Request) (error, int) {
 // The stored image will be a PNG.
 // Return a url path which can the client can use to request the stored image.
 func saveNonAnimatedGif(imageUrl string) (string, error) {
+	fmt.Printf("Saving non-animated image of %v\n", imageUrl)
+
 	// Fetch the GIF image.
 	res, err := http.Get(imageUrl)
 	if err != nil {
@@ -132,7 +138,6 @@ func saveNonAnimatedGif(imageUrl string) (string, error) {
 	// Return the url path which the client can use
 	//   to request the new PNG image.
 	previewUrl := concat("/api/images/", dbFileIdHex)
-	fmt.Printf("previewUrl: %v\n", previewUrl)
 	return previewUrl, nil
 }
 
@@ -168,6 +173,10 @@ func deleteNonAnimatedGif(imageUrl string) (error, int) {
 	imageId := filepath.Base(imageUrl)
 
 	// Convert the imageId to an Mongo ObjectId.
+	if !bson.IsObjectIdHex(imageId) {
+		return fmt.Errorf("Invalid image id: %v\n", imageId),
+			http.StatusInternalServerError
+	}
 	imageObjectId := bson.ObjectIdHex(imageId)
 
 	// Remove the image file with this id from the database.
