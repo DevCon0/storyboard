@@ -12,20 +12,241 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func handleStory(w http.ResponseWriter, r *http.Request, storyId string) (error, int) {
-	switch r.Method {
-	case "GET":
-		return getStory(w, r, storyId)
-	case "POST":
-		return saveStory(w, r)
-	case "PUT":
-		return editStory(w, r)
-	case "DELETE":
-		return deleteStory(w, r, storyId)
-	default:
-		return fmt.Errorf("Only GET and POST requests allowed\n"),
-			http.StatusBadRequest
+// GET request to 'api/stories/library'.
+// Respond with the full data for all of the stories
+//   created by a signed-in user.
+//   Find the user's stories by using the token in the request header.
+func library(w http.ResponseWriter, r *http.Request, userId string) (error, int) {
+	// Get user info from the database, using the token in the header.
+	user := User{}
+	err, status := user.getInfoFromHeaderSync(r)
+	if err != nil {
+		return err, status
 	}
+
+	// Convert the story id's from strings to bson object id's.
+	storyIds := make([]bson.ObjectId, len(user.Stories))
+	for i, storyId := range user.Stories {
+		storyIds[i] = bson.ObjectIdHex(storyId)
+	}
+
+	// Find full story data for data for all of the user's stories.
+	stories := []Story{}
+	err = storiesCollection.Find(bson.M{
+		"_id": bson.M{"$in": storyIds},
+	}).All(&stories)
+	if err != nil {
+		return fmt.Errorf("Failed to find user's stories\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// Stringify the story data array into JSON format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return err,
+			http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// GET request to 'api/stories/showcase'.
+// Respond with the full data for the top 3 stories.
+func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
+	stories := []Story{}
+
+	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(
+		&stories,
+	)
+	if err != nil {
+		return err, http.StatusNotFound
+	}
+
+	// Stringify the story data into JSON format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// GET request to 'api/stories/showcase'.
+// Respond with the full data for 3 random stories.
+func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Get all stories from the database.
+	stories := []Story{}
+	err := storiesCollection.Find(nil).All(&stories)
+	if err != nil {
+		return err, http.StatusNotFound
+	}
+
+	// Update any stories which are not structured correctly.
+	// For each one, make sure it has 4 frames
+	//   and that any GIF frames images have a non-animated thumbnail.
+	// go verifyStoryStructure(stories)
+
+	// Randomize the stories.
+	numberOfStories := len(stories)
+	// Declare a slice which will contain the random numbers used.
+	randomNumbers := []int{}
+	// Make an array which will serve as a randomized copy of 'stories'.
+	limit := 15
+	randomStories := make([]Story, limit)
+
+	i := 0
+	for {
+		// Get a random number between 0 and the number of stories.
+		randomIndex := rand.Intn(numberOfStories)
+		if intSlcContains(randomNumbers, randomIndex) {
+			continue
+		}
+		randomNumbers = append(randomNumbers, randomIndex)
+		randomStories[i] = stories[randomIndex]
+
+		i++
+		if i == limit || i == numberOfStories {
+			break
+		}
+	}
+
+	// Stringify the story data into JSON format.
+	js, err := json.Marshal(randomStories)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// Reset the structure of any stories which are misaligned.
+// Make sure all stories have 4 frames
+//   and that GIF images have a non-animated thumbnail.
+// If they don't, add a fourth one and update it in the database.
+func verifyStoryStructure(stories []Story) {
+	numberOfStories := len(stories)
+	for i := 0; i < numberOfStories; i++ {
+		story := &stories[i]
+		go func(story *Story) {
+			storyChanged := false
+
+			numberOfFrames := len(story.Frames)
+
+			// If the story is missing a fourth frame,
+			//   'unshift' a blank frame at index 0.
+			if numberOfFrames == 3 {
+				tmpFrames := make([]Frame, 4)
+				for i := 0; i < 3; i++ {
+					tmpFrames[i+1] = story.Frames[i]
+				}
+				story.Frames = tmpFrames
+
+				numberOfFrames = len(story.Frames)
+				storyChanged = true
+			}
+
+			// Check if any GIF frames need a non-animated thumbnail.
+			for j := numberOfFrames - 1; j >= 0; j-- {
+				frame := &story.Frames[j]
+				// Skip if not an image.
+				if frame.MediaType != 1 {
+					continue
+				}
+
+				// Skip if not a GIF.
+				if filepath.Ext(frame.ImageUrl) != ".gif" {
+					continue
+				}
+
+				// Skip if the PreviewUrl is not a GIF.
+				if filepath.Ext(frame.PreviewUrl) != ".gif" {
+					continue
+				}
+
+				// Set the PreviewUrl to nothing to force creation
+				//   of a new one.
+				(*frame).PreviewUrl = ""
+				storyChanged = true
+			}
+
+			// Skip editing if no edits were made.
+			if !storyChanged {
+				return
+			}
+
+			// Get user info for the author of the story.
+			user := User{}
+			err := usersCollection.Find(bson.M{
+				"username": story.Username,
+			}).One(&user)
+			if err != nil {
+				fmt.Printf(
+					"Failed to find user %v: %v\n",
+					story.Username, err,
+				)
+				return
+			}
+
+			// Convert the story struct to bytes.
+			js, err := json.Marshal(story)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			// Prepare an edit request to this server for the story.
+			url := "http://localhost:8020/api/stories/story"
+			req, err := http.NewRequest("PUT", url, bytes.NewBuffer(js))
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			// Set request options.
+			req.Header.Set("token", user.Token)
+			req.Header.Set("Content-Type", "application/json")
+
+			// Send the request.
+			client := &http.Client{}
+			res, err := client.Do(req)
+			if err != nil {
+				fmt.Printf("Couldn't update %v: %v\n", story.Title, err)
+				return
+			}
+			if res.StatusCode != http.StatusOK {
+				fmt.Printf(
+					"Couldn't update %v: %v\n", story.Title, story.Id.Hex(),
+				)
+			}
+			defer res.Body.Close()
+
+			fmt.Printf("Done for %v\n", story.Title)
+		}(story)
+	}
+}
+
+func intSlcContains(slc []int, q int) bool {
+	for _, n := range slc {
+		if n == q {
+			return true
+		}
+	}
+	return false
 }
 
 // GET request to 'api/stories/story/<story_id>'.
@@ -214,194 +435,6 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	w.Write(jsonStoryResponseData)
 
 	return nil, http.StatusCreated
-}
-
-// GET request to 'api/stories/library'.
-// Respond with the full data for all of the stories
-//   created by a signed-in user.
-//   Find the user's stories by using the token in the request header.
-func library(w http.ResponseWriter, r *http.Request, userId string) (error, int) {
-	// Make sure that this is a GET request.
-	if err, status := verifyMethod("GET", w, r); err != nil {
-		return err, status
-	}
-
-	// Get user info from the database, using the token in the header.
-	user, err, status := getUserInfoFromHeader(r)
-	if err != nil {
-		return err, status
-	}
-
-	// Convert the story id's from strings to bson object id's.
-	storyIds := make([]bson.ObjectId, len(user.Stories))
-	for i, storyId := range user.Stories {
-		storyIds[i] = bson.ObjectIdHex(storyId)
-	}
-
-	// Find full story data for data for all of the user's stories.
-	stories := []Story{}
-	err = storiesCollection.Find(bson.M{
-		"_id": bson.M{"$in": storyIds},
-	}).All(&stories)
-	if err != nil {
-		return fmt.Errorf("Failed to find user's stories\n%v\n", err),
-			http.StatusNotFound
-	}
-
-	// Stringify the story data array into JSON format.
-	js, err := json.Marshal(stories)
-	if err != nil {
-		return err,
-			http.StatusInternalServerError
-	}
-
-	// Send the JSON object with status 200.
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
-
-	return nil, http.StatusOK
-}
-
-// GET request to 'api/stories/showcase'.
-// Respond with the full data for the top 3 stories.
-func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
-	stories := []Story{}
-
-	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(
-		&stories,
-	)
-	if err != nil {
-		return err, http.StatusNotFound
-	}
-
-	// Stringify the story data into JSON format.
-	js, err := json.Marshal(stories)
-	if err != nil {
-		return err, http.StatusInternalServerError
-	}
-
-	// Send the JSON object with status 200.
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
-
-	return nil, http.StatusOK
-}
-
-// GET request to 'api/stories/showcase'.
-// Respond with the full data for 3 random stories.
-func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Get all stories from the database.
-	stories := []Story{}
-	err := storiesCollection.Find(nil).All(&stories)
-	if err != nil {
-		return err, http.StatusNotFound
-	}
-
-	// Make sure all stories have 4 frames.
-	// If they don't, add a fourth one and update it in the database.
-	numberOfStories := len(stories)
-	for i := 0; i < numberOfStories; i++ {
-		story := &stories[i]
-		if len(story.Frames) == 4 {
-			continue
-		}
-		tmpFrames := make([]Frame, 4)
-		for i := 0; i < 3; i++ {
-			tmpFrames[i+1] = story.Frames[i]
-		}
-		story.Frames = tmpFrames
-		go func(story *Story) {
-			user := User{}
-			err := usersCollection.Find(bson.M{
-				"username": story.Username,
-			}).One(&user)
-			if err != nil {
-				fmt.Printf(
-					"Failed to find user %v: %v\n",
-					story.Username, err,
-				)
-				return
-			}
-
-			url := "http://localhost:8020/api/stories/story"
-			js, err := json.Marshal(story)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			req, err := http.NewRequest("PUT", url, bytes.NewBuffer(js))
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			req.Header.Set("token", user.Token)
-			req.Header.Set("Content-Type", "application/json")
-			client := &http.Client{}
-
-			res, err := client.Do(req)
-			if err != nil {
-				fmt.Printf("Couldn't update %v: %v\n", story.Title, err)
-				return
-			}
-			if res.StatusCode != http.StatusOK {
-				fmt.Printf(
-					"Couldn't update %v: %v\n", story.Title, story.Id.Hex(),
-				)
-			}
-			defer res.Body.Close()
-
-			fmt.Printf("Done for %v\n", story.Title)
-		}(story)
-	}
-
-	// Randomize the stories.
-	// Declare a slice which will contain the random numbers used.
-	randomNumbers := []int{}
-	// Make an array which will serve as a randomized copy of 'stories'.
-	limit := 15
-	randomStories := make([]Story, limit)
-
-	i := 0
-	for {
-		// Get a random number between 0 and the number of stories.
-		randomIndex := rand.Intn(numberOfStories)
-		if intSlcContains(randomNumbers, randomIndex) {
-			continue
-		}
-		randomNumbers = append(randomNumbers, randomIndex)
-		randomStories[i] = stories[randomIndex]
-
-		i++
-		if i == limit || i == numberOfStories {
-			break
-		}
-	}
-
-	// Stringify the story data into JSON format.
-	js, err := json.Marshal(randomStories)
-	if err != nil {
-		return err, http.StatusInternalServerError
-	}
-
-	// Send the JSON object with status 200.
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
-
-	return nil, http.StatusOK
-}
-
-func intSlcContains(slc []int, q int) bool {
-	for _, n := range slc {
-		if n == q {
-			return true
-		}
-	}
-	return false
 }
 
 // PUT request to 'api/stories/story'.
@@ -674,7 +707,7 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	return nil, http.StatusOK
 }
 
-// GET request to 'api/stories/search/<search_tag>'.
+// GET request to 'api/stories/tags/<search_tag>'.
 // Respond with an array of stories which contain the search tag.
 func searchStories(w http.ResponseWriter, r *http.Request, searchTag string) (error, int) {
 	// Make sure a story id was given in the url.
