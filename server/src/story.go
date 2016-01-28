@@ -1,31 +1,252 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"math/rand"
 	"net/http"
 	"path/filepath"
-	"sync"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
 )
 
-func handleStory(w http.ResponseWriter, r *http.Request, storyId string) (error, int) {
-	switch r.Method {
-	case "GET":
-		return getStory(w, r, storyId)
-	case "POST":
-		return saveStory(w, r)
-	case "PUT":
-		return editStory(w, r)
-	case "DELETE":
-		return deleteStory(w, r, storyId)
-	default:
-		return fmt.Errorf("Only GET and POST requests allowed\n"),
-			http.StatusBadRequest
+// GET request to 'api/stories/library'.
+// Respond with the full data for all of the stories
+//   created by a signed-in user.
+//   Find the user's stories by using the token in the request header.
+func library(w http.ResponseWriter, r *http.Request, userId string) (error, int) {
+	// Get user info from the database, using the token in the header.
+	user := User{}
+	err, status := user.getInfoFromHeaderSync(r)
+	if err != nil {
+		return err, status
 	}
+
+	// Convert the story id's from strings to bson object id's.
+	storyIds := make([]bson.ObjectId, len(user.Stories))
+	for i, storyId := range user.Stories {
+		storyIds[i] = bson.ObjectIdHex(storyId)
+	}
+
+	// Find full story data for data for all of the user's stories.
+	stories := []Story{}
+	err = storiesCollection.Find(bson.M{
+		"_id": bson.M{"$in": storyIds},
+	}).All(&stories)
+	if err != nil {
+		return fmt.Errorf("Failed to find user's stories\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// Stringify the story data array into JSON format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return err,
+			http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// GET request to 'api/stories/showcase'.
+// Respond with the full data for the top 3 stories.
+func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
+	stories := []Story{}
+
+	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(
+		&stories,
+	)
+	if err != nil {
+		return err, http.StatusNotFound
+	}
+
+	// Stringify the story data into JSON format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// GET request to 'api/stories/showcase'.
+// Respond with the full data for 3 random stories.
+func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Get all stories from the database.
+	stories := []Story{}
+	err := storiesCollection.Find(nil).All(&stories)
+	if err != nil {
+		return err, http.StatusNotFound
+	}
+
+	// Update any stories which are not structured correctly.
+	// For each one, make sure it has 4 frames
+	//   and that any GIF frames images have a non-animated thumbnail.
+	// go verifyStoryStructure(stories)
+
+	// Randomize the stories.
+	numberOfStories := len(stories)
+	// Declare a slice which will contain the random numbers used.
+	randomNumbers := []int{}
+	// Make an array which will serve as a randomized copy of 'stories'.
+	limit := 15
+	randomStories := make([]Story, limit)
+
+	i := 0
+	for {
+		// Get a random number between 0 and the number of stories.
+		randomIndex := rand.Intn(numberOfStories)
+		if intSlcContains(randomNumbers, randomIndex) {
+			continue
+		}
+		randomNumbers = append(randomNumbers, randomIndex)
+		randomStories[i] = stories[randomIndex]
+
+		i++
+		if i == limit || i == numberOfStories {
+			break
+		}
+	}
+
+	// Stringify the story data into JSON format.
+	js, err := json.Marshal(randomStories)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// Reset the structure of any stories which are misaligned.
+// Make sure all stories have 4 frames
+//   and that GIF images have a non-animated thumbnail.
+// If they don't, add a fourth one and update it in the database.
+func verifyStoryStructure(stories []Story) {
+	numberOfStories := len(stories)
+	for i := 0; i < numberOfStories; i++ {
+		story := &stories[i]
+		go func(story *Story) {
+			storyChanged := false
+
+			numberOfFrames := len(story.Frames)
+
+			// If the story is missing a fourth frame,
+			//   'unshift' a blank frame at index 0.
+			if numberOfFrames == 3 {
+				tmpFrames := make([]Frame, 4)
+				for i := 0; i < 3; i++ {
+					tmpFrames[i+1] = story.Frames[i]
+				}
+				story.Frames = tmpFrames
+
+				numberOfFrames = len(story.Frames)
+				storyChanged = true
+			}
+
+			// Check if any GIF frames need a non-animated thumbnail.
+			for j := numberOfFrames - 1; j >= 0; j-- {
+				frame := &story.Frames[j]
+				// Skip if not an image.
+				if frame.MediaType != 1 {
+					continue
+				}
+
+				// Skip if not a GIF.
+				if filepath.Ext(frame.ImageUrl) != ".gif" {
+					continue
+				}
+
+				// Skip if the PreviewUrl is not a GIF.
+				if filepath.Ext(frame.PreviewUrl) != ".gif" {
+					continue
+				}
+
+				// Set the PreviewUrl to nothing to force creation
+				//   of a new one.
+				(*frame).PreviewUrl = ""
+				storyChanged = true
+			}
+
+			// Skip editing if no edits were made.
+			if !storyChanged {
+				return
+			}
+
+			// Get user info for the author of the story.
+			user := User{}
+			err := usersCollection.Find(bson.M{
+				"username": story.Username,
+			}).One(&user)
+			if err != nil {
+				fmt.Printf(
+					"Failed to find user %v: %v\n",
+					story.Username, err,
+				)
+				return
+			}
+
+			// Convert the story struct to bytes.
+			js, err := json.Marshal(story)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			// Prepare an edit request to this server for the story.
+			url := "http://localhost:8020/api/stories/story"
+			req, err := http.NewRequest("PUT", url, bytes.NewBuffer(js))
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			// Set request options.
+			req.Header.Set("token", user.Token)
+			req.Header.Set("Content-Type", "application/json")
+
+			// Send the request.
+			client := &http.Client{}
+			res, err := client.Do(req)
+			if err != nil {
+				fmt.Printf("Couldn't update %v: %v\n", story.Title, err)
+				return
+			}
+			if res.StatusCode != http.StatusOK {
+				fmt.Printf(
+					"Couldn't update %v: %v\n", story.Title, story.Id.Hex(),
+				)
+			}
+			defer res.Body.Close()
+
+			fmt.Printf("Done for %v\n", story.Title)
+		}(story)
+	}
+}
+
+func intSlcContains(slc []int, q int) bool {
+	for _, n := range slc {
+		if n == q {
+			return true
+		}
+	}
+	return false
 }
 
 // GET request to 'api/stories/story/<story_id>'.
@@ -79,24 +300,13 @@ func getStory(w http.ResponseWriter, r *http.Request, storyId string) (error, in
 // POST request to 'api/stories/story'.
 // Respond with the full data for the story specified in the url.
 func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Spawn a goroutine to find user info from the header.
 	user := User{}
-	var err error
-	status := http.StatusOK
-
-	chanErrGetUserInfoFromHeader := make(chan error, 1)
-	chanHttpStatus := make(chan int, 1)
-
-	// Spawn a new thread to find user info from the header.
-	go func() {
-		// Get user info from the token in the header.
-		user, err, status = getUserInfoFromHeader(r)
-		chanErrGetUserInfoFromHeader <- err
-		chanHttpStatus <- status
-	}()
+	wg, chanErrGetUserInfo, chanHttpStatus := user.getInfoFromHeader(r)
 
 	// Concurrently, decode the JSON object in the request body.
 	story := Story{}
-	err = json.NewDecoder(r.Body).Decode(&story)
+	err := json.NewDecoder(r.Body).Decode(&story)
 	if err != nil {
 		return fmt.Errorf("Invalid JSON object in request body \n%v\n", err),
 			http.StatusBadRequest
@@ -113,7 +323,8 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	// Wait for both threads to complete.
 	// Return an error if one was found.
-	if err = <-chanErrGetUserInfoFromHeader; err != nil {
+	wg.Wait()
+	if err = <-chanErrGetUserInfo; err != nil {
 		return err, <-chanHttpStatus
 	}
 
@@ -137,7 +348,6 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	numberOfFrames := len(story.Frames)
 
 	// Prepare to watch multi-threaded goroutines.
-	var wg sync.WaitGroup
 	wg.Add(numberOfFrames - 1)
 
 	for i := 1; i < numberOfFrames; i++ {
@@ -227,147 +437,15 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	return nil, http.StatusCreated
 }
 
-// GET request to 'api/stories/library'.
-// Respond with the full data for all of the stories
-//   created by a signed-in user.
-//   Find the user's stories by using the token in the request header.
-func library(w http.ResponseWriter, r *http.Request, userId string) (error, int) {
-	// Make sure that this is a GET request.
-	if err, status := verifyMethod("GET", w, r); err != nil {
-		return err, status
-	}
-
-	// Get user info from the token in the header.
-	user := User{}
-	user.Token = r.Header.Get("token")
-
-	// Get user info from the database, using the token in the header.
-	err := usersCollection.Find(bson.M{"token": user.Token}).One(&user)
-	if err != nil {
-		return fmt.Errorf("Failed to find token in the database\n%v\n", err),
-			http.StatusUnauthorized
-	}
-
-	// Convert the story id's from strings to bson object id's.
-	storyIds := make([]bson.ObjectId, len(user.Stories))
-	for i, storyId := range user.Stories {
-		storyIds[i] = bson.ObjectIdHex(storyId)
-	}
-
-	// Find full story data for data for all of the user's stories.
-	stories := []Story{}
-	err = storiesCollection.Find(bson.M{
-		"_id": bson.M{"$in": storyIds},
-	}).All(&stories)
-	if err != nil {
-		return fmt.Errorf("Failed to find user's stories\n%v\n", err),
-			http.StatusNotFound
-	}
-
-	// Stringify the story data array into JSON format.
-	js, err := json.Marshal(stories)
-	if err != nil {
-		return err,
-			http.StatusInternalServerError
-	}
-
-	// Send the JSON object with status 200.
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
-
-	return nil, http.StatusOK
-}
-
-// GET request to 'api/stories/showcase'.
-// Respond with the full data for the top 3 stories.
-func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
-	stories := []Story{}
-
-	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(
-		&stories,
-	)
-	if err != nil {
-		return err, http.StatusNotFound
-	}
-
-	// Stringify the story data into JSON format.
-	js, err := json.Marshal(stories)
-	if err != nil {
-		return err, http.StatusInternalServerError
-	}
-
-	// Send the JSON object with status 200.
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
-
-	return nil, http.StatusOK
-}
-
-// GET request to 'api/stories/showcase'.
-// Respond with the full data for 3 random stories.
-func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Get all stories from the database.
-	stories := []Story{}
-	err := storiesCollection.Find(nil).All(&stories)
-	if err != nil {
-		return err, http.StatusNotFound
-	}
-
-	// Randomize the stories.
-	numberOfStories := len(stories)
-	// Declare a slice which will contain the random numbers used.
-	randomNumbers := []int{}
-	// Make an array which will serve as a randomized copy of 'stories'.
-	limit := 15
-	randomStories := make([]Story, limit)
-
-	i := 0
-	for {
-		// Get a random number between 0 and the number of stories.
-		randomIndex := rand.Intn(numberOfStories)
-		if intSlcContains(randomNumbers, randomIndex) {
-			continue
-		}
-		randomNumbers = append(randomNumbers, randomIndex)
-		randomStories[i] = stories[randomIndex]
-
-		i++
-		if i == limit || i == numberOfStories {
-			break
-		}
-	}
-
-	// Stringify the story data into JSON format.
-	js, err := json.Marshal(randomStories)
-	if err != nil {
-		return err, http.StatusInternalServerError
-	}
-
-	// Send the JSON object with status 200.
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
-
-	return nil, http.StatusOK
-}
-
-func intSlcContains(slc []int, q int) bool {
-	for _, n := range slc {
-		if n == q {
-			return true
-		}
-	}
-	return false
-}
-
 // PUT request to 'api/stories/story'.
 // Update a story's information in the database.
 func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Spawn a goroutine to find user info from the header.
+	user := User{}
+	wg, chanErrGetUserInfo, chanHttpStatus := user.getInfoFromHeader(r)
+
 	// Grab the JSON object in the response body
 	story := Story{}
-
 	err := json.NewDecoder(r.Body).Decode(&story)
 	if err != nil {
 		return fmt.Errorf("Invalid JSON object in request body \n%v\n", err),
@@ -379,15 +457,17 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusBadRequest
 	}
 
-	// Get user info from the token in the header.
-	user, err, status := getUserInfoFromHeader(r)
-	if err != nil {
-		return err, status
+	// Wait for the goroutine which grabs user info from the token
+	//   in the request header to finish.
+	// Then return an error if one occurred.
+	wg.Wait()
+	if err = <-chanErrGetUserInfo; err != nil {
+		return err, <-chanHttpStatus
 	}
 
 	// Make sure that the token owner is the
 	//   autor of this story.
-	err, status = user.verifyAuthorship(story.Id.Hex())
+	err, status := user.verifyAuthorship(story.Id.Hex())
 	if err != nil {
 		return err, status
 	}
@@ -406,8 +486,28 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	//   remove the non-animated versions of them in the database.
 	numberOfFrames := len(story.Frames)
 
+	// Reset frames 0-2 to 1-3.
+	// Eventually, we can get rid of this, once we know that all stories
+	//   have four frames.
+	if numberOfFrames == 3 {
+		tmpFrames := make([]Frame, 4)
+		for i := 0; i < 3; i++ {
+			tmpFrames[i+1] = story.Frames[i]
+		}
+		story.Frames = tmpFrames
+		numberOfFrames = len(story.Frames)
+	}
+
+	// Reset frames 0-2 to 1-3 for originalStory as well.
+	if len(originalStory.Frames) == 3 {
+		tmpFrames := make([]Frame, 4)
+		for i := 0; i < 3; i++ {
+			tmpFrames[i+1] = originalStory.Frames[i]
+		}
+		originalStory.Frames = tmpFrames
+	}
+
 	// Prepare to watch multi-threaded goroutines.
-	var wg sync.WaitGroup
 	wg.Add(numberOfFrames - 1)
 
 	for i := 1; i < numberOfFrames; i++ {
@@ -442,7 +542,8 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 				switch filepath.Ext(editedImageUrl) {
 				case ".gif":
 					// Skip if the ImageUrl has not been edited.
-					if editedImageUrl == originalFrame.ImageUrl {
+					if editedImageUrl == originalFrame.ImageUrl &&
+						editedFrame.PreviewUrl != "" {
 						return
 					}
 
@@ -518,6 +619,10 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 // Only the owner of the story can delete it.
 // Respond with status 200.
 func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error, int) {
+	// Spawn a goroutine to find user info from the header.
+	user := User{}
+	wg, chanErrGetUserInfo, chanHttpStatus := user.getInfoFromHeader(r)
+
 	// Make sure a story id was given in the url.
 	if len(storyId) <= 0 {
 		return fmt.Errorf("Story id not specified in the url\n"),
@@ -536,15 +641,17 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 			http.StatusNotFound
 	}
 
-	// Get user info from the token in the header.
-	user, err, status := getUserInfoFromHeader(r)
-	if err != nil {
-		return err, status
+	// Wait for the goroutine which grabs user info from the token
+	//   in the request header to finish.
+	// Then return an error if one occurred.
+	wg.Wait()
+	if err = <-chanErrGetUserInfo; err != nil {
+		return err, <-chanHttpStatus
 	}
 
 	// Make sure that the token owner is the
 	//   autor of this story.
-	err, status = user.verifyAuthorship(storyId)
+	err, status := user.verifyAuthorship(storyId)
 	if err != nil {
 		return err, status
 	}
@@ -571,10 +678,7 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 		}
 
 		// Remove the file from the database.
-		err, status := deleteNonAnimatedGif(frame.PreviewUrl)
-		if err != nil {
-			return err, status
-		}
+		go deleteNonAnimatedGif(frame.PreviewUrl)
 	}
 
 	// Remove story data from the database.
@@ -603,7 +707,7 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	return nil, http.StatusOK
 }
 
-// GET request to 'api/stories/search/<search_tag>'.
+// GET request to 'api/stories/tags/<search_tag>'.
 // Respond with an array of stories which contain the search tag.
 func searchStories(w http.ResponseWriter, r *http.Request, searchTag string) (error, int) {
 	// Make sure a story id was given in the url.
@@ -638,25 +742,13 @@ func searchStories(w http.ResponseWriter, r *http.Request, searchTag string) (er
 
 // POST request to 'api/stories/votes'.
 func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Get user info from the token in the request header.
+	// Spawn a goroutine to find user info from the header.
 	user := User{}
-	var err error
-	status := http.StatusCreated
-
-	chanErrGetUserInfoFromHeader := make(chan error, 1)
-	chanHttpStatus := make(chan int, 1)
-
-	// Spawn a new thread to find user info from the header.
-	go func() {
-		// Get user info from the token in the header.
-		user, err, status = getUserInfoFromHeader(r)
-		chanErrGetUserInfoFromHeader <- err
-		chanHttpStatus <- status
-	}()
+	wg, chanErrGetUserInfo, chanHttpStatus := user.getInfoFromHeader(r)
 
 	// Concurrently, decode the JSON object in the request body.
 	vote := Vote{}
-	err = json.NewDecoder(r.Body).Decode(&vote)
+	err := json.NewDecoder(r.Body).Decode(&vote)
 	if err != nil {
 		return fmt.Errorf("Invalid JSON object in request body \n%v\n", err),
 			http.StatusBadRequest
@@ -687,7 +779,8 @@ func postVote(w http.ResponseWriter, r *http.Request) (error, int) {
 
 	// Wait for both threads to complete.
 	// Return an error if one was found.
-	if err = <-chanErrGetUserInfoFromHeader; err != nil {
+	wg.Wait()
+	if err = <-chanErrGetUserInfo; err != nil {
 		return err, <-chanHttpStatus
 	}
 

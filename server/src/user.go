@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
+	"sync"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -17,23 +17,91 @@ var (
 	tokenSecret []byte = []byte("Chuck Norris")
 )
 
-// Return a bool indicating whether the request method is correct.
-// If it is not, send an error response.
-func verifyMethod(wanted string, w http.ResponseWriter, r *http.Request) (error, int) {
-	if r.Method != wanted {
-		return fmt.Errorf("Method Not Allowed\n"),
-			http.StatusMethodNotAllowed
+// GET request to 'api/users/profile/<username>'.
+// Respond with the full data for all of the stories
+//   created by the user.
+//   Find the user's stories by using the username in the url.
+func loadProfile(w http.ResponseWriter, r *http.Request, username string) (error, int) {
+
+	// Get user info from the database, using the token in the header.
+	user := User{}
+	err := usersCollection.Find(bson.M{"username": username}).One(&user)
+	if err != nil {
+		return fmt.Errorf("Failed to find user in the database\n%v\n", err),
+			http.StatusNotFound
 	}
+
+	// Convert the story id's from strings to bson object id's.
+	storyIds := make([]bson.ObjectId, len(user.Stories))
+	for i, storyId := range user.Stories {
+		storyIds[i] = bson.ObjectIdHex(storyId)
+	}
+
+	// Find full story data for data for all of the user's stories.
+	stories := []Story{}
+	err = storiesCollection.Find(bson.M{
+		"_id": bson.M{"$in": storyIds},
+	}).All(&stories)
+	if err != nil {
+		return fmt.Errorf("Failed to find user's stories\n%v\n", err),
+			http.StatusNotFound
+	}
+
+	// Stringify the story data array into JSON format.
+	js, err := json.Marshal(stories)
+	if err != nil {
+		return err,
+			http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// Verify password, create user token, update database, send token back
+func signin(w http.ResponseWriter, r *http.Request) (error, int) {
+	// Create a User struct from the request body.
+	user, err, status := parseBody(w, r)
+	if err != nil {
+		return err, status
+	}
+
+	fmt.Printf("Signing in %v...\n", user.Username)
+
+	if err, status = user.verifyPassword(); err != nil {
+		return err, status
+	}
+
+	// Make a response object to send to the client.
+	shouldUpdateInDb := true
+	if err, status = user.genToken(shouldUpdateInDb); err != nil {
+		return err, status
+	}
+
+	// Prepare to send response data.
+	// Stringify the user into JSON string format.
+	js, err := json.Marshal(user)
+	if err != nil {
+		fmt.Printf("Failed to convert response data to JSON:\n%#v\n", user)
+		return fmt.Errorf("Internal Server Error\n"),
+			http.StatusInternalServerError
+	}
+
+	// Send the response object to the client.
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+
+	fmt.Printf("Signed in %v\n", user.Username)
+
 	return nil, http.StatusOK
 }
 
 // Add a user to the database.
 func signup(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Make sure the request method is a POST request.
-	if err, status := verifyMethod("POST", w, r); err != nil {
-		return err, status
-	}
-
 	// Create a User struct from the request body.
 	user, err, status := parseBody(w, r)
 	if err != nil {
@@ -50,7 +118,6 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 			http.StatusMethodNotAllowed
 	}
 
-	// fmt.Printf("%#v\n", user)
 	fmt.Printf("Signing up %v...\n", user.Username)
 
 	// Create a new ObjectId and creation time
@@ -108,83 +175,28 @@ func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 	return nil, http.StatusCreated
 }
 
-// Verify password, create user token, update database, send token back
-func signin(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Make sure the request method is a POST request.
-	if err, status := verifyMethod("POST", w, r); err != nil {
-		return err, status
-	}
-
-	// Create a User struct from the request body.
-	user, err, status := parseBody(w, r)
-	if err != nil {
-		return err, status
-	}
-
-	fmt.Printf("Signing in %v...\n", user.Username)
-
-	if err, status = user.verifyPassword(); err != nil {
-		return err, status
-	}
-
-	// Make a response object to send to the client.
-	shouldUpdateInDb := true
-	if err, status = user.genToken(shouldUpdateInDb); err != nil {
-		return err, status
-	}
-
-	// fmt.Printf("user:\n%#v\n\n", user)
-
-	// Prepare to send response data.
-	// Stringify the user into JSON string format.
-	js, err := json.Marshal(user)
-	if err != nil {
-		fmt.Printf("Failed to convert response data to JSON:\n%#v\n", user)
-		return fmt.Errorf("Internal Server Error\n"),
-			http.StatusInternalServerError
-	}
-
-	// Send the response object to the client.
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
-
-	fmt.Printf("Signed in %v\n", user.Username)
-
-	return nil, http.StatusOK
-}
-
-// find owner of current token, and remove on signout
+// Find owner of current token and remove on signout.
 func signout(w http.ResponseWriter, r *http.Request) (error, int) {
-	token := r.Header.Get("token")
-
-	if token == "" {
-		return fmt.Errorf("Empty Token in Header\n"),
-			http.StatusBadRequest
-	}
-
-	// find user with current token
+	// Find user with current token.
 	user := User{}
-	collection := db.C("users")
-	q := bson.M{"token": token}
-	err := collection.Find(q).One(&user)
+	err, status := user.getInfoFromHeaderSync(r)
 	if err != nil {
-		fmt.Printf("User token: %v\n", err)
-		return fmt.Errorf("Bad Token in Header\n"),
-			http.StatusBadRequest
+		return err, status
 	}
 
-	err = collection.Update(
+	err = usersCollection.Update(
 		bson.M{"token": user.Token},
 		bson.M{"$set": bson.M{"token": ""}},
 	)
 	if err != nil {
-		fmt.Printf("Can not set token to blank %v\n", err)
-		return fmt.Errorf("Can't write Token to DB\n"),
+		return fmt.Errorf("Can't write Token to DB"),
 			http.StatusInternalServerError
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Succesful Signout"))
+
+	fmt.Printf("%v signed out\n", user.Username)
 
 	return nil, http.StatusOK
 }
@@ -313,62 +325,23 @@ func (u *User) genToken(shouldUpdateInDb bool) (error, int) {
 	return nil, http.StatusOK
 }
 
-// GET request to 'api/users/profile/<username>'.
-// Respond with the full data for all of the stories
-//   created by the user.
-//   Find the user's stories by using the username in the url.
-func loadProfile(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Make sure that this is a GET request.
-	if err, status := verifyMethod("GET", w, r); err != nil {
+// Get user info from the token in the header.
+// Query the database for the token,
+//   and return the data received.
+func (u *User) getInfoFromHeaderSync(r *http.Request) (error, int) {
+	// Get user info from the token in the header.
+	u.Token = r.Header.Get("token")
+	err, status := u.verifyToken()
+	if err != nil {
 		return err, status
 	}
 
-	paths := strings.Split(r.URL.Path, "/")
-	if len(paths) < 5 {
-		return fmt.Errorf("No user specified\n"),
-			http.StatusBadRequest
-	}
-
-	// Get user info from the token in the header.
-	user := User{}
-	user.Username = paths[4]
-
 	// Get user info from the database, using the token in the header.
-	err := usersCollection.Find(bson.M{"username": user.Username}).One(&user)
+	err = usersCollection.Find(bson.M{"token": u.Token}).One(&u)
 	if err != nil {
-		return fmt.Errorf("Failed to find user in the database\n%v\n", err),
-			http.StatusNotFound
+		return fmt.Errorf("Failed to find token in the database\n%v\n", err),
+			http.StatusUnauthorized
 	}
-
-	// Convert the story id's from strings to bson object id's.
-	storyIds := make([]bson.ObjectId, len(user.Stories))
-	for i, storyId := range user.Stories {
-		storyIds[i] = bson.ObjectIdHex(storyId)
-	}
-
-	// Find full story data for data for all of the user's stories.
-	stories := []Story{}
-	err = storiesCollection.Find(bson.M{
-		"_id": bson.M{"$in": storyIds},
-	}).All(&stories)
-	if err != nil {
-		return fmt.Errorf("Failed to find user's stories\n%v\n", err),
-			http.StatusNotFound
-	}
-
-	// fmt.Printf("%#v\n", stories)
-
-	// Stringify the story data array into JSON format.
-	js, err := json.Marshal(stories)
-	if err != nil {
-		return err,
-			http.StatusInternalServerError
-	}
-
-	// Send the JSON object with status 200.
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
 
 	return nil, http.StatusOK
 }
@@ -376,24 +349,23 @@ func loadProfile(w http.ResponseWriter, r *http.Request) (error, int) {
 // Get user info from the token in the header.
 // Query the database for the token,
 //   and return the data received.
-func getUserInfoFromHeader(r *http.Request) (User, error, int) {
-	// Get user info from the token in the header.
-	user := User{}
-	user.Token = r.Header.Get("token")
-	err, status := user.verifyToken()
-	if err != nil {
-		return user, err, status
-	}
+func (u *User) getInfoFromHeader(r *http.Request) (*sync.WaitGroup, chan error, chan int) {
+	// Set goroutine variables.
+	var wg sync.WaitGroup
+	chanErr := make(chan error, 1)
+	chanHttpStatus := make(chan int, 1)
+	wg.Add(1)
 
-	// Get user info from the database, using the token in the header.
-	err = usersCollection.Find(bson.M{"token": user.Token}).One(&user)
-	if err != nil {
-		return user,
-			fmt.Errorf("Failed to find token in the database\n%v\n", err),
-			http.StatusUnauthorized
-	}
+	// Spawn a goroutine to find user info from the header.
+	go func() {
+		defer wg.Done()
+		// Get user info from the database, using the token in the header.
+		err, status := u.getInfoFromHeaderSync(r)
+		chanErr <- err
+		chanHttpStatus <- status
+	}()
 
-	return user, nil, http.StatusOK
+	return &wg, chanErr, chanHttpStatus
 }
 
 // Verify whether this user is the author of story
@@ -406,6 +378,6 @@ func (u *User) verifyAuthorship(storyId string) (error, int) {
 		}
 	}
 
-	return fmt.Errorf("User is not a creator of this story\n"),
+	return fmt.Errorf("User is not a creator of this story"),
 		http.StatusUnauthorized
 }

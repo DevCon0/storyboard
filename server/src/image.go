@@ -7,6 +7,7 @@ import (
 	"image/gif"
 	"image/png"
 	"io"
+	"mime"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -14,25 +15,58 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// GET request to '/api/images/<image_id>'.
+// GET request to '/api/images/<image_name>'.
 // Respond with an image from the database.
-func getImage(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Make sure that this is a GET request.
-	if err, status := verifyMethod("GET", w, r); err != nil {
-		return err, status
-	}
-
-	// Get the image_id from the url ('/api/images/<image_id>').
-	baseLocation := "/api/images/"
-	imageId := strings.TrimPrefix(r.URL.Path, baseLocation)
-
+func getImageByName(w http.ResponseWriter, r *http.Request, imageName string) (error, int) {
 	// If no image_id was provided, respond with status 400.
-	if imageId == "" {
-		return fmt.Errorf("No image specified\n"),
+	if imageName == "" {
+		return fmt.Errorf("No image specified"),
 			http.StatusBadRequest
 	}
 
 	// Find the image file in the database.
+	imageFile, err := dbFs.Open(imageName)
+	if err != nil {
+		return fmt.Errorf("Failed to open image %v: %v", imageName, err),
+			http.StatusInternalServerError
+	}
+	defer imageFile.Close()
+
+	// Get the mime type of the image.
+	ext := filepath.Ext(imageFile.Name())
+	mimeType := mime.TypeByExtension(ext)
+
+	// Set the response header Content-Type and status code.
+	w.Header().Set("Content-Type", mimeType)
+	w.WriteHeader(http.StatusOK)
+
+	// Write the image bytes to the response.
+	_, err = io.Copy(w, imageFile)
+	if err != nil {
+		return fmt.Errorf(
+				"Failed to write image %v to response: %v", imageName, err,
+			),
+			http.StatusInternalServerError
+	}
+
+	// Return a nil error if none were caught.
+	return nil, http.StatusOK
+}
+
+// GET request to '/api/images/<image_id>'.
+// Respond with an image from the database.
+func getImageById(w http.ResponseWriter, r *http.Request, imageId string) (error, int) {
+	// If no image_id was provided, respond with status 400.
+	if imageId == "" {
+		return fmt.Errorf("No image specified"),
+			http.StatusBadRequest
+	}
+
+	// Find the image file in the database.
+	if !bson.IsObjectIdHex(imageId) {
+		return fmt.Errorf("Invalid image id: %v\n", imageId),
+			http.StatusBadRequest
+	}
 	imageObjectId := bson.ObjectIdHex(imageId)
 	imageFile, err := dbFs.OpenId(imageObjectId)
 	if err != nil {
@@ -62,6 +96,8 @@ func getImage(w http.ResponseWriter, r *http.Request) (error, int) {
 // The stored image will be a PNG.
 // Return a url path which can the client can use to request the stored image.
 func saveNonAnimatedGif(imageUrl string) (string, error) {
+	fmt.Printf("Saving non-animated image of %v\n", imageUrl)
+
 	// Fetch the GIF image.
 	res, err := http.Get(imageUrl)
 	if err != nil {
@@ -132,7 +168,6 @@ func saveNonAnimatedGif(imageUrl string) (string, error) {
 	// Return the url path which the client can use
 	//   to request the new PNG image.
 	previewUrl := concat("/api/images/", dbFileIdHex)
-	fmt.Printf("previewUrl: %v\n", previewUrl)
 	return previewUrl, nil
 }
 
@@ -168,6 +203,10 @@ func deleteNonAnimatedGif(imageUrl string) (error, int) {
 	imageId := filepath.Base(imageUrl)
 
 	// Convert the imageId to an Mongo ObjectId.
+	if !bson.IsObjectIdHex(imageId) {
+		return fmt.Errorf("Invalid image id: %v\n", imageId),
+			http.StatusInternalServerError
+	}
 	imageObjectId := bson.ObjectIdHex(imageId)
 
 	// Remove the image file with this id from the database.

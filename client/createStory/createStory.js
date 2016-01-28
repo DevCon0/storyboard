@@ -240,7 +240,11 @@ angular.module('storyBoard.createStory', [])
     return allFieldsReady;
   }
 
-  $scope.saveStory = function(){
+  $scope.saveStory = function(isPreviewModal){
+    if(isPreviewModal){
+      $scope.destroyFrames();
+    }
+
     var story = {
       title: $scope.storyTitle,
       description: $scope.storyDescription,
@@ -381,7 +385,7 @@ angular.module('storyBoard.createStory', [])
     StoryStateMachine.setStory(story, isSingleStoryView, scope);
   }
 
-  $scope.destoryFrames = function(){
+  $scope.destroyFrames = function(){
     StoryStateMachine.endStory();
   }
 
