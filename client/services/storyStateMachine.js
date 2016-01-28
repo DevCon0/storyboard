@@ -34,10 +34,12 @@ angular.module('storyBoard.storyStateMachineService',
       var readyCallback = this._determineReadyCallback(i);
       var endPlayBackCallback = this._determineEndPlaybackCallback(i);
       var newFramePlayer = this._createPlayer(currentStoryFrame.mediaType);
+      var playingCallback = this._determinePlayingCallback(i);
       newFramePlayer.create(
         currentStoryFrame,
         readyCallback,
-        endPlayBackCallback);
+        endPlayBackCallback,
+        playingCallback);
       this.players.unshift(newFramePlayer);
     }
   };
@@ -87,6 +89,17 @@ angular.module('storyBoard.storyStateMachineService',
     }
 
     return player;
+  }
+
+  storyStateMachine._determinePlayingCallback = function (frameNum) {
+    var playingCallback = function () { };
+    var isAudioFrame = frameNum === AUDIO;
+
+    if (isAudioFrame) {
+      console.log('isAUDIOFrame determinePlayingCallback conditonal run');
+      playingCallback = this._firstFrameReady.bind(storyStateMachine.players[0]);
+    }
+    return playingCallback;
   }
 
   storyStateMachine._determineReadyCallback = function(frameNum){

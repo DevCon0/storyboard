@@ -4,13 +4,14 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   function VideoPlayer(){
     this.storyFrame = null;
     this.endPlaybackCallback = null;
+    this.playingCallback = null;
     this.volume = null;
     this.alreadyStopped = false;
   }
 
   VideoPlayer.prototype = Object.create(Player.prototype);
 
-  VideoPlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
+  VideoPlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback, playingCallback){
     var VIDEO_HEIGHT = 200;
     var VIDEO_WIDTH = 356;
     while( ! window.youtubeApiLoadedAndReady){}
@@ -29,12 +30,13 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
           },
           events: {
             'onReady': readyCallback.bind(this),
-            'onStateChange': this._onPausedListener.bind(this)
+            'onStateChange': this._onEventListener.bind(this)
           }
         }
       );
     this.storyFrame = storyFrame;
     this.endPlaybackCallback = endPlaybackCallback;
+    this.playingCallback = playingCallback;
     this.volume = storyFrame.volume;
   };
 
@@ -62,7 +64,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     );
   };
 
-  VideoPlayer.prototype._onPausedListener = function(event){
+  VideoPlayer.prototype._onEventListener = function(event){
     if( ! this.alreadyStopped) {
       switch(event.data) {
         case YT.PlayerState.PAUSED:
@@ -76,6 +78,11 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
           // twice.
           this.alreadyStopped = true;
           break;
+        case YT.PlayerState.PLAYING:
+          console.log('what is this',this.playingCallback);
+          this.playingCallback();
+          break;
+
       }
     }
   }
