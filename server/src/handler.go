@@ -149,7 +149,7 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
 			switch file {
-			case "text-to-speech":
+			case "text-to-speech.svg":
 				return getImageByName(w, r, file)
 			default:
 				return getImageById(w, r, file)
