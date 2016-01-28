@@ -141,14 +141,19 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 	//   wait until a connection is established.
 	verifyDbConnection()
 
-	// Get the unique part of the url (everything after '/api/images/').
-	sharedPath := "/api/images/"
-	endFilename := strings.TrimPrefix(r.URL.Path, sharedPath)
-
 	err, status := func() (error, int) {
+		// Get the unique part of the url (everything after '/api/images/').
+		sharedPath := "/api/images/"
+		file := strings.TrimPrefix(r.URL.Path, sharedPath)
+
 		switch r.Method {
 		case "GET":
-			return getImage(w, r, endFilename)
+			switch file {
+			case "text-to-speech":
+				return getImageByName(w, r, file)
+			default:
+				return getImageById(w, r, file)
+			}
 		default:
 			return fmt.Errorf("Unsupported method %v", r.Method),
 				http.StatusBadRequest

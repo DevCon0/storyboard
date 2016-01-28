@@ -91,9 +91,54 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 		return err, http.StatusNotFound
 	}
 
-	// Make sure all stories have 4 frames
-	//   and that GIF images have a non-animated thumbnail.
-	// If they don't, add a fourth one and update it in the database.
+	// Update any stories which are not structured correctly.
+	// For each one, make sure it has 4 frames
+	//   and that any GIF frames images have a non-animated thumbnail.
+	// go verifyStoryStructure(stories)
+
+	// Randomize the stories.
+	numberOfStories := len(stories)
+	// Declare a slice which will contain the random numbers used.
+	randomNumbers := []int{}
+	// Make an array which will serve as a randomized copy of 'stories'.
+	limit := 15
+	randomStories := make([]Story, limit)
+
+	i := 0
+	for {
+		// Get a random number between 0 and the number of stories.
+		randomIndex := rand.Intn(numberOfStories)
+		if intSlcContains(randomNumbers, randomIndex) {
+			continue
+		}
+		randomNumbers = append(randomNumbers, randomIndex)
+		randomStories[i] = stories[randomIndex]
+
+		i++
+		if i == limit || i == numberOfStories {
+			break
+		}
+	}
+
+	// Stringify the story data into JSON format.
+	js, err := json.Marshal(randomStories)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
+
+	// Send the JSON object with status 200.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+
+	return nil, http.StatusOK
+}
+
+// Reset the structure of any stories which are misaligned.
+// Make sure all stories have 4 frames
+//   and that GIF images have a non-animated thumbnail.
+// If they don't, add a fourth one and update it in the database.
+func verifyStoryStructure(stories []Story) {
 	numberOfStories := len(stories)
 	for i := 0; i < numberOfStories; i++ {
 		story := &stories[i]
@@ -193,42 +238,6 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 			fmt.Printf("Done for %v\n", story.Title)
 		}(story)
 	}
-
-	// Randomize the stories.
-	// Declare a slice which will contain the random numbers used.
-	randomNumbers := []int{}
-	// Make an array which will serve as a randomized copy of 'stories'.
-	limit := 15
-	randomStories := make([]Story, limit)
-
-	i := 0
-	for {
-		// Get a random number between 0 and the number of stories.
-		randomIndex := rand.Intn(numberOfStories)
-		if intSlcContains(randomNumbers, randomIndex) {
-			continue
-		}
-		randomNumbers = append(randomNumbers, randomIndex)
-		randomStories[i] = stories[randomIndex]
-
-		i++
-		if i == limit || i == numberOfStories {
-			break
-		}
-	}
-
-	// Stringify the story data into JSON format.
-	js, err := json.Marshal(randomStories)
-	if err != nil {
-		return err, http.StatusInternalServerError
-	}
-
-	// Send the JSON object with status 200.
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
-
-	return nil, http.StatusOK
 }
 
 func intSlcContains(slc []int, q int) bool {
