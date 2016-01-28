@@ -44,7 +44,8 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
 
   VideoPlayer.prototype.play = function () {
     this.alreadyStopped = false;
-    this.storyFrame.player.setVolume(Number(this.volume));
+    console.log('volume in vp.play: ' ,this.volume)
+    this.storyFrame.player.setVolume(parseInt(this.volume));
     this.storyFrame.player.playVideo();
   };
 

@@ -8,7 +8,8 @@ angular.module('storyBoard.createStory', [])
                                          $window,
                                          Auth,
                                          $stateParams,
-                                         TextToSpeechPlayer) {
+                                         TextToSpeechPlayer,
+                                         VideoPlayer) {
 
   if ( ! (Auth.isAuth()) ) {
     $state.go('login')
@@ -174,7 +175,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
     $scope.frame3UrlDuration = 1;
     $scope.frame3NarrationText = 'By Jove, I\'ve got a cheeky idea, let\'s have Milco solve the matrix.';
-  }
+  };
 
   $scope.checkRequiredFields = function(){
     var storyMetaInfoReady =
@@ -320,7 +321,7 @@ angular.module('storyBoard.createStory', [])
           $state.go('dashboard');
         });
     }
-  }
+  };
 
   $scope.previewStory = function () {
     var story = {
@@ -382,11 +383,11 @@ angular.module('storyBoard.createStory', [])
     var isSingleStoryView = false;
     var scope = null;
     StoryStateMachine.setStory(story, isSingleStoryView, scope);
-  }
+  };
 
   $scope.destroyFrames = function(){
     StoryStateMachine.endStory();
-  }
+  };
 
   var framePlayers = {
     frame0: null,
@@ -395,7 +396,7 @@ angular.module('storyBoard.createStory', [])
     frame3: null
   };
 
-  $scope.previewFrame = function(frameId){
+  $scope.previewFrame = function(frameId) {
     var frameYoutubeUrl = null;
     var frameStartTime = null;
     var frameEndTime = null;
@@ -443,13 +444,16 @@ angular.module('storyBoard.createStory', [])
 
     var videoId = stripOutVideoIdFromUrl(frameYoutubeUrl);
 
-    createPreview(
-      framePlayerName,
-      frameDivId,
-      videoId,
-      frameStartTime,
-      frameEndTime,
-      frameVolume);
+    var currentFrame = {
+      playerDiv: frameDivId,
+      videoId: videoId,
+      start: frameStartTime,
+      end: frameEndTime,
+      volume: frameVolume,
+      playerName: framePlayerName
+    };
+
+    $scope.previewAudioVideoFrame(currentFrame);
   };
 
   var createPreview = function(framePlayerName, domDiv, videoId, start, end, volume){
@@ -460,6 +464,7 @@ angular.module('storyBoard.createStory', [])
     }
     var VIDEO_HEIGHT = 160;
     var VIDEO_WIDTH = 284;
+    var closureFramePlayers = framePlayers;
     framePlayers[framePlayerName] = new YT.Player(
       domDiv,
       {
@@ -514,7 +519,7 @@ angular.module('storyBoard.createStory', [])
         } //events
       } //player config
     ); //new player
-  }
+  };
 
   var stripOutVideoIdFromUrl = function(url){
     if( ! url) return url;
@@ -526,12 +531,53 @@ angular.module('storyBoard.createStory', [])
     }
 
     return videoId;
-  }
+  };
 
   function recreateVideoUrl(youtubeID) {
     var header = "https://www.youtube.com/watch?v=";
     return header + youtubeID;
-  }
+  };
+
+
+  $scope.toggleBackingTrack = function () {
+    $scope.addBackingTrack = ! $scope.addBackingTrack;
+  };
+
+  $scope.previewAudioVideoFrame = function(currentFrameObject) {
+
+    switch(currentFrameObject.playerName){
+              case 'frame0':
+
+                        $scope.showSpinner0 = false;
+
+              break;
+              case 'frame1':
+
+                        $scope.showSpinner1 = false;
+
+              break;
+              case 'frame2':
+
+                        $scope.showSpinner2 = false;
+
+              break;
+              case 'frame3':
+
+                        $scope.showSpinner3 = false;
+
+              break;
+            }
+
+    var previewAudioVideoPlayer = new VideoPlayer();
+    var readyCallback =
+      previewAudioVideoPlayer.play.bind(previewAudioVideoPlayer);
+    var playbackFinishedCallback =
+      previewAudioVideoPlayer.destroy.bind(previewAudioVideoPlayer);
+
+    previewAudioVideoPlayer.create(currentFrameObject,
+                                     readyCallback,
+                                     playbackFinishedCallback);
+  };
 
   $scope.previewImageFrame = function(frameId){
     switch(frameId){
@@ -548,9 +594,9 @@ angular.module('storyBoard.createStory', [])
         $scope.addFrame3ImagePreview = true;
         break;
     }
-  }
+  };
 
-  $scope.previewTextToSpeech = function(frameId){
+  $scope.previewTextToSpeechFrame = function(frameId){
     var frameNarrationText = null;
     switch(frameId){
       case 1:
@@ -575,12 +621,12 @@ angular.module('storyBoard.createStory', [])
     previewTextToSpeechPlayer.create(tempStoryFrame,
                                      readyCallback,
                                      playbackFinishedCallback);
-  }
+  };
 
   $scope.toggleBackingTrack = function () {
     console.log('tracked!')
     $scope.addBackingTrack = ! $scope.addBackingTrack;
-  }
+  };
 
 });
 

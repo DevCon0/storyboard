@@ -1,35 +1,35 @@
 <paper-header-panel class="create-story-paper-header-panel">
-<div class="create-story-paper-header blue">{{user}}, create your own story!
-  <span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO Pre-populate inputs DEMO</button></span>
-</div>
-<div class="create-story-paper-header-panel-content">
-<div class="row">
-  <div class="col-md-3">
-    <paper-card heading="Story Info" elevation="3" class="create-story-paper-card">
-      <form>
-          <div class="form-group">
-            <label for="storyTitleInput">Story Title</label>
-            <input type="text" ng-model="storyTitle" class="form-control" placeholder="My Story" maxlength="50">
-          </div>
-          <div class="form-group">
-            <label for="storyDescriptionInput">Story Description</label>
-            <input type="text" ng-model="storyDescription" class="form-control" placeholder="Once upon a time..." maxlength="255">
-          </div>
-          <div class="form-group">
-            <label for="storyThumbnailUrlInput">Story Thumbnail URL</label>
-            <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
-          </div>
-          <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <input type="button" value="Add audio backing track" ng-click="toggleBackingTrack()"></input>
-      </form>
-      <div class="row clean"></div>
-      <div ng-show="checkRequiredFields()">
-        <button type="button" class="btn btn-success create-page-btn" ng-click="previewStory()" data-toggle="modal" data-target="#myModal">Preview Story<iron-icon icon="av:play-circle-outline" class="icon-margin-left"></iron-icon></button>
-        <div class="row clean"></div>
-        <button type="button" class="btn btn-success saveButton create-page-btn" ng-click="saveStory(false)">Save your story<iron-icon icon="icons:save" class="icon-margin-left"></iron-icon></button>
-      </div>
-    </paper-card>
+  <div class="create-story-paper-header blue">{{user}}, create your own story!
+    <span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO Pre-populate inputs DEMO</button></span>
   </div>
+<div class="create-story-paper-header-panel-content">
+  <div class="row">
+    <div class="col-md-3">
+      <paper-card heading="Story Info" elevation="3" class="create-story-paper-card">
+        <form>
+            <div class="form-group">
+              <label for="storyTitleInput">Story Title</label>
+              <input type="text" ng-model="storyTitle" class="form-control" placeholder="My Story" maxlength="50">
+            </div>
+            <div class="form-group">
+              <label for="storyDescriptionInput">Story Description</label>
+              <input type="text" ng-model="storyDescription" class="form-control" placeholder="Once upon a time..." maxlength="255">
+            </div>
+            <div class="form-group">
+              <label for="storyThumbnailUrlInput">Story Thumbnail URL</label>
+              <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
+            </div>
+            <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
+            <input type="button" value="Add audio backing track" ng-click="toggleBackingTrack()"></input>
+        </form>
+        <div class="row clean"></div>
+        <div ng-show="checkRequiredFields()">
+          <button type="button" class="btn btn-success create-page-btn" ng-click="previewStory()" data-toggle="modal" data-target="#myModal">Preview Story<iron-icon icon="av:play-circle-outline" class="icon-margin-left"></iron-icon></button>
+          <div class="row clean"></div>
+          <button type="button" class="btn btn-success saveButton create-page-btn" ng-click="saveStory(false)">Save your story<iron-icon icon="icons:save" class="icon-margin-left"></iron-icon></button>
+        </div>
+      </paper-card>
+    </div>
  <!-- Act I ///////////////////////////////////////////////////////////////////////////// -->
   <div class="creationFrameDiv col-md-2">
     <paper-card heading="Act I" elevation="3" class="create-story-paper-card">
@@ -84,7 +84,7 @@
       </div>
  <!-- Act I NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame1MediaType == 2">
-        <form ng-submit="previewTextToSpeech(1)">
+        <form ng-submit="previewTextToSpeechFrame(1)">
           <div class="form-group">
             <label for="textToSpeechNarration1">Narration</label>
             <textarea ng-model="$parent.frame1NarrationText" id="textToSpeechNarration1" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
@@ -149,7 +149,7 @@
       </div>
  <!-- Act II NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame2MediaType == 2">
-        <form ng-submit="previewTextToSpeech(2)">
+        <form ng-submit="previewTextToSpeechFrame(2)">
           <div class="form-group">
             <label for="textToSpeechNarration2">Narration</label>
             <textarea ng-model="$parent.frame2NarrationText" id="textToSpeechNarration2" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
@@ -214,7 +214,7 @@
       </div>
  <!-- Act III NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame3MediaType == 2">
-        <form ng-submit="previewTextToSpeech(3)">
+        <form ng-submit="previewTextToSpeechFrame(3)">
           <div class="form-group">
             <label for="textToSpeechNarration3">Narration</label>
             <textarea ng-model="$parent.frame3NarrationText" id="textToSpeechNarration3" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
@@ -259,7 +259,9 @@
         <div id="frame0Preview" class="col-md-12"></div>
     </paper-card>
   </div>
+ </div> <!--row-->
 </div> <!--content-->
+
 </paper-header-panel>
 
 <div id="myModal" class="modal" role="dialog" data-backdrop="static" data-keyboard="false">
