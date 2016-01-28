@@ -9,7 +9,6 @@ angular.module('storyBoard.dashboard', [])
   $scope.username = localStorageService.get('username');
 
   $scope.editStory = function (storyId) {
-    console.log('editStory function (controller) run with', storyId);
     StoryStorage.getStory(storyId)
     .then(function (resp) {
       $state.go('createStory', { story: resp.data });

@@ -13,6 +13,7 @@ angular.module('storyBoard.createStory', [])
   if ( ! (Auth.isAuth()) ) {
     $state.go('login')
   }
+
   $scope.showSpinner0 = false;
   $scope.addFrame0ImagePreview = false;
 
@@ -25,6 +26,8 @@ angular.module('storyBoard.createStory', [])
   $scope.showSpinner3 = false;
   $scope.addFrame3ImagePreview = false;
 
+  $scope.addBackingTrack = false;
+
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
   var wasPassed = Object.keys($stateParams.story).length !== 0;
@@ -35,13 +38,16 @@ angular.module('storyBoard.createStory', [])
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
 
-    // TODO: remove backwards compatibility
-    if(editStory.frames[0].mediaType !== undefined) {
-      $scope.frame0MediaType = editStory.frames[0].mediaType;
+    // media type is always 3 for frame0 and is set on save, and confirmed here
+    $scope.frame0MediaType = editStory.frames[0].mediaType;
+    // test for videoId to show or hide in create/edit view
+    if (editStory.frames[0].videoId !== "") {
+      $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
+      $scope.addBackingTrack = true;
     } else {
-      $scope.frame0MediaType = null;
+      $scope.frame0YoutubeUrl = "";
+      $scope.addBackingTrack = false;
     }
-    $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
     $scope.frame0StartTime = editStory.frames[0].start;
     $scope.frame0EndTime = editStory.frames[0].end;
     $scope.frame0Volume = editStory.frames[0].volume;
@@ -95,7 +101,7 @@ angular.module('storyBoard.createStory', [])
     $scope.storyDescription = null;
     $scope.storyThumbnailUrl = null;
 
-    $scope.frame0MediaType = null;
+    $scope.frame0MediaType = 3;
     $scope.frame0YoutubeUrl = null;
     $scope.frame0StartTime = "0";
     $scope.frame0EndTime = null;
@@ -569,6 +575,11 @@ angular.module('storyBoard.createStory', [])
     previewTextToSpeechPlayer.create(tempStoryFrame,
                                      readyCallback,
                                      playbackFinishedCallback);
+  }
+
+  $scope.toggleBackingTrack = function () {
+    console.log('tracked!')
+    $scope.addBackingTrack = ! $scope.addBackingTrack;
   }
 
 });
