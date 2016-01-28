@@ -38,23 +38,22 @@ angular.module('storyBoard.createStory', [])
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
 
-    // TODO: remove backwards compatibility
-    if(editStory.frames[0].mediaType !== undefined) {
-      $scope.frame0MediaType = editStory.frames[0].mediaType;
+    // media type is always 3 for frame0 and is set on save, and confirmed here
+    $scope.frame0MediaType = editStory.frames[0].mediaType;
+    // test for videoId to show or hide in create/edit view
+    if (editStory.frames[0].videoId !== "") {
+      $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
+      $scope.addBackingTrack = true;
     } else {
-      $scope.frame0MediaType = null;
+      $scope.frame0YoutubeUrl = "";
+      $scope.addBackingTrack = false;
     }
-    $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
     $scope.frame0StartTime = editStory.frames[0].start;
     $scope.frame0EndTime = editStory.frames[0].end;
     $scope.frame0Volume = editStory.frames[0].volume;
     $scope.frame0ImageUrl = editStory.frames[0].imageUrl;
     $scope.frame0UrlDuration = editStory.frames[0].imageDuration;
     // Not applicable $scope.frame0NarrationText
-    // hide backing track if has default value
-    if ($scope.frame0YoutubeUrl !== "https://www.youtube.com/watch?v=") {
-      $scope.addBackingTrack = true;
-    }
 
     // TODO: remove backwards compatibility
     if(editStory.frames[1].mediaType !== undefined) {
@@ -578,7 +577,7 @@ angular.module('storyBoard.createStory', [])
                                      playbackFinishedCallback);
   }
 
-  $scope.backingTrack = function () {
+  $scope.toggleBackingTrack = function () {
     console.log('tracked!')
     $scope.addBackingTrack = ! $scope.addBackingTrack;
   }

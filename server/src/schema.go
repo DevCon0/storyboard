@@ -38,7 +38,7 @@ type Story struct {
 
 // Frame model for Acts/Scenes
 type Frame struct {
-	// 0 for video, 1 for image
+	// 0 for video, 1 for image, 2 for txt2speech, 3 for audio track
 	MediaType     int      `json:"mediaType"`
 	Player        struct{} `json:"player"`
 	PlayerDiv     string   `json:"playerDiv"`

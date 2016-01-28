@@ -41,7 +41,6 @@ angular.module('storyBoard.storyStorageService', [])
   }
 
   storyStorage.getStory = function (id) {
-      console.log('getStory called with', id);
       return $http({
         method: 'GET',
         url: '/api/stories/story/' + id,

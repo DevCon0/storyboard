@@ -1,5 +1,7 @@
 <paper-header-panel class="create-story-paper-header-panel">
-<div class="create-story-paper-header blue">{{user}}, create your own story!<span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO Pre-populate inputs DEMO</button></span></div>
+<div class="create-story-paper-header blue">{{user}}, create your own story!
+  <span style="padding-left: 10px;"><button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO Pre-populate inputs DEMO</button></span>
+</div>
 <div class="create-story-paper-header-panel-content">
 <div class="row">
   <div class="col-md-3">
@@ -18,7 +20,7 @@
             <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
           </div>
           <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <input type="button" value="Add audio backing track" ng-click="backingTrack()"></input>
+          <input type="button" value="Add audio backing track" ng-click="toggleBackingTrack()"></input>
       </form>
       <div class="row clean"></div>
       <div ng-show="checkRequiredFields()">
@@ -56,6 +58,7 @@
           <div class="form-group">
             <label for="volume1">Volume (0-100%)</label>
             <input type="text" ng-model="$parent.frame1Volume" class="form-control" id="volume1" placeholder="100">
+            <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"/>
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
@@ -120,6 +123,7 @@
           <div class="form-group">
             <label for="volume2">Volume (0-100%)</label>
             <input type="text" ng-model="$parent.frame2Volume" class="form-control" id="volume2" placeholder="100">
+            <input type="range" min="0" max="100" ng-model="$parent.frame2Volume"/>
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner2" class="blueSpinner" active></paper-spinner-lite></span>
@@ -184,6 +188,7 @@
           <div class="form-group">
             <label for="volume3">Volume (0-100%)</label>
             <input type="text" ng-model="$parent.frame3Volume" class="form-control" id="volume3" placeholder="100">
+            <input type="range" min="0" max="100" ng-model="$parent.frame3Volume"/>
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner3" class="blueSpinner" active></paper-spinner-lite></span>
@@ -225,7 +230,7 @@
     <paper-card heading="Audio Track" elevation="3" class="create-story-paper-card">
       <paper-dropdown-menu label="Media Type">
         <paper-menu selected="0" class="dropdown-content">
-          <paper-item  >Audio</paper-item>
+          <paper-item>Audio</paper-item>
         </paper-menu>
       </paper-dropdown-menu>
  <!-- Act Zero AUDIO  ******************************** -->
@@ -245,6 +250,7 @@
           <div class="form-group">
             <label for="volume0">Volume (0-100%)</label>
             <input type="text" ng-model="frame0Volume" class="form-control" id="volume0" placeholder="100">
+            <input type="range" min="0" max="100" ng-model="frame0Volume"/>
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner0" class="blueSpinner" active></paper-spinner-lite></span>
