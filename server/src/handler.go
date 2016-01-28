@@ -24,65 +24,108 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, title)
 }
 
-// Handle requests to "/api/users/..."
+// Handle requests to "/api/users"
 func usersHandler(w http.ResponseWriter, r *http.Request) {
 	// If reconnecting to the database,
 	//   wait until a connection is established.
 	verifyDbConnection()
 
 	err, status := func() (error, int) {
-		location := strings.Split(r.URL.Path, "/")[3]
+		pathNodes := strings.Split(r.URL.Path, "/")
+		directory := pathNodes[3]
+		file := concat(pathNodes[4:]...)
 
-		switch location {
-		case "signup":
-			return signup(w, r)
-		case "signin":
-			return signin(w, r)
-		case "signout":
-			return signout(w, r)
-		case "profile":
-			return loadProfile(w, r)
+		errBadMethod := fmt.Errorf("Unsupported method: %v", r.Method)
+		errBadLocation := fmt.Errorf("Unsupported location: %v", r.URL.Path)
+
+		switch r.Method {
+		case "GET":
+			switch directory {
+			case "profile":
+				return loadProfile(w, r, file)
+			default:
+				return errBadLocation, http.StatusBadRequest
+			}
+
+		case "POST":
+			switch directory {
+			case "signup":
+				return signup(w, r)
+			case "signin":
+				return signin(w, r)
+			case "signout":
+				return signout(w, r)
+			default:
+				return errBadLocation, http.StatusBadRequest
+			}
+
 		default:
-			err := fmt.Errorf("Endpoint not defined: %v\n", location)
-			return err, http.StatusInternalServerError
+			return errBadMethod, http.StatusBadRequest
 		}
 	}()
+
 	if err != nil {
-		fmt.Printf("UserHandler error: %v\n", err)
+		fmt.Println(err)
 		http.Error(w, err.Error(), status)
 		return
 	}
 }
 
+// Handle requests to '/api/stories'.
 func storyHandler(w http.ResponseWriter, r *http.Request) {
 	// If reconnecting to the database,
 	//   wait until a connection is established.
 	verifyDbConnection()
 
-	baseLocation := "/api/stories/"
-	routeAndId := strings.TrimPrefix(r.URL.Path, baseLocation)
-	split := strings.Split(routeAndId, "/")
-	location := split[0]
-	id := concat(split[1:]...)
-
-	// fmt.Println("storyHandler location", location)
-
 	err, status := func() (error, int) {
-		switch location {
-		case "story":
-			return handleStory(w, r, id)
-		case "library":
-			return library(w, r, id)
-		case "showcase":
-			// return showCase(w, r)
-			return showCaseRandom(w, r)
-		case "search":
-			return searchStories(w, r, id)
-		case "votes":
-			return postVote(w, r)
+		pathNodes := strings.Split(r.URL.Path, "/")
+		directory := pathNodes[3]
+		file := concat(pathNodes[4:]...)
+
+		errBadMethod := fmt.Errorf("Unsupported method: %v", r.Method)
+		errBadLocation := fmt.Errorf("Unsupported location: %v", r.URL.Path)
+
+		switch r.Method {
+		case "GET":
+			switch directory {
+			case "story":
+				return getStory(w, r, file)
+			case "library":
+				return library(w, r, file)
+			case "showcase":
+				// return showCase(w, r)
+				return showCaseRandom(w, r)
+			case "tags":
+				return searchStories(w, r, file)
+			default:
+				return errBadLocation, http.StatusBadRequest
+			}
+		case "POST":
+			switch directory {
+			case "story":
+				return saveStory(w, r)
+			case "votes":
+				return postVote(w, r)
+			default:
+				return errBadLocation,
+					http.StatusBadRequest
+			}
+		case "PUT":
+			switch directory {
+			case "story":
+				return editStory(w, r)
+			default:
+				return errBadLocation, http.StatusBadRequest
+			}
+		case "DELETE":
+			switch directory {
+			case "story":
+				return deleteStory(w, r, file)
+			default:
+				return errBadLocation, http.StatusBadRequest
+			}
 		default:
-			return fmt.Errorf("Unknown stories api location: %v\n", location),
-				http.StatusBadRequest
+			return errBadMethod, http.StatusBadRequest
 		}
 	}()
 	if err != nil {
@@ -94,9 +137,22 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handle requests to "/api/images/..."
 func imageHandler(w http.ResponseWriter, r *http.Request) {
+	// If reconnecting to the database,
+	//   wait until a connection is established.
 	verifyDbConnection()
+
+	// Get the unique part of the url (everything after '/api/images/').
+	sharedPath := "/api/images/"
+	endFilename := strings.TrimPrefix(r.URL.Path, sharedPath)
+
 	err, status := func() (error, int) {
-		return getImage(w, r)
+		switch r.Method {
+		case "GET":
+			return getImage(w, r, endFilename)
+		default:
+			return fmt.Errorf("Unsupported method %v", r.Method),
+				http.StatusBadRequest
+		}
 	}()
 
 	if err != nil {

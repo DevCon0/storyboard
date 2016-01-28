@@ -16,16 +16,7 @@ import (
 
 // GET request to '/api/images/<image_id>'.
 // Respond with an image from the database.
-func getImage(w http.ResponseWriter, r *http.Request) (error, int) {
-	// Make sure that this is a GET request.
-	if err, status := verifyMethod("GET", w, r); err != nil {
-		return err, status
-	}
-
-	// Get the image_id from the url ('/api/images/<image_id>').
-	baseLocation := "/api/images/"
-	imageId := strings.TrimPrefix(r.URL.Path, baseLocation)
-
+func getImage(w http.ResponseWriter, r *http.Request, imageId string) (error, int) {
 	// If no image_id was provided, respond with status 400.
 	if imageId == "" {
 		return fmt.Errorf("No image specified\n"),
