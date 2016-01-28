@@ -7,6 +7,7 @@ angular.module('storyBoard.storyStateMachineService',
   var storyStateMachine = {};
   storyStateMachine.story = null;
   var closureIsSingleStoryView = false;
+  var closureStoryHasEnded = false;
   storyStateMachine.players = [];
   var parentControllerScope = null;
   var AUDIO = 0;
@@ -16,6 +17,7 @@ angular.module('storyBoard.storyStateMachineService',
 
   storyStateMachine.setStory = function(story, isSingleStoryView, scope){
     this.story = story;
+    closureStoryHasEnded = false;
     closureIsSingleStoryView = isSingleStoryView;
     parentControllerScope = scope;
     var storyFrames = story.frames;
@@ -48,6 +50,7 @@ angular.module('storyBoard.storyStateMachineService',
   }
 
   storyStateMachine.endStory = function(){
+    closureStoryHasEnded = true;
     var storyPlayers = this.players;
     storyPlayers.forEach(function(player){
       player.destroy();
@@ -122,6 +125,14 @@ angular.module('storyBoard.storyStateMachineService',
         if(closureIsSingleStoryView) {
           _shrinkAct1AndGrowAct2();
         }
+
+        // Do not attempt to move story
+        // forward if it has ended.
+        // This is here because these
+        // callbacks are asynchronous
+        // and could run after endStory()
+        if(closureStoryHasEnded) return;
+
         storyStateMachine.players[SECOND].play();
       };
     } else if(isSecondFrame) {
@@ -129,6 +140,14 @@ angular.module('storyBoard.storyStateMachineService',
         if(closureIsSingleStoryView) {
           _shrinkAct2AndGrowAct3();
         }
+
+        // Do not attempt to move story
+        // forward if it has ended.
+        // This is here because these
+        // callbacks are asynchronous
+        // and could run after endStory()
+        if(closureStoryHasEnded) return;
+
         storyStateMachine.players[THIRD].play();
       };
     } else if(isThirdFrame) {
@@ -136,6 +155,14 @@ angular.module('storyBoard.storyStateMachineService',
         if(closureIsSingleStoryView) {
           _shrinkAct3();
         }
+
+        // Do not attempt to move story
+        // forward if it has ended.
+        // This is here because these
+        // callbacks are asynchronous
+        // and could run after endStory()
+        if(closureStoryHasEnded) return;
+
         storyStateMachine.players[AUDIO].pause();
       };
     }
