@@ -1,21 +1,38 @@
+/*This is a mess because I'm trying
+to see if I can animate the svg.*/
 @keyframes pop-volume {
-  0%   {stroke-dashoffset: 3;}
-  50%  {stroke-dashoffset: 10;}
-  100% {stroke-dashoffset: 3;}
+  /*0%   {stroke-width: 3;}
+  50%  {stroke-width: 10;}
+  100% {stroke-width: 3;}*/
   /*0%   {fill: #FAFAFA;}
   50%  {fill: #F00;}
   100% {fill: #FAFAFA;}*/
+  from {stroke-width: 1;}
+  to {stroke-width: 5;}
+}
+
+.text-to-seech-image-container {
+  /*height: 30%;
+  width: 30%;
+  margin: auto;*/
+  /*display: block;
+  position: relative;
+  width: 10em;*/
+  /*max-width: 50%;*/
+  /*margin-left: 2.5em;*/
 }
 
 .text-to-speech-image {
-  margin-left:40%;
-  height: 30%;
-  width: 30%;
+  /*display: block;
+  position: relative;
+  width: 10em;
+  margin-left: 2.5em;*/
 }
 .text-to-speech-image
 .text-to-speech-image-volume-sound-2 {
-  animation-name: pop-volume;
+  /*animation-name: pop-volume;
   animation-duration: 3s;
   animation-iteration-count: 3;
-  transition: stroke-dashoffset 8s linear;
+  stroke-width: 1;
+  transition: stroke-dashoffset 8s linear;*/
 }
