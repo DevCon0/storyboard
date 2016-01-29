@@ -116,16 +116,6 @@ body {
   padding: 0px !important;
 }
 
-.create-story-paper-header-panel {
-  min-height: 750px;
-  /*overflow: hidden;*/
-  margin-left: auto;
-  margin-right: auto;
-  margin: 12px;
-  background-color: #fff;
-  /*@apply(--shadow-elevation-2dp);*/
-}
-
 .create-story-paper-header {
   background-color: blue;
   color: #fff;
@@ -144,24 +134,21 @@ body {
   margin: 0px;
 }
 
-.create-story-paper-header-panel-content {
-  background-color: white;
-  height: 554px;
-  padding: 20px;
-}
-
 paper-spinner-lite.blueSpinner{
   --paper-spinner-color: var(--google-blue-500);
 }
 
 @media screen and (max-width: 992px) {
-  .create-story-paper-header-panel-content {
-    height: 2000px;
-  }
-
   .create-story-paper-card {
     margin: 10px 0px;
   }
+}
+
+.create-story-media-type-select {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .blue {
@@ -200,50 +187,6 @@ paper-spinner-lite.blueSpinner{
 
 .single-story-inner {
   width: 100%;
-}
-
-.single-story-paper-header-panel {
-  float: left;
-  height: 600px;
-  margin: 12px;
-  color: #fff;
-  /*@apply(--shadow-elevation-2dp);*/
-}
-
-.single-story-paper-card{
-  background-color: #ddd !important;
-  margin: 5px;
-  font-family: helvetica;
-}
-
-.single-story-paper-header {
-  background-color: #4285F4;
-  height: 64px;
-  line-height: 64px;
-  font-size: 32px;
-  font-family: helvetica;
-  padding: 0px;
-  padding-left: 5px;
-}
-
-.single-story-paper-header-panel-content {
-  background-color: white;
-  height: 354px;
-  padding: 20px;
-}
-
-@media screen and (max-width: 1350px) {
-  .single-story-paper-header-panel-content {
-    height: 2000px;
-  }
-
-  .single-story-paper-header-panel {
-    height: 1500px;
-  }
-
-  .single-story-paper-card{
-    margin: 10px 0px;
-  }
 }
 
 .log-in-paper-card {
@@ -358,16 +301,16 @@ paper-spinner-lite.blueSpinner{
 }
 
 .single-story-replay-button {
-    opacity: 0; 
+    opacity: 0;
     visibility: hidden;
     -webkit-transition: visibility 2s linear, opacity 2s linear;
     -moz-transition: visibility 2s linear, opacity 2s linear;
-    -o-transition: visibility 2s linear, opacity 2s linear; 
+    -o-transition: visibility 2s linear, opacity 2s linear;
 }
 
 .single-story-replay-button-after {
      visibility: visible !important;
-     opacity: 1; 
+     opacity: 1;
 }
 
 #player0 {
