@@ -79,7 +79,7 @@
       </div>
  <!-- Act I NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame1MediaType == 2">
-        <form ng-submit="previewTextToSpeech(1)">
+        <form ng-submit="previewTextToSpeechFrame(1)">
           <div class="form-group">
             <label for="textToSpeechNarration1">Narration</label>
             <textarea ng-model="$parent.frame1NarrationText" id="textToSpeechNarration1" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
@@ -143,7 +143,7 @@
       </div>
  <!-- Act II NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame2MediaType == 2">
-        <form ng-submit="previewTextToSpeech(2)">
+        <form ng-submit="previewTextToSpeechFrame(2)">
           <div class="form-group">
             <label for="textToSpeechNarration2">Narration</label>
             <textarea ng-model="$parent.frame2NarrationText" id="textToSpeechNarration2" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
@@ -207,7 +207,7 @@
       </div>
  <!-- Act III NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame3MediaType == 2">
-        <form ng-submit="previewTextToSpeech(3)">
+        <form ng-submit="previewTextToSpeechFrame(3)">
           <div class="form-group">
             <label for="textToSpeechNarration3">Narration</label>
             <textarea ng-model="$parent.frame3NarrationText" id="textToSpeechNarration3" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
@@ -268,5 +268,4 @@
         <!-- End Modal Content-->
     </div>
 </div>
-
 
