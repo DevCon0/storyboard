@@ -223,10 +223,13 @@ func verifyStoryStructure(stories []Story) {
 				storyChanged = true
 			}
 
+			fmt.Printf("story %v HasSoundtrack: %v\n", story.Title, story.HasSoundtrack)
 			// Check whether the story has a soundtrack.
 			if !story.HasSoundtrack && story.Frames[0].VideoId != "" {
 				story.HasSoundtrack = true
+				storyChanged = true
 			}
+			fmt.Printf("story %v HasSoundtrack: %v\n\n", story.Title, story.HasSoundtrack)
 
 			// Skip editing if no edits were made.
 			if !storyChanged {
@@ -659,11 +662,12 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	err = storiesCollection.Update(
 		bson.M{"_id": story.Id},
 		bson.M{"$set": bson.M{
-			"title":       story.Title,
-			"description": story.Description,
-			"thumbnail":   story.Thumbnail,
-			"tags":        story.Tags,
-			"frames":      story.Frames,
+			"title":          story.Title,
+			"description":    story.Description,
+			"has_soundtrack": story.HasSoundtrack,
+			"thumbnail":      story.Thumbnail,
+			"tags":           story.Tags,
+			"frames":         story.Frames,
 		}})
 	if err != nil {
 		return fmt.Errorf("Failed to update story in the database\n"),
