@@ -94,7 +94,7 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Update any stories which are not structured correctly.
 	// For each one, make sure it has 4 frames
 	//   and that any GIF frames images have a non-animated thumbnail.
-	// go verifyStoryStructure(stories)
+	go verifyStoryStructure(stories)
 
 	// Randomize the stories.
 	numberOfStories := len(stories)
