@@ -21,6 +21,7 @@ angular.module('storyBoard.storyStateMachineService',
     closureIsSingleStoryView = isSingleStoryView;
     parentControllerScope = scope;
     var storyFrames = story.frames;
+    var hasSoundtrack = this.story.hasSoundtrack;
     // Start with last frame and go backwards
     // because each player receives a play call
     // from the player ahead of it.  There could
@@ -31,7 +32,7 @@ angular.module('storyBoard.storyStateMachineService',
     var lastFrame = storyFrames.length - 1;
     for(var i = lastFrame; i >= 0; i--) {
       var currentStoryFrame = storyFrames[i];
-      var readyCallback = this._determineReadyCallback(i);
+      var readyCallback = this._determineReadyCallback(i, hasSoundtrack);
       var endPlayBackCallback = this._determineEndPlaybackCallback(i);
       var newFramePlayer = this._createPlayer(currentStoryFrame.mediaType);
       var playingCallback = this._determinePlayingCallback(i);
@@ -102,19 +103,25 @@ angular.module('storyBoard.storyStateMachineService',
     return playingCallback;
   }
 
-  storyStateMachine._determineReadyCallback = function(frameNum){
-    var readyCallback = function(){};
+  storyStateMachine._determineReadyCallback = function (frameNum, hasSoundtrack) {
 
     var isZeroFrame = frameNum === AUDIO;
     var isFirstFrame = frameNum === FIRST;
 
-    if (isZeroFrame) {
-      readyCallback = this._zeroFrameReady;
-    } else if (isFirstFrame) {
-      readyCallback = this._firstFrameReady;
+    if (hasSoundtrack) {
+      if (isZeroFrame) {
+        return this._zeroFrameReady;
+      } else if (isFirstFrame) {
+        return function () { };
+      }
+    } else {
+      if (isFirstFrame) {
+        return this._firstFrameReady;
+      } else {
+        return function () { };
+      }
     }
-
-    return readyCallback;
+    return function () { };
   };
 
   storyStateMachine._zeroFrameReady = function(){
