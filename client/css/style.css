@@ -288,8 +288,19 @@ paper-spinner-lite.blueSpinner{
     margin: auto;
 }
 
+.panel-title-font {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 22px;
+  line-height: 22px;
+}
+
 .panel-body{
     background-color:rgba(0, 0, 0, 0.1);
+}
+
+.panel-body-font {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
 }
 
 .story-title{
