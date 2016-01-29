@@ -94,7 +94,7 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Update any stories which are not structured correctly.
 	// For each one, make sure it has 4 frames
 	//   and that any GIF frames images have a non-animated thumbnail.
-	// go verifyStoryStructure(stories)
+	go verifyStoryStructure(stories)
 
 	// Randomize the stories.
 	numberOfStories := len(stories)
@@ -135,9 +135,11 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 }
 
 // Reset the structure of any stories which are misaligned.
-// Make sure all stories have 4 frames
-//   and that GIF images have a non-animated thumbnail.
-// If they don't, add a fourth one and update it in the database.
+// Make sure all:
+//   stories have 4 frames,
+//   stories' first frames are MediaType 3,
+//   text-to-speech frames are MediaType 2, and
+//   GIF images have a non-animated thumbnail.
 func verifyStoryStructure(stories []Story) {
 	numberOfStories := len(stories)
 	for i := 0; i < numberOfStories; i++ {
@@ -160,28 +162,70 @@ func verifyStoryStructure(stories []Story) {
 				storyChanged = true
 			}
 
-			// Check if any GIF frames need a non-animated thumbnail.
-			for j := numberOfFrames - 1; j >= 0; j-- {
-				frame := &story.Frames[j]
-				// Skip if not an image.
-				if frame.MediaType != 1 {
-					continue
-				}
-
-				// Skip if not a GIF.
-				if filepath.Ext(frame.ImageUrl) != ".gif" {
-					continue
-				}
-
-				// Skip if the PreviewUrl is not a GIF.
-				if filepath.Ext(frame.PreviewUrl) != ".gif" {
-					continue
-				}
-
-				// Set the PreviewUrl to nothing to force creation
-				//   of a new one.
-				(*frame).PreviewUrl = ""
+			// Make sure the first frame's MediaType is 3.
+			if story.Frames[0].MediaType != 3 {
+				story.Frames[0].MediaType = 3
 				storyChanged = true
+			}
+
+			for i := 1; i < numberOfFrames; i++ {
+				frame := &story.Frames[i]
+				switch frame.MediaType {
+				// Check if any GIF frames need a non-animated thumbnail.
+				case 1:
+					// Skip if not a GIF.
+					if filepath.Ext(frame.ImageUrl) != ".gif" {
+						continue
+					}
+
+					// Skip if the PreviewUrl is not a GIF.
+					if filepath.Ext(frame.PreviewUrl) != ".gif" {
+						continue
+					}
+
+					// Set the PreviewUrl to nothing to force creation
+					//   of a new one.
+					(*frame).PreviewUrl = ""
+					storyChanged = true
+
+				// Verify that text-to-speech frames
+				//   have the correct PreviewUrl.
+				case 2:
+					textToSpeechPreviewUrl := "/api/images/text-to-speech.svg"
+					if frame.PreviewUrl == textToSpeechPreviewUrl {
+						continue
+					}
+					(*frame).PreviewUrl = textToSpeechPreviewUrl
+					storyChanged = true
+				}
+			}
+
+			// Check whether at least one frame has a volume above 0.
+			hasVolume := false
+			for i := 0; i < numberOfFrames; i++ {
+				frame := &story.Frames[i]
+				if frame.Volume != 0 {
+					hasVolume = true
+				}
+			}
+
+			// If no frame has a volume above 0, set them all to 100.
+			if !hasVolume {
+				// If an audio track exists, only set the audio track to 100.
+				if story.Frames[0].VideoId != "" {
+					story.Frames[0].Volume = 100
+				} else {
+					for i := numberOfFrames - 1; i >= 1; i-- {
+						frame := &story.Frames[i]
+						frame.Volume = 100
+					}
+				}
+				storyChanged = true
+			}
+
+			// Check whether the story has a soundtrack.
+			if !story.HasSoundtrack && story.Frames[0].VideoId != "" {
+				story.HasSoundtrack = true
 			}
 
 			// Skip editing if no edits were made.
@@ -235,7 +279,7 @@ func verifyStoryStructure(stories []Story) {
 			}
 			defer res.Body.Close()
 
-			fmt.Printf("Done for %v\n", story.Title)
+			fmt.Printf("Re-structured %v\n", story.Title)
 		}(story)
 	}
 }
@@ -338,19 +382,13 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 		)
 	}()
 
-	// Set default values.
-	story.Views = 0
-	if story.Author == "" {
-		story.Author = user.Username
-	}
-
 	// Set defaults for 'story.Frames'.
 	numberOfFrames := len(story.Frames)
 
 	// Prepare to watch multi-threaded goroutines.
-	wg.Add(numberOfFrames - 1)
+	wg.Add(numberOfFrames)
 
-	for i := 1; i < numberOfFrames; i++ {
+	for i := 0; i < numberOfFrames; i++ {
 		// Set each frame's PreviewUrl concurrently.
 		go func(i int) {
 			// At the end of this goroutine,
@@ -367,14 +405,14 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			// Handle images and videos differently.
 			switch frame.MediaType {
 
-			// Set a video's PreviewUrl.
+			// Set a video frame's PreviewUrl.
 			case 0:
 				// Set the PreviewUrl to the first frame in the YouTube video.
-				videoId := frame.VideoId
-				previewUrl := concat("https://img.youtube.com/vi/", videoId, "/1.jpg")
-				frame.PreviewUrl = previewUrl
+				frame.PreviewUrl = concat(
+					"https://img.youtube.com/vi/", frame.VideoId, "/1.jpg",
+				)
 
-			// Set an image's PreviewUrl.
+			// Set an image frame's PreviewUrl.
 			case 1:
 
 				// Handle GIF images differently than other images.
@@ -400,8 +438,27 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 					//   just use the ImageUrl as the PreviewUrl.
 					frame.PreviewUrl = frame.ImageUrl
 				}
+
+			// Set a text-to-speech frame's PreviewUrl.
+			case 2:
+				frame.PreviewUrl = "/api/images/text-to-speech.svg"
+
+			// Set an audio frame's PreviewUrl.
+			case 3:
+				frame.PreviewUrl = ""
 			}
 		}(i)
+	}
+
+	// Check whether the story has a soundtrack.
+	if story.Frames[0].VideoId != "" {
+		story.HasSoundtrack = true
+	}
+
+	// Set default values.
+	story.Views = 0
+	if story.Author == "" {
+		story.Author = user.Username
 	}
 
 	// Wait for goroutines to finish.
@@ -433,6 +490,8 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	w.Write(jsonStoryResponseData)
+
+	fmt.Printf("Created story %v\n", story.Title)
 
 	return nil, http.StatusCreated
 }
@@ -524,7 +583,7 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			// Handle images and videos differently.
 			switch editedFrame.MediaType {
 
-			// Set a video's PreviewUrl.
+			// Set a video frame's PreviewUrl.
 			case 0:
 				// Set the PreviewUrl to the first frame in the YouTube video.
 				videoId := editedFrame.VideoId
@@ -533,7 +592,7 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 				)
 				(*editedFrame).PreviewUrl = previewUrl
 
-			// Set an image's PreviewUrl.
+			// Set an image frame's PreviewUrl.
 			case 1:
 
 				editedImageUrl := editedFrame.ImageUrl
@@ -576,8 +635,21 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 				default:
 					(*editedFrame).PreviewUrl = editedImageUrl
 				}
+
+			// Set a text-to-speech frame's PreviewUrl.
+			case 2:
+				editedFrame.PreviewUrl = "/api/images/text-to-speech.svg"
+
+			// Set an audio frame's PreviewUrl.
+			case 3:
+				editedFrame.PreviewUrl = ""
 			}
 		}(i)
+	}
+
+	// Check whether the story has a soundtrack.
+	if story.Frames[0].VideoId != "" {
+		story.HasSoundtrack = true
 	}
 
 	// Wait for goroutines to finish.
@@ -611,6 +683,8 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
+
+	fmt.Printf("Edited story %v\n", story.Title)
 
 	return nil, http.StatusOK
 }
@@ -703,6 +777,8 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 	// Send the story with status 200;
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Story deleted"))
+
+	fmt.Printf("Edited story %v\n", story.Title)
 
 	return nil, http.StatusOK
 }
