@@ -223,13 +223,11 @@ func verifyStoryStructure(stories []Story) {
 				storyChanged = true
 			}
 
-			fmt.Printf("story %v HasSoundtrack: %v\n", story.Title, story.HasSoundtrack)
 			// Check whether the story has a soundtrack.
 			if !story.HasSoundtrack && story.Frames[0].VideoId != "" {
 				story.HasSoundtrack = true
 				storyChanged = true
 			}
-			fmt.Printf("story %v HasSoundtrack: %v\n\n", story.Title, story.HasSoundtrack)
 
 			// Skip editing if no edits were made.
 			if !storyChanged {
