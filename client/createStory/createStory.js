@@ -456,7 +456,7 @@ angular.module('storyBoard.createStory', [])
       playerName: framePlayerName
     };
 
-    $scope.previewAudioVideoFrame(currentFrame);
+    previewAudioVideoFrame(currentFrame);
   };
 
   var createPreview = function(framePlayerName, domDiv, videoId, start, end, volume){
@@ -546,30 +546,22 @@ angular.module('storyBoard.createStory', [])
     $scope.addBackingTrack = ! $scope.addBackingTrack;
   };
 
-  $scope.previewAudioVideoFrame = function(currentFrameObject) {
+  var previewAudioVideoFrame = function(currentFrameObject) {
 
     switch(currentFrameObject.playerName){
-              case 'frame0':
-
-                        $scope.showSpinner0 = false;
-
-              break;
-              case 'frame1':
-
-                        $scope.showSpinner1 = false;
-
-              break;
-              case 'frame2':
-
-                        $scope.showSpinner2 = false;
-
-              break;
-              case 'frame3':
-
-                        $scope.showSpinner3 = false;
-
-              break;
-            }
+      case 'frame0':
+        $scope.showSpinner0 = false;
+      break;
+      case 'frame1':
+        $scope.showSpinner1 = false;
+      break;
+      case 'frame2':
+        $scope.showSpinner2 = false;
+      break;
+      case 'frame3':
+        $scope.showSpinner3 = false;
+      break;
+    }
 
     var previewAudioVideoPlayer = new VideoPlayer();
     var readyCallback =
