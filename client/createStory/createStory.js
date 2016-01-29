@@ -58,7 +58,7 @@ angular.module('storyBoard.createStory', [])
 
     // TODO: remove backwards compatibility
     if(editStory.frames[1].mediaType !== undefined) {
-      $scope.frame1MediaType = editStory.frames[1].mediaType;
+      $scope.frame1MediaType = "" + editStory.frames[1].mediaType;
     } else {
       $scope.frame1MediaType = null;
     }
@@ -72,7 +72,7 @@ angular.module('storyBoard.createStory', [])
 
     // TODO: remove backwards compatibility
     if(editStory.frames[2].mediaType !== undefined) {
-      $scope.frame2MediaType = editStory.frames[2].mediaType;
+      $scope.frame2MediaType = "" + editStory.frames[2].mediaType;
     } else {
       $scope.frame2MediaType = null;
     }
@@ -86,7 +86,7 @@ angular.module('storyBoard.createStory', [])
 
     // TODO: remove backwards compatibility
     if(editStory.frames[3].mediaType !== undefined) {
-      $scope.frame3MediaType = editStory.frames[3].mediaType;
+      $scope.frame3MediaType = "" + editStory.frames[3].mediaType;
     } else {
       $scope.frame3MediaType = null;
     }
