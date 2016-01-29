@@ -482,7 +482,7 @@ func TestShowCase(t *testing.T) {
 func TestStorySearch(t *testing.T) {
 	t.Log("Testing story tag search...")
 
-	url := "http://localhost:8020/api/stories/search/tagme"
+	url := "http://localhost:8020/api/stories/tags/tagme"
 	t.Logf("GET request to%v\n", url)
 
 	expectedStatus := http.StatusOK
