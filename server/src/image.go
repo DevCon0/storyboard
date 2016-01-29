@@ -165,6 +165,8 @@ func saveNonAnimatedGif(imageUrl string) (string, error) {
 	}
 	dbFileIdHex := dbFileId.Hex()
 
+	fmt.Printf("Created motionless image for %v\n", imageUrl)
+
 	// Return the url path which the client can use
 	//   to request the new PNG image.
 	previewUrl := concat("/api/images/", dbFileIdHex)
