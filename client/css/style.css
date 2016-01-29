@@ -6,6 +6,10 @@ body {
   background-repeat: no-repeat;
 }
 
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
 
 .clean {
   margin: 10px;
@@ -94,78 +98,6 @@ body {
 
 .edit-button {
   margin-left: 18px;
-}
-
-.libraryStoryFrame {
-  float: left;
-  height: 250px;
-  overflow: hidden;
-  position: relative;
-  width: 250px;
-  /*box-shadow: 10px 10px 5px #888888 ;*/
-  margin: 15px;
-}
-
-.libraryStoryFrame a {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
-
-.libraryStoryFrame img {
-  width: 100%;
-  height: 100%;
-  margin: auto;
-  border: solid;
-  border-width: 5px;
-  border-color: black;
-  border-radius: 5px;
-}
-
-.libraryStoryFrame a .caption {
-  background-color: rgba(0, 0, 0, 0.7);
-  display: block;
-  overflow: hidden;
-  padding: 10px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 180px;
-  transition-property: top;
-  transition-duration: 0.2s;
-  width: 100%;
-  z-index: 10;
-  border-top: hidden;
-  border-bottom: solid;
-  border-color: black;
-  border-width: 5px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-
-.libraryStoryFrame a:hover .caption {
-  top: 0;
-  transition: all 2s;
-}
-
-.libraryStoryFrame a .caption f {
-  color: white;
-  font-size: 32px;
-  margin-bottom: 20px;
-}
-
-.libraryStoryFrame a .caption p {
-  color: orange;
-  display: none;
-  line-height: 150%;
-  transition: all 0.2s;
-  width: 100%;
-}
-
-.libraryStoryFrame a:hover .caption p {
-  display: block;
-  margin-bottom: 20px;
 }
 
 .create-previewThumbnail {
