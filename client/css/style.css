@@ -144,6 +144,13 @@ paper-spinner-lite.blueSpinner{
   }
 }
 
+.create-story-media-type-select {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
 .blue {
   background-color: #4285F4;
 }
