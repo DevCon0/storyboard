@@ -33,13 +33,11 @@
  <!-- Act I ///////////////////////////////////////////////////////////////////////////// -->
   <div class="creationFrameDiv col-md-2">
     <paper-card heading="Act I" elevation="3" class="create-story-paper-card">
-      <paper-dropdown-menu label="Media Type">
-        <paper-menu ng-model="frame1MediaType" class="dropdown-content">
-          <paper-item>Video</paper-item>
-          <paper-item>Image</paper-item>
-          <paper-item>Text-to-Speech</paper-item>
-        </paper-menu>
-      </paper-dropdown-menu>
+      <select ng-model="frame1MediaType">
+        <option value="0">Video</option>
+        <option value="1">Image</option>
+        <option value="2">Text-to-Speech</option>
+      </select>
  <!-- Act I VIDEO  ******************************** -->
       <div ng-if="frame1MediaType == 0">
         <form ng-submit="previewFrame(1)">
@@ -98,13 +96,11 @@
  <!-- Act II ///////////////////////////////////////////////////////////////////////////// -->
   <div class="creationFrameDiv col-md-2">
     <paper-card heading="Act II" elevation="3" class="create-story-paper-card">
-      <paper-dropdown-menu label="Media Type">
-        <paper-menu ng-model="frame2MediaType" class="dropdown-content">
-          <paper-item>Video</paper-item>
-          <paper-item>Image</paper-item>
-          <paper-item>Text-to-Speech</paper-item>
-        </paper-menu>
-      </paper-dropdown-menu>
+      <select ng-model="frame2MediaType">
+        <option value="0">Video</option>
+        <option value="1">Image</option>
+        <option value="2">Text-to-Speech</option>
+      </select>
  <!-- Act II VIDEO  ******************************** -->
       <div ng-if="frame2MediaType == 0">
         <form ng-submit="previewFrame(2)">
@@ -163,13 +159,11 @@
  <!-- Act III ///////////////////////////////////////////////////////////////////////////// -->
   <div class="creationFrameDiv col-md-2">
     <paper-card heading="Act III" elevation="3" class="create-story-paper-card">
-      <paper-dropdown-menu label="Media Type">
-        <paper-menu ng-model="frame3MediaType" class="dropdown-content">
-          <paper-item>Video</paper-item>
-          <paper-item>Image</paper-item>
-          <paper-item>Text-to-Speech</paper-item>
-        </paper-menu>
-      </paper-dropdown-menu>
+      <select ng-model="frame3MediaType">
+        <option value="0">Video</option>
+        <option value="1">Image</option>
+        <option value="2">Text-to-Speech</option>
+      </select>
  <!-- Act III VIDEO  ******************************** -->
       <div ng-if="frame3MediaType == 0">
         <form ng-submit="previewFrame(3)">
