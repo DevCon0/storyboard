@@ -1,0 +1,20 @@
+@keyframes pop-volume {
+  0%   {stroke-dashoffset: 3;}
+  50%  {stroke-dashoffset: 10;}
+  100% {stroke-dashoffset: 3;}
+  /*0%   {fill: #FAFAFA;}
+  50%  {fill: #F00;}
+  100% {fill: #FAFAFA;}*/
+}
+
+.text-to-speech-image {
+  height: 30%;
+  width: 30%;
+}
+.text-to-speech-image
+.text-to-speech-image-volume-sound-2 {
+  animation-name: pop-volume;
+  animation-duration: 3s;
+  animation-iteration-count: 3;
+  transition: stroke-dashoffset 8s linear;
+}

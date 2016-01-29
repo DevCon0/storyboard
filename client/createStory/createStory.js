@@ -332,6 +332,7 @@ angular.module('storyBoard.createStory', [])
       FRAME1: 1,
       FRAME2: 2,
       FRAME3: 3,
+      hasSoundtrack: $scope.frame0YoutubeUrl !== '' && $scope.frame0YoutubeUrl !== null,
       frames: [
         {
           mediaType: parseInt($scope.frame0MediaType),
