@@ -257,7 +257,7 @@ angular.module('storyBoard.createStory', [])
       FRAME3: 3,
       frames: [
         {
-          mediaType: $scope.frame0MediaType,
+          mediaType: parseInt($scope.frame0MediaType),
           player: null,
           playerDiv: 'player0',
           videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
@@ -269,7 +269,7 @@ angular.module('storyBoard.createStory', [])
           narrationText: null /* Not applicable $scope.frame0NarrationText*/
         },
         {
-          mediaType: $scope.frame1MediaType,
+          mediaType: parseInt($scope.frame1MediaType),
           player: null,
           playerDiv: 'player1',
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
@@ -282,7 +282,7 @@ angular.module('storyBoard.createStory', [])
           narrationText: $scope.frame1NarrationText
         },
         {
-          mediaType: $scope.frame2MediaType,
+          mediaType: parseInt($scope.frame2MediaType),
           player: null,
           playerDiv: 'player2',
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
@@ -295,7 +295,7 @@ angular.module('storyBoard.createStory', [])
           narrationText: $scope.frame2NarrationText
         },
         {
-          mediaType: $scope.frame3MediaType,
+          mediaType: parseInt($scope.frame3MediaType),
           player: null,
           playerDiv: 'player3',
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
@@ -331,7 +331,7 @@ angular.module('storyBoard.createStory', [])
       FRAME3: 3,
       frames: [
         {
-          mediaType: $scope.frame0MediaType,
+          mediaType: parseInt($scope.frame0MediaType),
           player: null,
           playerDiv: 'player0',
           videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
@@ -343,7 +343,7 @@ angular.module('storyBoard.createStory', [])
           narrationText: null /* Not applicable $scope.frame0NarrationText*/
         },
         {
-          mediaType: $scope.frame1MediaType,
+          mediaType: parseInt($scope.frame1MediaType),
           player: null,
           playerDiv: 'player1',
           videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
@@ -355,7 +355,7 @@ angular.module('storyBoard.createStory', [])
           narrationText: $scope.frame1NarrationText
         },
         {
-          mediaType: $scope.frame2MediaType,
+          mediaType: parseInt($scope.frame2MediaType),
           player: null,
           playerDiv: 'player2',
           videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
@@ -367,7 +367,7 @@ angular.module('storyBoard.createStory', [])
           narrationText: $scope.frame2NarrationText
         },
         {
-          mediaType: $scope.frame3MediaType,
+          mediaType: parseInt($scope.frame3MediaType),
           player: null,
           playerDiv: 'player3',
           videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
