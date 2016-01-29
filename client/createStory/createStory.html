@@ -15,7 +15,7 @@
             <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
           </div>
           <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <input type="button" value="Add audio backing track" ng-click="toggleBackingTrack()"></input>
+          <input type="button" class="btn btn-default" value="Add audio backing track" ng-click="toggleBackingTrack()"></input>
           <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button>
       </form>
       <div class="row clean"></div>
