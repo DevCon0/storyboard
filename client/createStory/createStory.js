@@ -152,6 +152,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame0ImageUrl = null;
     $scope.frame0UrlDuration = null;
 
+    $scope.frame1MediaType = "0";
     $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=S7_Hr3iCPls";
     $scope.frame1StartTime = "14";
     $scope.frame1EndTime = "24";
@@ -160,6 +161,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1UrlDuration = 2;
     $scope.frame1NarrationText = 'A long time ago, in a galaxy far, far away';
 
+    $scope.frame2MediaType = "1";
     $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=b8cCsUBYSkw";
     $scope.frame2StartTime = "870";
     $scope.frame2EndTime = "885";
@@ -168,6 +170,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2UrlDuration = 3;
     $scope.frame2NarrationText = 'Why don\'t you just tell me what movie you want to see!';
 
+    $scope.frame3MediaType = "2";
     $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
     $scope.frame3StartTime = "0";
     $scope.frame3EndTime = "13";

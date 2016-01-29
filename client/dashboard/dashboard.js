@@ -33,6 +33,18 @@ angular.module('storyBoard.dashboard', [])
   StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))
   .then(function(library){
     $scope.userLibrary = library;
+    $scope.userLibrary.forEach(function(story) {
+      story.frames.forEach(function(act) {
+        act.isTextToSpeech = false;
+
+        var previewUrlSrc = act.previewUrl.substring(0, 12)
+        var previewUrlExt = act.previewUrl.substring(act.previewUrl.length -4)
+
+        if (previewUrlSrc === '/api/images/' && previewUrlExt === ".svg") {
+          act.isTextToSpeech = true;
+        }
+      })
+    })
   });
 
 });
