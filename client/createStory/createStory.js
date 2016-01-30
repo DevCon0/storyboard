@@ -27,7 +27,8 @@ angular.module('storyBoard.createStory', [])
   $scope.showSpinner3 = false;
   $scope.addFrame3ImagePreview = false;
 
-  $scope.addBackingTrack = false;
+  $scope.addSoundTrack = false;
+  $scope.audioTrackDisplay = "Add Soundtrack";
 
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
@@ -44,10 +45,10 @@ angular.module('storyBoard.createStory', [])
     // test for videoId to show or hide in create/edit view
     if (editStory.frames[0].videoId !== "") {
       $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
-      $scope.addBackingTrack = true;
+      $scope.addSoundTrack = true;
     } else {
       $scope.frame0YoutubeUrl = "";
-      $scope.addBackingTrack = false;
+      $scope.addSoundTrack = false;
     }
     $scope.frame0StartTime = editStory.frames[0].start;
     $scope.frame0EndTime = editStory.frames[0].end;
@@ -479,10 +480,6 @@ angular.module('storyBoard.createStory', [])
   };
 
 
-  $scope.toggleBackingTrack = function () {
-    $scope.addBackingTrack = ! $scope.addBackingTrack;
-  };
-
   var previewAudioVideoFrame = function(currentFrameObject) {
     var previewAudioVideoPlayer = new VideoPlayer();
     var readyCallback =
@@ -546,9 +543,20 @@ angular.module('storyBoard.createStory', [])
                                      playbackFinishedCallback);
   };
 
-  $scope.toggleBackingTrack = function () {
-    console.log('tracked!')
-    $scope.addBackingTrack = ! $scope.addBackingTrack;
+  $scope.toggleSoundTrack = function () {
+    $scope.addSoundTrack = !$scope.addSoundTrack;
+    if ($scope.addSoundTrack) {
+      $scope.audioTrackDisplay = "Destory Soundtrack";
+    } else {
+      $scope.audioTrackDisplay = "Add Soundtrack";
+    }
+    $scope.frame0MediaType = 3;
+    $scope.frame0YoutubeUrl = null;
+    $scope.frame0StartTime = "0";
+    $scope.frame0EndTime = null;
+    $scope.frame0Volume = "100";
+    $scope.frame0ImageUrl = null;
+    $scope.frame0UrlDuration = null;
   };
 
 });

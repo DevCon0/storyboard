@@ -14,8 +14,8 @@
             <label for="storyThumbnailUrlInput">Story Thumbnail URL</label>
             <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
           </div>
-          <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <input type="button" class="btn btn-default" value="Add audio backing track" ng-click="toggleBackingTrack()"></input>
+          <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg">
+          <input type="button" class="btn btn-default" value="{{audioTrackDisplay}}" ng-click="toggleSoundTrack()">
           <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button>
       </form>
       <div class="row clean"></div>
@@ -219,7 +219,7 @@
     </paper-card>
   </div>
  <!-- Act Zero AUDIO /////////////////////////////////////////////////////////////////////// -->
-  <div ng-show="addBackingTrack" class="creationFrameDiv col-md-2">
+  <div ng-show="addSoundTrack" class="creationFrameDiv col-md-2">
     <paper-card heading="Audio Track" elevation="3" class="create-story-paper-card">
  <!-- Act Zero AUDIO  ******************************** -->
         <form ng-submit="previewFrame(0)">
