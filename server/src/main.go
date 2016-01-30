@@ -66,6 +66,7 @@ func main() {
 	}
 	fmt.Printf("Listening on port %s\n", port)
 
+	// go modifyImage()
 	port = concat(":", port)
 	http.ListenAndServe(port, nil)
 }
