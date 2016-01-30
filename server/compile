@@ -20,7 +20,7 @@ fi;
 
 (
     (
-        echo "Building Windows binary..";
+        echo "Building Windows binary...";
         GOOS=windows go build &&
             mv -f src.exe ../bin/server.exe
     ) &&

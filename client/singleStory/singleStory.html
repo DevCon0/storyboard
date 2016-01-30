@@ -16,18 +16,21 @@
       <div id="player0" style="visibility:hidden;"></div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="panel panel-primary single-story-replay-button" ng-class="replaybutton">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{storyTitle}}</h3>
+                    <div class="panel-title panel-title-font">
+                        {{storyTitle}}
+                        <span style="float: right; padding-right: 5px;">Made with<iron-icon icon="icons:favorite" class="icon-margin-left"></iron-icon> by {{storyUsername}}</span>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    Created By: {{storyUsername}}<br />
-                    Date: {{storyCreatedAt}}<br />
+                <div class="panel-body panel-body-font">
+                    <span style="float:left;">Story Creation: {{storyCreatedAt}}</span>
+                    <span class="view-count">Views: {{viewCount}}</span>
                     <hr style="width: 100%; color: black; height: 2px; background-color:black;" />
-                    Description<br />
                     {{storyDescription}}<br />
-                    <button class="btn btn-lg btn-success button-location" ng-click="replay()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button>
+                    <br />
+                    <button class="btn btn-lg btn-success button-location" ng-click="replay()"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>  Replay</button>
                 </div>
             </div>
         </div>

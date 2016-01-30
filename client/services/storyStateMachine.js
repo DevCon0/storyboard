@@ -7,6 +7,7 @@ angular.module('storyBoard.storyStateMachineService',
   var storyStateMachine = {};
   storyStateMachine.story = null;
   var closureIsSingleStoryView = false;
+  var closureStoryHasEnded = false;
   storyStateMachine.players = [];
   var parentControllerScope = null;
   var AUDIO = 0;
@@ -16,9 +17,11 @@ angular.module('storyBoard.storyStateMachineService',
 
   storyStateMachine.setStory = function(story, isSingleStoryView, scope){
     this.story = story;
+    closureStoryHasEnded = false;
     closureIsSingleStoryView = isSingleStoryView;
     parentControllerScope = scope;
     var storyFrames = story.frames;
+    var hasSoundtrack = this.story.hasSoundtrack;
     // Start with last frame and go backwards
     // because each player receives a play call
     // from the player ahead of it.  There could
@@ -29,13 +32,15 @@ angular.module('storyBoard.storyStateMachineService',
     var lastFrame = storyFrames.length - 1;
     for(var i = lastFrame; i >= 0; i--) {
       var currentStoryFrame = storyFrames[i];
-      var readyCallback = this._determineReadyCallback(i);
+      var readyCallback = this._determineReadyCallback(i, hasSoundtrack);
       var endPlayBackCallback = this._determineEndPlaybackCallback(i);
       var newFramePlayer = this._createPlayer(currentStoryFrame.mediaType);
+      var playingCallback = this._determinePlayingCallback(i);
       newFramePlayer.create(
         currentStoryFrame,
         readyCallback,
-        endPlayBackCallback);
+        endPlayBackCallback,
+        playingCallback);
       this.players.unshift(newFramePlayer);
     }
   };
@@ -48,6 +53,7 @@ angular.module('storyBoard.storyStateMachineService',
   }
 
   storyStateMachine.endStory = function(){
+    closureStoryHasEnded = true;
     var storyPlayers = this.players;
     storyPlayers.forEach(function(player){
       player.destroy();
@@ -75,6 +81,9 @@ angular.module('storyBoard.storyStateMachineService',
       case 2:
         player = new TextToSpeechPlayer();
         break;
+      case 3:
+        player = new VideoPlayer();  //Audio only version of VidPlayer
+      break;
       default:
         throw "Unrecognized media type in storyStateMachine.js";
         break;
@@ -83,19 +92,36 @@ angular.module('storyBoard.storyStateMachineService',
     return player;
   }
 
-  storyStateMachine._determineReadyCallback = function(frameNum){
-    var readyCallback = function(){};
+  storyStateMachine._determinePlayingCallback = function (frameNum) {
+    var playingCallback = function () { };
+    var isAudioFrame = frameNum === AUDIO;
+
+    if (isAudioFrame) {
+      console.log('isAUDIOFrame determinePlayingCallback conditonal run');
+      playingCallback = this._firstFrameReady.bind(storyStateMachine.players[0]);
+    }
+    return playingCallback;
+  }
+
+  storyStateMachine._determineReadyCallback = function (frameNum, hasSoundtrack) {
 
     var isZeroFrame = frameNum === AUDIO;
     var isFirstFrame = frameNum === FIRST;
 
-    if (isZeroFrame) {
-      readyCallback = this._zeroFrameReady;
-    } else if (isFirstFrame) {
-      readyCallback = this._firstFrameReady;
+    if (hasSoundtrack) {
+      if (isZeroFrame) {
+        return this._zeroFrameReady;
+      } else if (isFirstFrame) {
+        return function () { };
+      }
+    } else {
+      if (isFirstFrame) {
+        return this._firstFrameReady;
+      } else {
+        return function () { };
+      }
     }
-
-    return readyCallback;
+    return function () { };
   };
 
   storyStateMachine._zeroFrameReady = function(){
@@ -122,6 +148,14 @@ angular.module('storyBoard.storyStateMachineService',
         if(closureIsSingleStoryView) {
           _shrinkAct1AndGrowAct2();
         }
+
+        // Do not attempt to move story
+        // forward if it has ended.
+        // This is here because these
+        // callbacks are asynchronous
+        // and could run after endStory()
+        if(closureStoryHasEnded) return;
+
         storyStateMachine.players[SECOND].play();
       };
     } else if(isSecondFrame) {
@@ -129,14 +163,30 @@ angular.module('storyBoard.storyStateMachineService',
         if(closureIsSingleStoryView) {
           _shrinkAct2AndGrowAct3();
         }
+
+        // Do not attempt to move story
+        // forward if it has ended.
+        // This is here because these
+        // callbacks are asynchronous
+        // and could run after endStory()
+        if(closureStoryHasEnded) return;
+
         storyStateMachine.players[THIRD].play();
       };
     } else if(isThirdFrame) {
       endPlayBackCallback = function(){
         if(closureIsSingleStoryView) {
           _shrinkAct3();
-          storyStateMachine.players[AUDIO].pause()
         }
+
+        // Do not attempt to move story
+        // forward if it has ended.
+        // This is here because these
+        // callbacks are asynchronous
+        // and could run after endStory()
+        if(closureStoryHasEnded) return;
+
+        storyStateMachine.players[AUDIO].pause();
       };
     }
 

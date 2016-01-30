@@ -19,26 +19,27 @@ type User struct {
 
 // Story Model - separate collection
 type Story struct {
-	Id          bson.ObjectId `json:"storyId" bson:"_id,omitempty"`
-	CreatedAt   time.Time     `json:"createdAt" bson:"created_at"`
-	Title       string        `json:"title"`
-	Description string        `json:"description"`
-	Thumbnail   string        `json:"thumbnail"`
-	Username    string        `json:"username"`
-	Author      string        `json:"author"`
-	Views       int           `json:"views"`
-	Tags        []string      `json:"tags"`
-	Votes       []Vote        `json:"votes"`
-	VoteCount   int           `json:"voteCount" bson:"voteCount"`
-	Frames      []Frame       `json:"frames"`
-	FRAME1      int
-	FRAME2      int
-	FRAME3      int
+	Id            bson.ObjectId `json:"storyId" bson:"_id,omitempty"`
+	CreatedAt     time.Time     `json:"createdAt" bson:"created_at"`
+	Title         string        `json:"title"`
+	Description   string        `json:"description"`
+	HasSoundtrack bool          `json:"hasSoundtrack" bson:"has_soundtrack"`
+	Thumbnail     string        `json:"thumbnail"`
+	Username      string        `json:"username"`
+	Author        string        `json:"author"`
+	Views         int           `json:"views"`
+	Tags          []string      `json:"tags"`
+	Votes         []Vote        `json:"votes"`
+	VoteCount     int           `json:"voteCount" bson:"voteCount"`
+	Frames        []Frame       `json:"frames"`
+	FRAME1        int
+	FRAME2        int
+	FRAME3        int
 }
 
 // Frame model for Acts/Scenes
 type Frame struct {
-	// 0 for video, 1 for image
+	// 0 for video, 1 for image, 2 for txt2speech, 3 for audio track
 	MediaType     int      `json:"mediaType"`
 	Player        struct{} `json:"player"`
 	PlayerDiv     string   `json:"playerDiv"`

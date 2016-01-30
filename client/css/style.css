@@ -6,6 +6,10 @@ body {
   background-repeat: no-repeat;
 }
 
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
 
 .clean {
   margin: 10px;
@@ -96,78 +100,6 @@ body {
   margin-left: 18px;
 }
 
-.libraryStoryFrame {
-  float: left;
-  height: 250px;
-  overflow: hidden;
-  position: relative;
-  width: 250px;
-  /*box-shadow: 10px 10px 5px #888888 ;*/
-  margin: 15px;
-}
-
-.libraryStoryFrame a {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
-
-.libraryStoryFrame img {
-  width: 100%;
-  height: 100%;
-  margin: auto;
-  border: solid;
-  border-width: 5px;
-  border-color: black;
-  border-radius: 5px;
-}
-
-.libraryStoryFrame a .caption {
-  background-color: rgba(0, 0, 0, 0.7);
-  display: block;
-  overflow: hidden;
-  padding: 10px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 180px;
-  transition-property: top;
-  transition-duration: 0.2s;
-  width: 100%;
-  z-index: 10;
-  border-top: hidden;
-  border-bottom: solid;
-  border-color: black;
-  border-width: 5px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-
-.libraryStoryFrame a:hover .caption {
-  top: 0;
-  transition: all 2s;
-}
-
-.libraryStoryFrame a .caption f {
-  color: white;
-  font-size: 32px;
-  margin-bottom: 20px;
-}
-
-.libraryStoryFrame a .caption p {
-  color: orange;
-  display: none;
-  line-height: 150%;
-  transition: all 0.2s;
-  width: 100%;
-}
-
-.libraryStoryFrame a:hover .caption p {
-  display: block;
-  margin-bottom: 20px;
-}
-
 .create-previewThumbnail {
   width: 100px;
   height: 100px;
@@ -182,16 +114,6 @@ body {
 
 .no-padding {
   padding: 0px !important;
-}
-
-.create-story-paper-header-panel {
-  min-height: 750px;
-  /*overflow: hidden;*/
-  margin-left: auto;
-  margin-right: auto;
-  margin: 12px;
-  background-color: #fff;
-  /*@apply(--shadow-elevation-2dp);*/
 }
 
 .create-story-paper-header {
@@ -212,24 +134,21 @@ body {
   margin: 0px;
 }
 
-.create-story-paper-header-panel-content {
-  background-color: white;
-  height: 554px;
-  padding: 20px;
-}
-
 paper-spinner-lite.blueSpinner{
   --paper-spinner-color: var(--google-blue-500);
 }
 
 @media screen and (max-width: 992px) {
-  .create-story-paper-header-panel-content {
-    height: 2000px;
-  }
-
   .create-story-paper-card {
     margin: 10px 0px;
   }
+}
+
+.create-story-media-type-select {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .blue {
@@ -268,50 +187,6 @@ paper-spinner-lite.blueSpinner{
 
 .single-story-inner {
   width: 100%;
-}
-
-.single-story-paper-header-panel {
-  float: left;
-  height: 600px;
-  margin: 12px;
-  color: #fff;
-  /*@apply(--shadow-elevation-2dp);*/
-}
-
-.single-story-paper-card{
-  background-color: #ddd !important;
-  margin: 5px;
-  font-family: helvetica;
-}
-
-.single-story-paper-header {
-  background-color: #4285F4;
-  height: 64px;
-  line-height: 64px;
-  font-size: 32px;
-  font-family: helvetica;
-  padding: 0px;
-  padding-left: 5px;
-}
-
-.single-story-paper-header-panel-content {
-  background-color: white;
-  height: 354px;
-  padding: 20px;
-}
-
-@media screen and (max-width: 1350px) {
-  .single-story-paper-header-panel-content {
-    height: 2000px;
-  }
-
-  .single-story-paper-header-panel {
-    height: 1500px;
-  }
-
-  .single-story-paper-card{
-    margin: 10px 0px;
-  }
 }
 
 .log-in-paper-card {
@@ -413,8 +288,19 @@ paper-spinner-lite.blueSpinner{
     margin: auto;
 }
 
+.panel-title-font {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 22px;
+  line-height: 22px;
+}
+
 .panel-body{
     background-color:rgba(0, 0, 0, 0.1);
+}
+
+.panel-body-font {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
 }
 
 .story-title{
@@ -426,19 +312,23 @@ paper-spinner-lite.blueSpinner{
 }
 
 .single-story-replay-button {
-    opacity: 0; 
+    opacity: 0;
     visibility: hidden;
     -webkit-transition: visibility 2s linear, opacity 2s linear;
     -moz-transition: visibility 2s linear, opacity 2s linear;
-    -o-transition: visibility 2s linear, opacity 2s linear; 
+    -o-transition: visibility 2s linear, opacity 2s linear;
 }
 
 .single-story-replay-button-after {
      visibility: visible !important;
-     opacity: 1; 
+     opacity: 1;
 }
 
 #player0 {
     height:10px;
     width:10px;
+}
+
+.view-count{
+    float:right;
 }
