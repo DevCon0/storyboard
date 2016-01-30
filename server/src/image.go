@@ -11,8 +11,16 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"sync"
 
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+)
+
+var (
+	pngEncoder png.Encoder = png.Encoder{
+		CompressionLevel: png.BestCompression,
+	}
 )
 
 // GET request to '/api/images/<image_name>'.
@@ -96,7 +104,31 @@ func getImageById(w http.ResponseWriter, r *http.Request, imageId string) (error
 // The stored image will be a PNG.
 // Return a url path which can the client can use to request the stored image.
 func saveNonAnimatedGif(imageUrl string) (string, error) {
-	fmt.Printf("Saving non-animated image of %v\n", imageUrl)
+	// Create the dbFile concurrently while drawing the new, non-animated
+	//   version of the GIF.
+	var wg sync.WaitGroup
+	var dbFile *mgo.GridFile
+	chanErrCreateDbFile := make(chan error, 1)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		// Remove any url parameters.
+		cutImageUrl := reGifUrlWithoutParams.ReplaceAllString(
+			imageUrl, "$1",
+		)
+
+		// Make a filename for the new image.
+		// Use the filename of the GIF image, replacing ".gif" with ".png".
+		basename := filepath.Base(cutImageUrl)
+		ext := filepath.Ext(basename)
+		basenameWithoutExt := strings.TrimSuffix(basename, ext)
+		newFilename := concat(basenameWithoutExt, ".png")
+
+		// Create a file for the new image in the database.
+		var err error
+		dbFile, err = dbFs.Create(newFilename)
+		chanErrCreateDbFile <- err
+	}()
 
 	// Fetch the GIF image.
 	res, err := http.Get(imageUrl)
@@ -106,8 +138,7 @@ func saveNonAnimatedGif(imageUrl string) (string, error) {
 	defer res.Body.Close()
 
 	// Convert the bytes of the GIF into a '*gif.GIF' type.
-	gifBytes := res.Body
-	gifImage, err := gif.DecodeAll(gifBytes)
+	gifImage, err := gif.DecodeAll(res.Body)
 	if err != nil {
 		return "", err
 	}
@@ -135,22 +166,13 @@ func saveNonAnimatedGif(imageUrl string) (string, error) {
 		draw.Src,
 	)
 
-	// Make a filename for the new image.
-	// Use the filename of the GIF image, replacing ".gif" with ".png".
-	basename := filepath.Base(imageUrl)
-	ext := filepath.Ext(basename)
-	basenameWithoutExt := strings.TrimSuffix(basename, ext)
-	newFilename := concat(basenameWithoutExt, ".png")
-
-	// Create a file for the new image in the database.
-	dbFile, err := dbFs.Create(newFilename)
-	if err != nil {
+	wg.Wait()
+	if err = <-chanErrCreateDbFile; err != nil {
 		return "", err
 	}
 	defer dbFile.Close()
 
 	// Write the new image to the database file, using png encoding.
-	pngEncoder := png.Encoder{CompressionLevel: png.BestCompression}
 	err = pngEncoder.Encode(dbFile, overpaintImage)
 	if err != nil {
 		return "", err
@@ -220,6 +242,8 @@ func deleteNonAnimatedGif(imageUrl string) (error, int) {
 			),
 			http.StatusInternalServerError
 	}
+
+	fmt.Printf("Removed motionless image for %v\n", imageUrl)
 
 	return nil, http.StatusOK
 }
