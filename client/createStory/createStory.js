@@ -407,6 +407,7 @@ angular.module('storyBoard.createStory', [])
     var frameVolume = null;
     var frameDivId = null;
     var framePlayerName = null;
+    console.log('prev frameId', frameId)
     switch(frameId){
       case 0:
         frameYoutubeUrl = $scope.frame0YoutubeUrl;
@@ -460,71 +461,6 @@ angular.module('storyBoard.createStory', [])
     previewAudioVideoFrame(currentFrame);
   };
 
-  var createPreview = function(framePlayerName, domDiv, videoId, start, end, volume){
-    while( ! window.youtubeApiLoadedAndReady){};
-
-    if(framePlayers[framePlayerName]){
-      framePlayers[framePlayerName].destroy();
-    }
-    var VIDEO_HEIGHT = 160;
-    var VIDEO_WIDTH = 284;
-    var closureFramePlayers = framePlayers;
-    framePlayers[framePlayerName] = new YT.Player(
-      domDiv,
-      {
-        height: VIDEO_HEIGHT,
-        width: VIDEO_WIDTH,
-        videoId: videoId,
-        playerVars: {
-          controls: 0,
-          showinfo: 0,
-          start: start,
-          end: end
-        },
-        events: {
-          'onReady': function(){
-            switch(framePlayerName){
-              case 'frame0':
-                $scope.$apply(function () {
-                        $scope.showSpinner0 = false;
-                });
-              break;
-              case 'frame1':
-                $scope.$apply(function () {
-                        $scope.showSpinner1 = false;
-                });
-              break;
-              case 'frame2':
-                $scope.$apply(function () {
-                        $scope.showSpinner2 = false;
-                });
-              break;
-              case 'frame3':
-                $scope.$apply(function () {
-                        $scope.showSpinner3 = false;
-                });
-              break;
-            }
-          },
-          'onStateChange': function(event){
-            //TODO: move into shared Youtube functionality service
-            switch(event.data){
-              case YT.PlayerState.PAUSED:
-                event.target.cueVideoById(
-                  {
-                    'videoId': videoId,
-                    'startSeconds': start,
-                    'endSeconds': end
-                  }
-                );
-                break;
-            } //switch
-          } //function
-        } //events
-      } //player config
-    ); //new player
-  };
-
   var stripOutVideoIdFromUrl = function(url){
     if( ! url) return url;
 
@@ -548,31 +484,22 @@ angular.module('storyBoard.createStory', [])
   };
 
   var previewAudioVideoFrame = function(currentFrameObject) {
-
-    switch(currentFrameObject.playerName){
-      case 'frame0':
-        $scope.showSpinner0 = false;
-      break;
-      case 'frame1':
-        $scope.showSpinner1 = false;
-      break;
-      case 'frame2':
-        $scope.showSpinner2 = false;
-      break;
-      case 'frame3':
-        $scope.showSpinner3 = false;
-      break;
-    }
-
     var previewAudioVideoPlayer = new VideoPlayer();
     var readyCallback =
       previewAudioVideoPlayer.play.bind(previewAudioVideoPlayer);
     var playbackFinishedCallback =
       previewAudioVideoPlayer.destroy.bind(previewAudioVideoPlayer);
+    var playingCallback = function () {};
+
+    $scope.showSpinner0 = false;
+    $scope.showSpinner1 = false;
+    $scope.showSpinner2 = false;
+    $scope.showSpinner3 = false;
 
     previewAudioVideoPlayer.create(currentFrameObject,
                                      readyCallback,
-                                     playbackFinishedCallback);
+                                     playbackFinishedCallback,
+                                     playingCallback);
   };
 
   $scope.previewImageFrame = function(frameId){
