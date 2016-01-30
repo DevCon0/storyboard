@@ -17,7 +17,6 @@ angular.module('storyBoard.storyStateMachineService',
 
   storyStateMachine.setStory = function(story, isSingleStoryView, scope){
     this.story = story;
-    console.log('story in storyStateMachine:', story);
     closureStoryHasEnded = false;
     closureIsSingleStoryView = isSingleStoryView;
     parentControllerScope = scope;

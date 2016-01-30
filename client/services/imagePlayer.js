@@ -10,7 +10,6 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
   ImagePlayer.prototype = Object.create(Player.prototype);
 
   ImagePlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
-    console.log('Creating image for storyFrame:', storyFrame);
     // Save image duration and end playback callback for later
     this.imageDuration = storyFrame.imageDuration;
     this.endPlaybackCallback = endPlaybackCallback;
