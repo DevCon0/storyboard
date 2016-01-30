@@ -80,7 +80,6 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
           this.alreadyStopped = true;
           break;
         case YT.PlayerState.PLAYING:
-          console.log('what is this',this.playingCallback);
           this.playingCallback();
           break;
 

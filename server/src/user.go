@@ -31,7 +31,7 @@ func loadProfile(w http.ResponseWriter, r *http.Request, username string) (error
 			http.StatusNotFound
 	}
 
-	// Convert the story id's from strings to bson object id's.
+	// Convert the story ids from strings to bson object ids.
 	storyIds := make([]bson.ObjectId, len(user.Stories))
 	for i, storyId := range user.Stories {
 		storyIds[i] = bson.ObjectIdHex(storyId)
@@ -65,7 +65,7 @@ func loadProfile(w http.ResponseWriter, r *http.Request, username string) (error
 // Verify password, create user token, update database, send token back
 func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Create a User struct from the request body.
-	user, err, status := parseBody(w, r)
+	user, err, status := parseForUserInfo(r)
 	if err != nil {
 		return err, status
 	}
@@ -103,7 +103,7 @@ func signin(w http.ResponseWriter, r *http.Request) (error, int) {
 // Add a user to the database.
 func signup(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Create a User struct from the request body.
-	user, err, status := parseBody(w, r)
+	user, err, status := parseForUserInfo(r)
 	if err != nil {
 		return err, status
 	}
@@ -201,8 +201,9 @@ func signout(w http.ResponseWriter, r *http.Request) (error, int) {
 	return nil, http.StatusOK
 }
 
-// Get user information from the response body and headers.
-func parseBody(w http.ResponseWriter, r *http.Request) (User, error, int) {
+// Get user information from the response body.
+func parseForUserInfo(r *http.Request) (User, error, int) {
+	_ = "breakpoint"
 	// Declare a variable for the user to sign in.
 	user := User{}
 
@@ -239,7 +240,7 @@ func verifyToken(userToken string) (error, int) {
 	return nil, http.StatusOK
 }
 
-// Return a bool whether the password submitted for a user is correct.
+// Determine whether the password submitted for a user is correct.
 func (u *User) verifyPassword() (error, int) {
 	// Make sure required fields are filled out.
 	if len(u.Password) <= 0 {
@@ -272,7 +273,7 @@ func (u *User) verifyPassword() (error, int) {
 			http.StatusUnauthorized
 	}
 
-	// Return true if no errors occurred.
+	// Password is verified.
 	return nil, http.StatusOK
 }
 
@@ -291,7 +292,6 @@ func (u *User) genToken(shouldUpdateInDb bool) (error, int) {
 	// Insert claims inside the token.
 	token.Claims["user"] = u
 	token.Claims["iat"] = time.Now().Unix()
-	// token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 	// Sign the token with the super secret password.
 	tokenString, err := token.SignedString(tokenSecret)
@@ -304,18 +304,17 @@ func (u *User) genToken(shouldUpdateInDb bool) (error, int) {
 	// Add the signed token to the User struct.
 	u.Token = tokenString
 
-	if !shouldUpdateInDb {
-		return nil, http.StatusOK
-	}
+	if shouldUpdateInDb {
+		// Update the token in the database.
+		err = usersCollection.Update(
+			bson.M{"username": u.Username},
+			bson.M{"$set": bson.M{"token": u.Token}});
 
-	// Update the token in the database.
-	if err = usersCollection.Update(
-		bson.M{"username": u.Username},
-		bson.M{"$set": bson.M{"token": u.Token}},
-	); err != nil {
-		fmt.Printf("Failed to update token in the database\n%v\n", err)
-		return fmt.Errorf("Internal Server Error"),
-			http.StatusInternalServerError
+		if err != nil {
+			fmt.Printf("Failed to update token in the database\n%v\n", err)
+			return fmt.Errorf("Internal Server Error"),
+				http.StatusInternalServerError
+		}
 	}
 
 	return nil, http.StatusOK

@@ -734,29 +734,20 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 		return err, status
 	}
 
-	// If the story contains GIF's,
+	// If the story contains GIFs,
 	//   remove the non-animated versions of them in the database.
 	numberOfFrames := len(story.Frames)
 	for i := 1; i < numberOfFrames; i++ {
 		frame := &story.Frames[i]
 
-		// Skip is the frame is not an image.
-		if frame.MediaType != 1 {
-			continue
-		}
+		frameIsAnImage := frame.MediaType == 1
+		imageIsAGIF := filepath.Ext(frame.ImageUrl) == ".gif"
+		gifIsInDatabase := filepath.Dir(frame.PreviewUrl) == "/api/images"
 
-		// Skip is the frame is not a GIF.
-		if filepath.Ext(frame.ImageUrl) != ".gif" {
-			continue
+		if frameIsAnImage && imageIsAGIF && gifIsInDatabase {
+			// Remove the file from the database.
+			go deleteNonAnimatedGif(frame.PreviewUrl)
 		}
-
-		// Skip if the PreviewUrl does not point to an image in the database.
-		if filepath.Dir(frame.PreviewUrl) != "/api/images" {
-			continue
-		}
-
-		// Remove the file from the database.
-		go deleteNonAnimatedGif(frame.PreviewUrl)
 	}
 
 	// Remove story data from the database.
