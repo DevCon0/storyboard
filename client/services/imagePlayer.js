@@ -1,10 +1,13 @@
-angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
+angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textToSpeechPlayer'])
 
-.factory('ImagePlayer', function(Player){
-  function ImagePlayer(){
+.factory('ImagePlayer', function(Player, TextToSpeechPlayer){
+  function ImagePlayer(narrationText){
     this.imageDuration = null;
     this.playerDiv = null;
     this.endPlaybackCallback = null;
+
+    this.narrationText = narrationText || '';
+    this.textToSpeechPlayer = null;
   }
 
   ImagePlayer.prototype = Object.create(Player.prototype);
@@ -20,6 +23,11 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
     var imageURL = storyFrame.imageUrl;
     var imgTagStr = '<img src=\"' + imageURL + '\" class=\"hiddenImagePlayerFrame\">';
     this.playerDiv.append(imgTagStr);
+
+    if (this.narrationText != "") {
+      this.textToSpeechPlayer = new TextToSpeechPlayer(true);
+      this.textToSpeechPlayer.create(storyFrame);
+    }
 
     readyCallback.call(this);
   };

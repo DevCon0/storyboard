@@ -80,13 +80,7 @@ angular.module('storyBoard.storyStateMachineService',
         player = new VideoPlayer();
         break;
       case 1:
-        player = new ImagePlayer();
-        if (storyFrame.narrationText != "") {
-          player.textToSpeechPlayer = new TextToSpeechPlayer();
-          player.textToSpeechPlayer.createWithSoundOnly(
-            storyFrame
-          );
-        }
+        player = new ImagePlayer(storyFrame.narrationText);
         break;
       case 2:
         player = new TextToSpeechPlayer();

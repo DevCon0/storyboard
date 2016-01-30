@@ -1,7 +1,8 @@
 angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
 
 .factory('TextToSpeechPlayer', function(Player){
-  function TextToSpeechPlayer(){
+  function TextToSpeechPlayer(isBackgroundPlayer){
+    this.isBackgroundPlayer = isBackgroundPlayer || false;
     this.playerDiv = null;
     this.utterance = null;
   }
@@ -10,11 +11,15 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
 
   TextToSpeechPlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
     this.utterance = new SpeechSynthesisUtterance(storyFrame.narrationText);
-    this.utterance.onend = endPlaybackCallback;
-
     this.utterance.voice = this._getBrowserSupportedVoice();
 
+    if (this.isBackgroundPlayer) {
+      return;
+    }
+
     // Add text to DOM
+    this.utterance.onend = endPlaybackCallback;
+
     var divId = '#' + storyFrame.playerDiv;
     this.playerDiv = angular.element(document.querySelector(divId));
     var paragraphTagStr = '<svg class="hiddenImagePlayerFrame text-to-speech-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152.0599975585938 176" enable-background="new 0 0 192 192"><path class="text-to-speech-image-background" d="m76 0c-41.97 0-76 34.03-76 76 0 39.76 36.24 72 76 72v28c46.18-23.42 76.06-61.11 76.06-100 0-41.97-34.09-76-76.06-76" fill="#212121"/><g class="text-to-speech-image-volume" fill="#fafafa"><path class="text-to-speech-image-volume-sound-1" stroke-width="1" d="m84 59.98c5.92 2.94 10 9.04 10 16.1 0 7.06-4.08 13.159-10 16.12v-32.22"/><path class="text-to-speech-image-volume-speaker" d="m76 44.08v64l-20-20h-16v-24h16l20-20"/><path class="text-to-speech-image-volume-sound-2" d="m84 41c16.02 3.64 28 17.94 28 35.08 0 17.14-11.98 31.44-28 35.08v-8.26c11.56-3.44 20-14.14 20-26.82 0-12.68-8.44-23.38-20-26.82v-8.26"/></g></svg>';
@@ -23,18 +28,12 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
     readyCallback.call(this);
   };
 
-  // Create a background player.
-  TextToSpeechPlayer.prototype.createWithSoundOnly = function(storyFrame){
-    this.utterance = new SpeechSynthesisUtterance(storyFrame.narrationText);
-    this.utterance.voice = this._getBrowserSupportedVoice();
-  };
-
   TextToSpeechPlayer.prototype.destroy = function(){
     window.speechSynthesis.cancel();
     // If this is being played in the background,
     //   i.e., created with 'TextToSpeechPlayer.prototype.createWithSoundOnly',
     //   it doesn't have a playerDiv.
-    if (this.playerDiv) {
+    if ( ! this.isBackgroundPlayer ) {
       this.playerDiv.empty();
     }
     this.utterance = null;
@@ -44,7 +43,7 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
     // If this is being played in the background,
     //   i.e., created with 'TextToSpeechPlayer.prototype.createWithSoundOnly',
     //   it doesn't have a playerDiv.
-    if (this.playerDiv) {
+    if ( ! this.isBackgroundPlayer ) {
       var paragraphTagStr = this.playerDiv.children();
       paragraphTagStr.addClass('showImagePlayerFrame');
     }
