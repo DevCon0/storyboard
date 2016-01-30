@@ -7,9 +7,14 @@ import (
 	"math/rand"
 	"net/http"
 	"path/filepath"
+	"regexp"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
+)
+
+var (
+	reGifUrlWithoutParams *regexp.Regexp
 )
 
 // GET request to 'api/stories/library'.
@@ -416,8 +421,12 @@ func saveStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			// Set an image frame's PreviewUrl.
 			case 1:
 
+				imageUrl := reGifUrlWithoutParams.ReplaceAllString(
+					frame.ImageUrl, "$1",
+				)
+
 				// Handle GIF images differently than other images.
-				switch filepath.Ext(frame.ImageUrl) {
+				switch filepath.Ext(imageUrl) {
 				case ".gif":
 					// Save a non-animated version of the GIF in the database.
 					previewUrl, err := saveNonAnimatedGif(frame.ImageUrl)
@@ -595,20 +604,22 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 
 			// Set an image frame's PreviewUrl.
 			case 1:
-				editedImageUrl := editedFrame.ImageUrl
+				editedImageUrl := reGifUrlWithoutParams.ReplaceAllString(
+					editedFrame.ImageUrl, "$1",
+				)
 
 				// Handle GIF images differently than other images.
 				switch filepath.Ext(editedImageUrl) {
 				case ".gif":
 					// Skip if the ImageUrl has not been edited.
-					if editedImageUrl == originalFrame.ImageUrl &&
+					if editedFrame.ImageUrl == originalFrame.ImageUrl &&
 						editedFrame.PreviewUrl != "" {
 						return
 					}
 
 					// Save a non-animated version of the GIF in the database.
 					nonAnimatedPreviewUrl, err := saveNonAnimatedGif(
-						editedImageUrl,
+						editedFrame.ImageUrl,
 					)
 
 					// Note the '==' here instead of the usual '!='.
@@ -627,13 +638,13 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 					// If an error occurred, treat the GIF as a normal image.
 					fmt.Printf(
 						"Failed to create a non-animated version of %v: %v\n",
-						editedImageUrl, err,
+						editedFrame.ImageUrl, err,
 					)
 					fallthrough
 
 				// For non-GIF images, set the PreviewUrl to the ImageUrl.
 				default:
-					(*editedFrame).PreviewUrl = editedImageUrl
+					(*editedFrame).PreviewUrl = editedFrame.ImageUrl
 				}
 
 			// Set a text-to-speech frame's PreviewUrl.
@@ -648,7 +659,10 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			// When switching media types,
 			// 	 delete any motionless versions of GIF's from the database.
 			if originalFrame.MediaType == 1 && editedFrame.MediaType != 1 {
-				if filepath.Ext(originalFrame.ImageUrl) == ".gif" {
+				originalImageUrl := reGifUrlWithoutParams.ReplaceAllString(
+					originalFrame.ImageUrl, "$1",
+				)
+				if filepath.Ext(originalImageUrl) == ".gif" {
 					go deleteNonAnimatedGif(originalFrame.PreviewUrl)
 				}
 			}
@@ -751,7 +765,10 @@ func deleteStory(w http.ResponseWriter, r *http.Request, storyId string) (error,
 		}
 
 		// Skip is the frame is not a GIF.
-		if filepath.Ext(frame.ImageUrl) != ".gif" {
+		imageUrl := reGifUrlWithoutParams.ReplaceAllString(
+			frame.ImageUrl, "$1",
+		)
+		if filepath.Ext(imageUrl) != ".gif" {
 			continue
 		}
 
