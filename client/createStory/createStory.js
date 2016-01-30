@@ -505,13 +505,13 @@ angular.module('storyBoard.createStory', [])
         throw('Whoa, amazing, you put an image in an audio track');
         break;
       case 1:
-        $scope.addFrame1ImagePreview = true;
+        $scope.addFrame1ImagePreview = !$scope.addFrame1ImagePreview;
         break;
       case 2:
-        $scope.addFrame2ImagePreview = true;
+        $scope.addFrame2ImagePreview = !$scope.addFrame2ImagePreview;
         break;
       case 3:
-        $scope.addFrame3ImagePreview = true;
+        $scope.addFrame3ImagePreview = !$scope.addFrame3ImagePreview;
         break;
     }
   };
