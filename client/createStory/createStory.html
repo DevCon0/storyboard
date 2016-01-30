@@ -14,8 +14,8 @@
             <label for="storyThumbnailUrlInput">Story Thumbnail URL</label>
             <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
           </div>
-          <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <input type="button" class="btn btn-default" value="Add audio backing track" ng-click="toggleBackingTrack()"></input>
+          <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg">
+          <input type="button" class="btn btn-default" value="{{audioTrackDisplay}}" ng-click="toggleSoundTrack()">
           <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button>
       </form>
       <div class="row clean"></div>
@@ -82,7 +82,7 @@
         <form ng-submit="previewTextToSpeechFrame(1)">
           <div class="form-group">
             <label for="textToSpeechNarration1">Narration</label>
-            <textarea ng-model="$parent.frame1NarrationText" id="textToSpeechNarration1" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+            <textarea  maxlength="600" ng-model="$parent.frame1NarrationText" id="textToSpeechNarration1" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
           </div>
           <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -146,7 +146,7 @@
         <form ng-submit="previewTextToSpeechFrame(2)">
           <div class="form-group">
             <label for="textToSpeechNarration2">Narration</label>
-            <textarea ng-model="$parent.frame2NarrationText" id="textToSpeechNarration2" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+            <textarea  maxlength="600" ng-model="$parent.frame2NarrationText" id="textToSpeechNarration2" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
           </div>
           <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -210,7 +210,7 @@
         <form ng-submit="previewTextToSpeechFrame(3)">
           <div class="form-group">
             <label for="textToSpeechNarration3">Narration</label>
-            <textarea ng-model="$parent.frame3NarrationText" id="textToSpeechNarration3" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+            <textarea  maxlength="600" ng-model="$parent.frame3NarrationText" id="textToSpeechNarration3" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
           </div>
           <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -219,7 +219,7 @@
     </paper-card>
   </div>
  <!-- Act Zero AUDIO /////////////////////////////////////////////////////////////////////// -->
-  <div ng-show="addBackingTrack" class="creationFrameDiv col-md-2">
+  <div ng-show="addSoundTrack" class="creationFrameDiv col-md-2">
     <paper-card heading="Audio Track" elevation="3" class="create-story-paper-card">
  <!-- Act Zero AUDIO  ******************************** -->
         <form ng-submit="previewFrame(0)">
