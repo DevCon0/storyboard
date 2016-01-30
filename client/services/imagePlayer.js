@@ -10,6 +10,7 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
   ImagePlayer.prototype = Object.create(Player.prototype);
 
   ImagePlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
+    console.log('Creating image for storyFrame:', storyFrame);
     // Save image duration and end playback callback for later
     this.imageDuration = storyFrame.imageDuration;
     this.endPlaybackCallback = endPlaybackCallback;
@@ -24,6 +25,7 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
     readyCallback.call(this);
   };
 
+  // This doesn't seem to ever get called.
   ImagePlayer.prototype.destroy = function(){
     this.playerDiv.empty();
   };
@@ -33,11 +35,18 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
     imgTag.addClass('showImagePlayerFrame');
     var durationInMilliseconds = this.imageDuration * 1000;
     var boundEndPlaybackCallback = this.endPlaybackCallback.bind(this);
+
+    var textToSpeechPlayer = this.textToSpeechPlayer;
+    if (textToSpeechPlayer) {
+      textToSpeechPlayer.play();
+    }
+
     setTimeout(function(){
-        boundEndPlaybackCallback();
-      },
-      durationInMilliseconds
-    );
+      if (textToSpeechPlayer) {
+        textToSpeechPlayer.destroy();
+      }
+      boundEndPlaybackCallback();
+    }, durationInMilliseconds);
   };
 
   return ImagePlayer;

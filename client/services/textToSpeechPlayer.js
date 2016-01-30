@@ -23,15 +23,31 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
     readyCallback.call(this);
   };
 
+  // Create a background player.
+  TextToSpeechPlayer.prototype.createWithSoundOnly = function(storyFrame){
+    this.utterance = new SpeechSynthesisUtterance(storyFrame.narrationText);
+    this.utterance.voice = this._getBrowserSupportedVoice();
+  };
+
   TextToSpeechPlayer.prototype.destroy = function(){
     window.speechSynthesis.cancel();
-    this.playerDiv.empty();
+    // If this is being played in the background,
+    //   i.e., created with 'TextToSpeechPlayer.prototype.createWithSoundOnly',
+    //   it doesn't have a playerDiv.
+    if (this.playerDiv) {
+      this.playerDiv.empty();
+    }
     this.utterance = null;
   };
 
   TextToSpeechPlayer.prototype.play = function(){
-    var paragraphTagStr = this.playerDiv.children();
-    paragraphTagStr.addClass('showImagePlayerFrame');
+    // If this is being played in the background,
+    //   i.e., created with 'TextToSpeechPlayer.prototype.createWithSoundOnly',
+    //   it doesn't have a playerDiv.
+    if (this.playerDiv) {
+      var paragraphTagStr = this.playerDiv.children();
+      paragraphTagStr.addClass('showImagePlayerFrame');
+    }
     window.speechSynthesis.speak(this.utterance);
   };
 
