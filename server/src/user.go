@@ -218,11 +218,7 @@ func parseBody(w http.ResponseWriter, r *http.Request) (User, error, int) {
 			http.StatusBadRequest
 	}
 
-	// Get the token from the header.
-	var status int
-	user.Token, err, status = getUserToken(r)
-
-	return user, err, status
+	return user, err, http.StatusOK
 }
 
 // Return a bool whether a user's token is valid.
