@@ -595,7 +595,6 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 
 			// Set an image frame's PreviewUrl.
 			case 1:
-
 				editedImageUrl := editedFrame.ImageUrl
 
 				// Handle GIF images differently than other images.
@@ -644,6 +643,14 @@ func editStory(w http.ResponseWriter, r *http.Request) (error, int) {
 			// Set an audio frame's PreviewUrl.
 			case 3:
 				editedFrame.PreviewUrl = ""
+			}
+
+			// When switching media types,
+			// 	 delete any motionless versions of GIF's from the database.
+			if originalFrame.MediaType == 1 && editedFrame.MediaType != 1 {
+				if filepath.Ext(originalFrame.ImageUrl) == ".gif" {
+					go deleteNonAnimatedGif(originalFrame.PreviewUrl)
+				}
 			}
 		}(i)
 	}
