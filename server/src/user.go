@@ -211,30 +211,30 @@ func parseBody(w http.ResponseWriter, r *http.Request) (User, error, int) {
 	//   the problem most likely is a mismatch
 	//   between the User type and the JSON object.
 	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&user); err != nil {
+	var err error
+	if err = decoder.Decode(&user); err != nil {
 		fmt.Printf("Failed to decode JSON object in the request\n%v\n", err)
 		return user, fmt.Errorf("Invalid JSON object\n"),
 			http.StatusBadRequest
 	}
 
 	// Get the token from the header.
-	user.Token = r.Header.Get("token")
+	var status int
+	user.Token, err, status = getUserToken(r)
 
-	// fmt.Printf("user: %#v\n\n", user)
-
-	return user, nil, http.StatusOK
+	return user, err, status
 }
 
 // Return a bool whether a user's token is valid.
 // If not, send an http error.
-func (u *User) verifyToken() (error, int) {
+func verifyToken(userToken string) (error, int) {
 	// Parse the token with the tokenSecret.
-	token, err := jwt.Parse(u.Token, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(userToken, func(token *jwt.Token) (interface{}, error) {
 		return tokenSecret, nil
 	})
 	if err != nil || !token.Valid {
 		if err != nil {
-			fmt.Printf("What? %v\n", err)
+			fmt.Printf("Error verifying token: %v\n", err)
 		}
 		return fmt.Errorf("Invalid Token\n"),
 			http.StatusUnauthorized
@@ -325,13 +325,20 @@ func (u *User) genToken(shouldUpdateInDb bool) (error, int) {
 	return nil, http.StatusOK
 }
 
+func getUserToken(r * http.Request) (string, error, int) {
+	token := r.Header.Get("token")
+	err, status := verifyToken(token)
+	return token, err, status
+}
+
 // Get user info from the token in the header.
 // Query the database for the token,
 //   and return the data received.
 func (u *User) getInfoFromHeaderSync(r *http.Request) (error, int) {
 	// Get user info from the token in the header.
-	u.Token = r.Header.Get("token")
-	err, status := u.verifyToken()
+	var err error
+	var status int
+	u.Token, err, status = getUserToken(r)
 	if err != nil {
 		return err, status
 	}

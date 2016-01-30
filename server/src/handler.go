@@ -17,8 +17,6 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Append the present working directory to the filename.
-	//    "/bower_components/mithril/mithril.min.js"
-	// => "/$PWD/client/bower_components/mithril/mithril.min.js"
 	title := concat(rootDir, slash, "client", slash, fileRequested)
 
 	http.ServeFile(w, r, title)
@@ -86,47 +84,47 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 		errBadLocation := fmt.Errorf("Unsupported location: %v", r.URL.Path)
 
 		switch r.Method {
-		case "GET":
-			switch directory {
-			case "story":
-				return getStory(w, r, file)
-			case "library":
-				return library(w, r, file)
-			case "showcase":
-				// return showCase(w, r)
-				return showCaseRandom(w, r)
-			case "tags":
-				return searchStories(w, r, file)
+			case "GET":
+				switch directory {
+					case "story":
+						return getStory(w, r, file)
+					case "library":
+						return getLibrary(w, r, file)
+					case "showcase":
+						// return showCase(w, r)
+						return getShowCaseRandom(w, r)
+					case "tags":
+						return searchStories(w, r, file)
+					default:
+						return errBadLocation, http.StatusBadRequest
+				}
+			case "POST":
+				switch directory {
+					case "story":
+						return saveStory(w, r)
+					case "votes":
+						return postVote(w, r)
+					default:
+						return errBadLocation,
+							http.StatusBadRequest
+				}
+			case "PUT":
+				switch directory {
+					case "story":
+						return editStory(w, r)
+					default:
+						return errBadLocation, http.StatusBadRequest
+				}
+			case "DELETE":
+				switch directory {
+					case "story":
+						return deleteStory(w, r, file)
+					default:
+						return errBadLocation, http.StatusBadRequest
+				}
 			default:
-				return errBadLocation, http.StatusBadRequest
+				return errBadMethod, http.StatusBadRequest
 			}
-		case "POST":
-			switch directory {
-			case "story":
-				return saveStory(w, r)
-			case "votes":
-				return postVote(w, r)
-			default:
-				return errBadLocation,
-					http.StatusBadRequest
-			}
-		case "PUT":
-			switch directory {
-			case "story":
-				return editStory(w, r)
-			default:
-				return errBadLocation, http.StatusBadRequest
-			}
-		case "DELETE":
-			switch directory {
-			case "story":
-				return deleteStory(w, r, file)
-			default:
-				return errBadLocation, http.StatusBadRequest
-			}
-		default:
-			return errBadMethod, http.StatusBadRequest
-		}
 	}()
 	if err != nil {
 		fmt.Println(err)

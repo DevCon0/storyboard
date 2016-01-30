@@ -21,7 +21,7 @@ var (
 // Respond with the full data for all of the stories
 //   created by a signed-in user.
 //   Find the user's stories by using the token in the request header.
-func library(w http.ResponseWriter, r *http.Request, userId string) (error, int) {
+func getLibrary(w http.ResponseWriter, r *http.Request, userId string) (error, int) {
 	// Get user info from the database, using the token in the header.
 	user := User{}
 	err, status := user.getInfoFromHeaderSync(r)
@@ -87,8 +87,8 @@ func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
 }
 
 // GET request to 'api/stories/showcase'.
-// Respond with the full data for 3 random stories.
-func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
+// Respond with the full data for 16 random stories.
+func getShowCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Get all stories from the database.
 	stories := []Story{}
 	err := storiesCollection.Find(nil).All(&stories)
@@ -104,16 +104,16 @@ func showCaseRandom(w http.ResponseWriter, r *http.Request) (error, int) {
 	// Randomize the stories.
 	numberOfStories := len(stories)
 	// Declare a slice which will contain the random numbers used.
-	randomNumbers := []int{}
+	randomNumbers := IntSlice{}
 	// Make an array which will serve as a randomized copy of 'stories'.
-	limit := 15
+	limit := 16
 	randomStories := make([]Story, limit)
 
 	i := 0
 	for {
 		// Get a random number between 0 and the number of stories.
 		randomIndex := rand.Intn(numberOfStories)
-		if intSlcContains(randomNumbers, randomIndex) {
+		if randomNumbers.contains(randomIndex) {
 			continue
 		}
 		randomNumbers = append(randomNumbers, randomIndex)
@@ -290,9 +290,11 @@ func verifyStoryStructure(stories []Story) {
 	}
 }
 
-func intSlcContains(slc []int, q int) bool {
-	for _, n := range slc {
-		if n == q {
+type IntSlice []int
+
+func (slice IntSlice) contains(target int) bool {
+	for _, integer := range slice {
+		if integer == target {
 			return true
 		}
 	}
