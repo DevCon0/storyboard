@@ -24,7 +24,6 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player'])
     readyCallback.call(this);
   };
 
-  // This doesn't seem to ever get called.
   ImagePlayer.prototype.destroy = function(){
     this.playerDiv.empty();
   };
