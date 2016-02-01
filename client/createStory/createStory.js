@@ -27,8 +27,11 @@ angular.module('storyBoard.createStory', [])
   $scope.showSpinner3 = false;
   $scope.addFrame3ImagePreview = false;
 
-  $scope.addSoundTrack = false;
+  $scope.addSoundtrack = false;
   $scope.audioTrackDisplay = "Add Soundtrack";
+  $scope.addNarration1 = false;
+  $scope.addNarration2 = false;
+  $scope.addNarration3 = false;
 
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
@@ -45,10 +48,10 @@ angular.module('storyBoard.createStory', [])
     // test for videoId to show or hide in create/edit view
     if (editStory.frames[0].videoId !== "") {
       $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
-      $scope.addSoundTrack = true;
+      $scope.addSoundtrack = true;
     } else {
       $scope.frame0YoutubeUrl = "";
-      $scope.addSoundTrack = false;
+      $scope.addSoundtrack = false;
     }
     $scope.frame0StartTime = editStory.frames[0].start;
     $scope.frame0EndTime = editStory.frames[0].end;
@@ -543,9 +546,10 @@ angular.module('storyBoard.createStory', [])
                                      playbackFinishedCallback);
   };
 
-  $scope.toggleSoundTrack = function () {
-    $scope.addSoundTrack = !$scope.addSoundTrack;
-    if ($scope.addSoundTrack) {
+  $scope.toggleSoundtrack = function () {
+    $scope.addSoundtrack = !$scope.addSoundtrack;
+    console.log('addSoundtrack', $scope.addSoundtrack)
+    if ($scope.addSoundtrack) {
       $scope.audioTrackDisplay = "Destory Soundtrack";
     } else {
       $scope.audioTrackDisplay = "Add Soundtrack";
@@ -558,6 +562,20 @@ angular.module('storyBoard.createStory', [])
     $scope.frame0ImageUrl = null;
     $scope.frame0UrlDuration = null;
   };
+
+  $scope.toggleNarration = function (frameId) {
+    switch (frameId) {
+    case 1:
+      $scope.addNarration1 = !$scope.addNarration1;
+      break;
+    case 2:
+      $scope.addNarration2 = !$scope.addNarration2;
+      break;
+    case 3:
+      $scope.addNarration3 = !$scope.addNarration3;
+      break;
+    }
+  }
 
 });
 
