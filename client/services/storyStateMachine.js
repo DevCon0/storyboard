@@ -32,15 +32,19 @@ angular.module('storyBoard.storyStateMachineService',
     var lastFrame = storyFrames.length - 1;
     for(var i = lastFrame; i >= 0; i--) {
       var currentStoryFrame = storyFrames[i];
+
       var readyCallback = this._determineReadyCallback(i, hasSoundtrack);
       var endPlayBackCallback = this._determineEndPlaybackCallback(i);
-      var newFramePlayer = this._createPlayer(currentStoryFrame.mediaType);
+      var newFramePlayer = this._createPlayer(currentStoryFrame);
       var playingCallback = this._determinePlayingCallback(i);
+
       newFramePlayer.create(
         currentStoryFrame,
         readyCallback,
         endPlayBackCallback,
-        playingCallback);
+        playingCallback
+      );
+
       this.players.unshift(newFramePlayer);
     }
   };
@@ -63,20 +67,20 @@ angular.module('storyBoard.storyStateMachineService',
     parentControllerScope = null;
   };
 
-  storyStateMachine._createPlayer = function(mediaType){
+  storyStateMachine._createPlayer = function(storyFrame){
     var player = null;
     // TODO: Old story backwards compatibility
-    if(mediaType === undefined){
-      mediaType = 0;
+    if(storyFrame.mediaType === undefined){
+      storyFrame.mediaType = 0;
     }
     // End backwards compatiblity
 
-    switch(mediaType){
+    switch(storyFrame.mediaType){
       case 0:
         player = new VideoPlayer();
         break;
       case 1:
-        player = new ImagePlayer();
+        player = new ImagePlayer(storyFrame.narrationText);
         break;
       case 2:
         player = new TextToSpeechPlayer();
