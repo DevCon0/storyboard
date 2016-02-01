@@ -30,10 +30,10 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
     this.playerDiv.append(imgTagStr);
 
     if (this.textToSpeechPlayer) {
-      var readyCallback = function() {};
-      var endPlaybackCallback = function() {};
+      var dummyReadyCallback = function() {};
+      var dummyEndPlaybackCallback = function() {};
       this.textToSpeechPlayer.create(
-        storyFrame, readyCallback, endPlaybackCallback
+        storyFrame, dummyReadyCallback, dummyEndPlaybackCallback
       );
     }
 
