@@ -135,7 +135,7 @@ angular.module('storyBoard.storyStateMachineService',
 
   storyStateMachine._firstFrameReady = function(){
     if (closureIsSingleStoryView) {
-      parentControllerScope.firstFrameLoaded = true;
+      parentControllerScope.isFirstFrameLoaded = true;
       _growAct1();
     }
     // Here, *this* will refer to the first frame player

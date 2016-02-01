@@ -1,8 +1,8 @@
 <div class="single-story-outer">
-    <div ng-hide="firstFrameLoaded" class="single-story-inner">
+    <div ng-hide="isFirstFrameLoaded" class="single-story-inner">
         <img class="single-story-spinner" src="http://www.tenniswake.fr/tennis/annonces-tennis/images/ajax-loader-tennis.gif" />
     </div>
-    <div ng-show="firstFrameLoaded" class="single-story-inner">
+    <div ng-show="isFirstFrameLoaded" class="single-story-inner">
         <div class="row">
             <div class="act1 col-md-4 player-video" ng-class="act1divclass">
                 <div id="player1" class="center-it"></div>
