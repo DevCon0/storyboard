@@ -6,6 +6,7 @@ angular.module('storyBoard.singleStory', [])
   $scope.act1divclass = '';
   $scope.act2divclass = '';
   $scope.act3divclass = '';
+  $scope.isFirstFrameLoaded = false;
 
   var storyID = $stateParams.storyId;
   var token = localStorageService.get('sessionToken');
