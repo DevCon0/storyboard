@@ -61,11 +61,9 @@ func getLibrary(w http.ResponseWriter, r *http.Request, userId string) (error, i
 }
 
 // GET request to 'api/stories/showcase'.
-// Respond with the full data for the top 3 stories.
-func showCase(w http.ResponseWriter, r *http.Request) (error, int) {
+func getShowCase(w http.ResponseWriter, r *http.Request) (error, int) {
 	stories := []Story{}
-
-	err := storiesCollection.Find(nil).Limit(3).Sort("rating").All(
+	err := storiesCollection.Find(nil).Sort("-views").All(
 		&stories,
 	)
 	if err != nil {

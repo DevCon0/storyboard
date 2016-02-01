@@ -81,18 +81,30 @@
 .topStoryframe a
 .infoContainer .infoBackground {
   display: block;
-  padding: 1.5em;
+  padding-top: 0em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
   margin: 0;
 }
 
 .topStoryframe a
 .infoContainer .infoBackground
-.storyInfo h2 {
+.storyInfo .caption-title {
   font-size: 2.5em;
   color: #FAFAFA;
   text-shadow: 1px 1px 5px rgba(250,250,250,.4);
   margin: 0;
   text-decoration: none;
+}
+
+.topStoryframe a
+.infoContainer .infoBackground
+.storyInfo .views-text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: white;
+  margin-top: 0em;
+  padding-top: 0em;
 }
 
 /*.caption*/
@@ -110,8 +122,6 @@
   right: 0;
   bottom: 0;
   top: 20em;
-  /*transition-property: top;*/
-  /*transition-duration: 0.2s;  */
   width: 100%;
   height: 100%;
   z-index: -1;
@@ -122,11 +132,21 @@
 
 .topStoryframe a
 .infoContainer .infoBackground
-.caption h2 {
+.caption .caption-title {
   color: #FAFAFA;
   text-shadow: 1px 1px 5px rgba(250,250,250,.4);
   font-size: 2.5em;
-  margin-bottom: 1em;
+  margin-bottom: 0em;
+}
+
+.topStoryframe a
+.infoContainer .infoBackground
+.caption .views-text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: white;
+  margin-top: 0em;
+  padding-top: 0em;
 }
 
 .topStoryframe a
@@ -135,8 +155,7 @@
   color: #4285f4;
   display: none;
   position: absolute;
-  margin-top: .5em;
-  transition: all 0.2s;  
+  margin-top: 0em;
   width: 90%;
   font-size: 1.5em;
   text-shadow: 1px 1px 5px rgba(66,133,244,.54);
@@ -173,12 +192,17 @@
 
 .topStoryframe a:hover
 .infoContainer .infoBackground
-.storyInfo h2 {
+.storyInfo .caption-title {
   color: rgba(0, 0, 0, 0);
   text-shadow: none;
   text-decoration: none;
-  /*text-shadow: 1px 1px 5px rgba(250,250,250,.4);*/
   font-size: 2.5em;
+}
+
+.topStoryframe a:hover
+.infoContainer .infoBackground
+.storyInfo .views-text {
+  color: rgba(0, 0, 0, 0);
 }
 
 .topStoryframe a:hover
@@ -186,8 +210,8 @@
 .caption {
   background-color: rgba(0, 0, 0, 0.95);
   color: #FAFAFA;
+  padding-top: 0em;
   padding: 1.5em;
-  padding-top: 0;
   z-index: 10;
   margin: 0;
 
@@ -209,9 +233,9 @@
 
 .topStoryframe a:hover
 .infoContainer .infoBackground
-.caption h2 {
-  /*text-shadow: none;*/
+.caption .caption-title {
   text-decoration: none;
   text-shadow: 1px 1px 5px rgba(250,250,250,.4);
   font-size: 2.5em;
 }
+
