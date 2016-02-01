@@ -36,3 +36,8 @@ to see if I can animate the svg.*/
   stroke-width: 1;
   transition: stroke-dashoffset 8s linear;*/
 }
+.single-story-spinner {
+    height: 428px;
+    width:760px;
+    margin-left: 20%;
+}
