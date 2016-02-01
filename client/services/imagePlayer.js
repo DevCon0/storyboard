@@ -70,7 +70,7 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
     var boundEndPlaybackCallback = this.endPlaybackCallback.bind(this);
 
     if (this.textToSpeechPlayer) {
-      this.textToSpeechPlayer.play();;
+      this.textToSpeechPlayer.play();
     }
 
     setTimeout(function(){
