@@ -48,9 +48,6 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
     }
 
     setTimeout(function(){
-      if (textToSpeechPlayer) {
-        textToSpeechPlayer.destroy();
-      }
       boundEndPlaybackCallback();
     }, durationInMilliseconds);
   };
