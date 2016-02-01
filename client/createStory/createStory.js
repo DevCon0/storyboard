@@ -33,6 +33,9 @@ angular.module('storyBoard.createStory', [])
   $scope.addNarration1 = false;
   $scope.addNarration2 = false;
   $scope.addNarration3 = false;
+  $scope.narration1Display = "Add Narration";
+  $scope.narration2Display = "Add Narration";
+  $scope.narration3Display = "Add Narration";
 
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
@@ -296,7 +299,7 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0,
           narrationText: $scope.frame1NarrationText,
-          narrationDelay: $scope.frame1NarrationDelay
+          narrationDelay: $scope.frame1NarrationDelay ? parseFloat($scope.frame1NarrationDelay) : 0
         },
         {
           mediaType: parseInt($scope.frame2MediaType),
@@ -310,7 +313,7 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0,
           narrationText: $scope.frame2NarrationText,
-          narrationDelay: $scope.frame2NarrationDelay
+          narrationDelay: $scope.frame2NarrationDelay ? parseFloat($scope.frame2NarrationDelay) : 0
         },
         {
           mediaType: parseInt($scope.frame3MediaType),
@@ -324,7 +327,7 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame3ImageUrl,
           imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0,
           narrationText: $scope.frame3NarrationText,
-          narrationDelay: $scope.frame3NarrationDelay
+          narrationDelay: $scope.frame3NarrationDelay ? parseFloat($scope.frame3NarrationDelay) : 0
         }
       ]
     }
@@ -582,13 +585,28 @@ angular.module('storyBoard.createStory', [])
   $scope.toggleNarration = function (frameId) {
     switch (frameId) {
     case 1:
-        $scope.addNarration1 = !$scope.addNarration1;
+      $scope.addNarration1 = !$scope.addNarration1;
+      if ($scope.addNarration1) {
+        $scope.narration1Display = "Remove Narration";
+      } else {
+        $scope.narration1Display = "Add Narration";
+      }
       break;
     case 2:
       $scope.addNarration2 = !$scope.addNarration2;
+      if ($scope.addNarration2) {
+        $scope.narration2Display = "Remove Narration";
+      } else {
+        $scope.narration2Display = "Add Narration";
+      }
       break;
     case 3:
       $scope.addNarration3 = !$scope.addNarration3;
+      if ($scope.addNarration3) {
+        $scope.narration3Display = "Remove Narration";
+      } else {
+        $scope.narration3Display = "Add Narration";
+      }
       break;
     }
   }
