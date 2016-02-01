@@ -7,6 +7,11 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
     this.endPlaybackCallback = null;
 
     this.narrationText = narrationText || '';
+    var containsNarrationText = this.narrationText !== '';
+    if (containsNarrationText) {
+      var isBackgroundPlayer = true;
+      this.textToSpeechPlayer = new TextToSpeechPlayer(isBackgroundPlayer);
+    }
     this.textToSpeechPlayer = null;
   }
 
@@ -24,8 +29,7 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
     var imgTagStr = '<img src=\"' + imageURL + '\" class=\"hiddenImagePlayerFrame\">';
     this.playerDiv.append(imgTagStr);
 
-    if (this.narrationText != "") {
-      this.textToSpeechPlayer = new TextToSpeechPlayer(true);
+    if (this.textToSpeechPlayer) {
       this.textToSpeechPlayer.create(storyFrame);
     }
 
@@ -42,9 +46,9 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
     var durationInMilliseconds = this.imageDuration * 1000;
     var boundEndPlaybackCallback = this.endPlaybackCallback.bind(this);
 
-    var textToSpeechPlayer = this.textToSpeechPlayer;
-    if (textToSpeechPlayer) {
-      textToSpeechPlayer.play();
+    var closureTextToSpeechPlayer = this.textToSpeechPlayer;
+    if (closureTextToSpeechPlayer) {
+      closureTextToSpeechPlayer.play();;
     }
 
     setTimeout(function(){
