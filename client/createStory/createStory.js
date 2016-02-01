@@ -590,6 +590,8 @@ angular.module('storyBoard.createStory', [])
         $scope.narration1Display = "Remove Narration";
       } else {
         $scope.narration1Display = "Add Narration";
+        $scope.frame1NarrationText = null;
+        $scope.frame1NarrationDelay = null;
       }
       break;
     case 2:
@@ -598,6 +600,8 @@ angular.module('storyBoard.createStory', [])
         $scope.narration2Display = "Remove Narration";
       } else {
         $scope.narration2Display = "Add Narration";
+        $scope.frame2NarrationText = null;
+        $scope.frame2NarrationDelay = null;
       }
       break;
     case 3:
@@ -606,6 +610,8 @@ angular.module('storyBoard.createStory', [])
         $scope.narration3Display = "Remove Narration";
       } else {
         $scope.narration3Display = "Add Narration";
+        $scope.frame3NarrationText = null;
+        $scope.frame3NarrationDelay = null;
       }
       break;
     }
