@@ -5,6 +5,7 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
     this.imageDuration = null;
     this.playerDiv = null;
     this.endPlaybackCallback = null;
+    this.textToSpeechPlayer = null;
 
     this.narrationText = narrationText || '';
     var containsNarrationText = this.narrationText !== '';
@@ -12,12 +13,11 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
       var isBackgroundPlayer = true;
       this.textToSpeechPlayer = new TextToSpeechPlayer(isBackgroundPlayer);
     }
-    this.textToSpeechPlayer = null;
   }
 
   ImagePlayer.prototype = Object.create(Player.prototype);
 
-  ImagePlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
+  ImagePlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback) {
     // Save image duration and end playback callback for later
     this.imageDuration = storyFrame.imageDuration;
     this.endPlaybackCallback = endPlaybackCallback;
