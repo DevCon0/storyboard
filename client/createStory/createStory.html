@@ -79,7 +79,7 @@
         <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act I NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame1MediaType == 2 || addNarration1">
+      <div ng-if="frame1MediaType == 2 || (addNarration1 && frame1MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(1)">
           <div class="form-group">
             <label for="textToSpeechNarration1">Narration</label>
@@ -148,7 +148,7 @@
         <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act II NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame2MediaType == 2 || addNarration2">
+      <div ng-if="frame2MediaType == 2 || (addNarration2 && frame2MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(2)">
           <div class="form-group">
             <label for="textToSpeechNarration2">Narration</label>
@@ -217,7 +217,7 @@
         <div class="frameImagePreviewDiv" ng-show="addFrame3ImagePreview"><img ng-src="{{$parent.frame3ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act III NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame3MediaType == 2 || addNarration3">
+      <div ng-if="frame3MediaType == 2 || (addNarration3 && frame3MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(3)">
           <div class="form-group">
             <label for="textToSpeechNarration3">Narration</label>

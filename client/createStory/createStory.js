@@ -29,6 +29,7 @@ angular.module('storyBoard.createStory', [])
 
   $scope.addSoundtrack = false;
   $scope.audioTrackDisplay = "Add Soundtrack";
+
   $scope.addNarration1 = false;
   $scope.addNarration2 = false;
   $scope.addNarration3 = false;
@@ -73,6 +74,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1ImageUrl = editStory.frames[1].imageUrl;
     $scope.frame1UrlDuration = editStory.frames[1].imageDuration;
     $scope.frame1NarrationText = editStory.frames[1].narrationText;
+    $scope.frame1NarrationDelay = editStory.frames[1].narrationDelay;
 
     // TODO: remove backwards compatibility
     if(editStory.frames[2].mediaType !== undefined) {
@@ -87,6 +89,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2ImageUrl = editStory.frames[2].imageUrl;
     $scope.frame2UrlDuration = editStory.frames[2].imageDuration;
     $scope.frame2NarrationText = editStory.frames[2].narrationText;
+    $scope.frame2NarrationDelay = editStory.frames[2].narrationDelay;
 
     // TODO: remove backwards compatibility
     if(editStory.frames[3].mediaType !== undefined) {
@@ -101,6 +104,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3ImageUrl = editStory.frames[3].imageUrl;
     $scope.frame3UrlDuration = editStory.frames[3].imageDuration;
     $scope.frame3NarrationText = editStory.frames[3].narrationText;
+    $scope.frame3NarrationDelay = editStory.frames[3].narrationDelay;
   } else {
     $scope.storyTitle = null;
     $scope.storyDescription = null;
@@ -123,6 +127,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1ImageUrl = null;
     $scope.frame1UrlDuration = null;
     $scope.frame1NarrationText = null;
+    $scope.frame1NarrationDelay = null;
 
     $scope.frame2MediaType = null;
     $scope.frame2YoutubeUrl = null;
@@ -132,6 +137,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2ImageUrl = null;
     $scope.frame2UrlDuration = null;
     $scope.frame2NarrationText = null;
+    $scope.frame2NarrationDelay = null;
 
     $scope.frame3MediaType = null;
     $scope.frame3YoutubeUrl = null;
@@ -141,6 +147,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
     $scope.frame3NarrationText = null;
+    $scope.frame3NarrationDelay = null;
   }
 
   $scope.prepopulateInputs = function(){
@@ -273,7 +280,9 @@ angular.module('storyBoard.createStory', [])
           volume: parseInt($scope.frame0Volume),
           imageUrl: $scope.frame0ImageUrl,
           imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0,
-          narrationText: null /* Not applicable $scope.frame0NarrationText*/
+          /* Not applicable $scope.frame0NarrationText*/
+          narrationText: null,
+          narrationDelay: null
         },
         {
           mediaType: parseInt($scope.frame1MediaType),
@@ -286,7 +295,8 @@ angular.module('storyBoard.createStory', [])
           previewUrl: (wasPassed)? $stateParams.story.frames[1].previewUrl: "",
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0,
-          narrationText: $scope.frame1NarrationText
+          narrationText: $scope.frame1NarrationText,
+          narrationDelay: $scope.frame1NarrationDelay
         },
         {
           mediaType: parseInt($scope.frame2MediaType),
@@ -299,7 +309,8 @@ angular.module('storyBoard.createStory', [])
           previewUrl: (wasPassed)? $stateParams.story.frames[2].previewUrl: "",
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0,
-          narrationText: $scope.frame2NarrationText
+          narrationText: $scope.frame2NarrationText,
+          narrationDelay: $scope.frame2NarrationDelay
         },
         {
           mediaType: parseInt($scope.frame3MediaType),
@@ -312,7 +323,8 @@ angular.module('storyBoard.createStory', [])
           previewUrl: (wasPassed)? $stateParams.story.frames[3].previewUrl: "",
           imageUrl: $scope.frame3ImageUrl,
           imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0,
-          narrationText: $scope.frame3NarrationText
+          narrationText: $scope.frame3NarrationText,
+          narrationDelay: $scope.frame3NarrationDelay
         }
       ]
     }
@@ -348,7 +360,9 @@ angular.module('storyBoard.createStory', [])
           volume: $scope.frame0Volume,
           imageUrl: $scope.frame0ImageUrl,
           imageDuration: $scope.frame0UrlDuration,
-          narrationText: null /* Not applicable $scope.frame0NarrationText*/
+          /* Not applicable $scope.frame0NarrationText*/
+          narrationText: null ,
+          narrationDelay: null
         },
         {
           mediaType: parseInt($scope.frame1MediaType),
@@ -360,7 +374,8 @@ angular.module('storyBoard.createStory', [])
           volume: $scope.frame1Volume,
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration,
-          narrationText: $scope.frame1NarrationText
+          narrationText: $scope.frame1NarrationText,
+          narrationText: $scope.frame1NarrationDelay
         },
         {
           mediaType: parseInt($scope.frame2MediaType),
@@ -372,7 +387,8 @@ angular.module('storyBoard.createStory', [])
           volume: $scope.frame2Volume,
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration,
-          narrationText: $scope.frame2NarrationText
+          narrationText: $scope.frame2NarrationText,
+          narrationDelay: $scope.frame1NarrationDelay
         },
         {
           mediaType: parseInt($scope.frame3MediaType),
@@ -384,7 +400,8 @@ angular.module('storyBoard.createStory', [])
           volume: $scope.frame3Volume,
           imageUrl: $scope.frame3ImageUrl,
           imageDuration: $scope.frame3UrlDuration,
-          narrationText: $scope.frame3NarrationText
+          narrationText: $scope.frame3NarrationText,
+          narrationDelay: $scope.frame3NarrationDelay
         }
       ]
     }
@@ -548,25 +565,24 @@ angular.module('storyBoard.createStory', [])
 
   $scope.toggleSoundtrack = function () {
     $scope.addSoundtrack = !$scope.addSoundtrack;
-    console.log('addSoundtrack', $scope.addSoundtrack)
     if ($scope.addSoundtrack) {
       $scope.audioTrackDisplay = "Destory Soundtrack";
     } else {
       $scope.audioTrackDisplay = "Add Soundtrack";
+      $scope.frame0MediaType = 3;
+      $scope.frame0YoutubeUrl = null;
+      $scope.frame0StartTime = "0";
+      $scope.frame0EndTime = null;
+      $scope.frame0Volume = "100";
+      $scope.frame0ImageUrl = null;
+      $scope.frame0UrlDuration = null;
     }
-    $scope.frame0MediaType = 3;
-    $scope.frame0YoutubeUrl = null;
-    $scope.frame0StartTime = "0";
-    $scope.frame0EndTime = null;
-    $scope.frame0Volume = "100";
-    $scope.frame0ImageUrl = null;
-    $scope.frame0UrlDuration = null;
   };
 
   $scope.toggleNarration = function (frameId) {
     switch (frameId) {
     case 1:
-      $scope.addNarration1 = !$scope.addNarration1;
+        $scope.addNarration1 = !$scope.addNarration1;
       break;
     case 2:
       $scope.addNarration2 = !$scope.addNarration2;
