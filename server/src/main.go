@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
+	"regexp"
 	"time"
 
 	"net/http"
@@ -43,6 +45,13 @@ func main() {
 			}
 		}
 	}()
+
+	// Compile regexp object which will be used in 'story.go' and 'image.go'.
+	var err error
+	reGifUrlWithoutParams, err = regexp.Compile(`(^.*\.gif)(\?|\/).*`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	setRootDir()
 
