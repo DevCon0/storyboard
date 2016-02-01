@@ -41,6 +41,9 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
   };
 
   ImagePlayer.prototype.destroy = function(){
+    if (this.textToSpeechPlayer) {
+      this.textToSpeechPlayer.destroy();
+    }
     this.playerDiv.empty();
   };
 
@@ -50,12 +53,12 @@ angular.module('storyBoard.imagePlayer', ['storyBoard.player', 'storyBoard.textT
     var durationInMilliseconds = this.imageDuration * 1000;
     var boundEndPlaybackCallback = this.endPlaybackCallback.bind(this);
 
-    var closureTextToSpeechPlayer = this.textToSpeechPlayer;
-    if (closureTextToSpeechPlayer) {
-      closureTextToSpeechPlayer.play();;
+    if (this.textToSpeechPlayer) {
+      this.textToSpeechPlayer.play();
     }
 
     setTimeout(function(){
+      window.speechSynthesis.cancel();
       boundEndPlaybackCallback();
     }, durationInMilliseconds);
   };
