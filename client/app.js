@@ -83,8 +83,8 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
           controller: 'navBarCtrl'
         },
         'content': {
-          templateUrl: '/dashboard/dashboard.html',
-          controller: 'dashboardCtrl'
+          templateUrl: '/splash/splash.html',
+          controller: 'splashCtrl'
         }
       }
     })
