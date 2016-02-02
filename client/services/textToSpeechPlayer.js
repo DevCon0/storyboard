@@ -53,7 +53,6 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
     window.speechSynthesis.speak(this.utterance);
   };
 
-
   TextToSpeechPlayer.prototype._getBrowserSupportedVoice = function(){
     var voicePreferences = [
       'Daniel',
