@@ -50,6 +50,7 @@ angular.module('storyBoard.createStory', [])
     } else {
       $scope.frame0YoutubeUrl = "";
       $scope.addSoundTrack = false;
+      $scope.audioTrackDisplay = "Add Soundtrack";
     }
     $scope.frame0StartTime = editStory.frames[0].start;
     $scope.frame0EndTime = editStory.frames[0].end;
