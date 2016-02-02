@@ -39,13 +39,21 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
 
   TextToSpeechPlayer.prototype.play = function(){
     var textToSpeechPlayer = this;
-    setTimeout(function() {
+    if (textToSpeechPlayer.narrationDelay) {
+      setTimeout(function() {
+        if ( ! textToSpeechPlayer.isBackgroundPlayer ) {
+          var paragraphTagStr = textToSpeechPlayer.playerDiv.children();
+          paragraphTagStr.addClass('showImagePlayerFrame');
+        }
+        window.speechSynthesis.speak(textToSpeechPlayer.utterance);
+      }, textToSpeechPlayer.narrationDelay * 1000);
+    } else {
       if ( ! textToSpeechPlayer.isBackgroundPlayer ) {
         var paragraphTagStr = textToSpeechPlayer.playerDiv.children();
         paragraphTagStr.addClass('showImagePlayerFrame');
       }
       window.speechSynthesis.speak(textToSpeechPlayer.utterance);
-    }, textToSpeechPlayer.narrationDelay * 1000);
+    }
   };
 
   TextToSpeechPlayer.prototype._getBrowserSupportedVoice = function(){
