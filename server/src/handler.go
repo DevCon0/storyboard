@@ -91,8 +91,8 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 					case "library":
 						return getLibrary(w, r, file)
 					case "showcase":
-						// return showCase(w, r)
-						return getShowCaseRandom(w, r)
+						return getShowCase(w, r)
+						//return getShowCaseRandom(w, r)
 					case "tags":
 						return searchStories(w, r, file)
 					default:
