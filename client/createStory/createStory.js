@@ -144,7 +144,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1ImageUrl = null;
     $scope.frame1UrlDuration = null;
     $scope.frame1NarrationText = null;
-    $scope.frame1NarrationDelay = "0";
+    $scope.frame1NarrationDelay = 0;
 
     $scope.frame2MediaType = null;
     $scope.frame2YoutubeUrl = null;
@@ -154,7 +154,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2ImageUrl = null;
     $scope.frame2UrlDuration = null;
     $scope.frame2NarrationText = null;
-    $scope.frame2NarrationDelay = "0";
+    $scope.frame2NarrationDelay = 0;
 
     $scope.frame3MediaType = null;
     $scope.frame3YoutubeUrl = null;
@@ -164,7 +164,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
     $scope.frame3NarrationText = null;
-    $scope.frame3NarrationDelay = "0";
+    $scope.frame3NarrationDelay = 0;
   }
 
   $scope.prepopulateInputs = function(){
@@ -608,7 +608,7 @@ angular.module('storyBoard.createStory', [])
       } else {
         $scope.narration1ButtonLabel = "Add Narration";
         $scope.frame1NarrationText = null;
-        $scope.frame1NarrationDelay = "0";
+        $scope.frame1NarrationDelay = 0;
       }
       break;
     case 2:
@@ -618,7 +618,7 @@ angular.module('storyBoard.createStory', [])
       } else {
         $scope.narration2ButtonLabel = "Add Narration";
         $scope.frame2NarrationText = null;
-        $scope.frame2NarrationDelay = "0";
+        $scope.frame2NarrationDelay = 0;
       }
       break;
     case 3:
@@ -628,7 +628,7 @@ angular.module('storyBoard.createStory', [])
       } else {
         $scope.narration3ButtonLabel = "Add Narration";
         $scope.frame3NarrationText = null;
-        $scope.frame3NarrationDelay = "0";
+        $scope.frame3NarrationDelay = 0;
       }
       break;
     }
