@@ -5,6 +5,7 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
     this.isBackgroundPlayer = isBackgroundPlayer || false;
     this.playerDiv = null;
     this.utterance = null;
+    this.narrationDelay = 0;
   }
 
   TextToSpeechPlayer.prototype = Object.create(Player.prototype);
@@ -12,6 +13,8 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
   TextToSpeechPlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
     this.utterance = new SpeechSynthesisUtterance(storyFrame.narrationText);
     this.utterance.voice = this._getBrowserSupportedVoice();
+
+    this.narrationDelay = storyFrame.narrationDelay || 0;
 
     this.utterance.onend = endPlaybackCallback;
 
@@ -35,11 +38,14 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
   };
 
   TextToSpeechPlayer.prototype.play = function(){
-    if ( ! this.isBackgroundPlayer ) {
-      var paragraphTagStr = this.playerDiv.children();
-      paragraphTagStr.addClass('showImagePlayerFrame');
-    }
-    window.speechSynthesis.speak(this.utterance);
+    var textToSpeechPlayer = this;
+    setTimeout(function() {
+      if ( ! textToSpeechPlayer.isBackgroundPlayer ) {
+        var paragraphTagStr = textToSpeechPlayer.playerDiv.children();
+        paragraphTagStr.addClass('showImagePlayerFrame');
+      }
+      window.speechSynthesis.speak(textToSpeechPlayer.utterance);
+    }, textToSpeechPlayer.narrationDelay * 1000);
   };
 
   TextToSpeechPlayer.prototype._getBrowserSupportedVoice = function(){
