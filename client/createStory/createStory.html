@@ -15,7 +15,7 @@
             <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
           </div>
           <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <input type="button" class="btn btn-default" value="{{audioButtonLabel}}" ng-click="toggleSoundtrack()"></input>
+          <button type="button" class="btn btn-success single-story-button" ng-click="toggleSoundtrack()">{{audioButtonLabel}}</button>
           <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button>
       </form>
       <div class="row clean"></div>
@@ -55,7 +55,7 @@
             <input type="text" ng-model="$parent.frame1Volume" class="form-control" id="volume1" placeholder="100">
             <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"/>
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
@@ -72,9 +72,10 @@
             <label for="imageUrl1Duration">Duration (sec)</label>
             <input type="text" ng-model="$parent.frame1UrlDuration" class="form-control" id="imageUrl1Duration" placeholder="0">
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
-        <input type="button" class="btn btn-default" value="{{$parent.narration1ButtonLabel}}" ng-click="$parent.toggleNarration(1)"></input>
+          <br />
+        <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleNarration(1)">{{$parent.narration1ButtonLabel}} <span class="narration-icon glyphicon glyphicon-user" aria-hidden="true"></span></button>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
@@ -89,7 +90,7 @@
             <label for="delay1">Delay (sec)</label>
             <input type="text" ng-model="$parent.frame1NarrationDelay" class="form-control" id="narrationDelay1" placeholder="0">
           </div>
-          <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
         <div class="col-md-12 clean"></div>
       </div>
@@ -124,7 +125,7 @@
             <input type="text" ng-model="$parent.frame2Volume" class="form-control" id="volume2" placeholder="100">
             <input type="range" min="0" max="100" ng-model="$parent.frame2Volume"/>
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner2" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
@@ -141,9 +142,10 @@
             <label for="imageUrl2Duration">Duration (sec)</label>
             <input type="text" ng-model="$parent.frame2UrlDuration" class="form-control" id="imageUrl2Duration" placeholder="0">
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
-        <input type="button" class="btn btn-default" value="{{$parent.narration2ButtonLabel}}" ng-click="$parent.toggleNarration(2)"></input>
+          <br />
+          <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleNarration(2)">{{$parent.narration2ButtonLabel}} <span class="narration-icon glyphicon glyphicon-user" aria-hidden="true"></span></button>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
@@ -158,7 +160,7 @@
             <label for="delay2">Delay (sec)</label>
             <input type="text" ng-model="$parent.frame2NarrationDelay" class="form-control" id="narrationDelay2" placeholder="0">
           </div>
-          <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
         <div class="col-md-12 clean"></div>
       </div>
@@ -210,9 +212,10 @@
             <label for="imageUrl3Duration">Duration (sec)</label>
             <input type="text" ng-model="$parent.frame3UrlDuration" class="form-control" id="imageUrl3Duration" placeholder="0">
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
-        <input type="button" class="btn btn-default" value="{{$parent.narration3ButtonLabel}}" ng-click="$parent.toggleNarration(3)"></input>
+          <br />
+          <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleNarration(3)">{{$parent.narration3ButtonLabel}} <span class="narration-icon glyphicon glyphicon-user" aria-hidden="true"></span></button>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame3ImagePreview"><img ng-src="{{$parent.frame3ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
@@ -227,7 +230,7 @@
             <label for="endTime3">Delay (sec)</label>
             <input type="text" ng-model="$parent.frame3NarrationDelay" class="form-control" id="narrationDelay3" placeholder="0">
           </div>
-          <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
         <div class="col-md-12 clean"></div>
       </div>
@@ -255,7 +258,7 @@
             <input type="text" ng-model="frame0Volume" class="form-control" id="volume0" placeholder="100">
             <input type="range" min="0" max="100" ng-model="frame0Volume"/>
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner0" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
