@@ -395,7 +395,7 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration,
           narrationText: $scope.frame1NarrationText,
-          narrationText: $scope.frame1NarrationDelay
+          narrationDelay: $scope.frame1NarrationDelay
         },
         {
           mediaType: parseInt($scope.frame2MediaType),
@@ -408,7 +408,7 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration,
           narrationText: $scope.frame2NarrationText,
-          narrationDelay: $scope.frame1NarrationDelay
+          narrationDelay: $scope.frame2NarrationDelay
         },
         {
           mediaType: parseInt($scope.frame3MediaType),
