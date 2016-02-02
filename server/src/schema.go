@@ -40,17 +40,22 @@ type Story struct {
 // Frame model for Acts/Scenes
 type Frame struct {
 	// 0 for video, 1 for image, 2 for txt2speech, 3 for audio track
-	MediaType     int      `json:"mediaType"`
-	Player        struct{} `json:"player"`
-	PlayerDiv     string   `json:"playerDiv"`
-	VideoId       string   `json:"videoId"`
-	Start         float32  `json:"start"`
-	End           float32  `json:"end"`
-	Volume        int      `json:"volume"`
-	PreviewUrl    string   `json:"previewUrl" bson:"previewurl"`
-	ImageUrl      string   `json:"imageUrl" bson:"imageurl"`
-	ImageDuration int      `json:"imageDuration"`
-	NarrationText string   `json:"narrationText"`
+	MediaType      int      `json:"mediaType"`
+	Player         struct{} `json:"player"`
+	PlayerDiv      string   `json:"playerDiv"`
+	VideoId        string   `json:"videoId"`
+	Start          float32  `json:"start"`
+	End            float32  `json:"end"`
+	Volume         int      `json:"volume"`
+	PreviewUrl     string   `json:"previewUrl" bson:"previewurl"`
+	ImageUrl       string   `json:"imageUrl" bson:"imageurl"`
+	ImageDuration  int      `json:"imageDuration"`
+	NarrationText  string   `json:"narrationText"`
+	NarrationDelay float32  `json:"narrationDelay"`
+	AudioId        string   `json:"audioId"`
+	AudioStart     float32  `json:"audioStart"`
+	AudioEnd       float32  `json:"audioEnd"`
+	AudioDelay     float32  `json:"audioDelay"`
 }
 
 // Vote Model - separate collection
