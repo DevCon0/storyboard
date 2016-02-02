@@ -50,10 +50,13 @@ angular.module('storyBoard.storyStateMachineService',
   };
 
   storyStateMachine.restartStory = function () {
-    var audioStoryPlayer = this.players[AUDIO];
-    this._zeroFrameReady.call(audioStoryPlayer);
-    var firstStoryPlayer = this.players[FIRST];
-    this._firstFrameReady.call(firstStoryPlayer);
+    if (this.story.hasSoundtrack) {
+      var audioStoryPlayer = this.players[AUDIO];
+      this._zeroFrameReady.call(audioStoryPlayer);
+    } else {
+      var firstStoryPlayer = this.players[FIRST];
+      this._firstFrameReady.call(firstStoryPlayer);
+    }
   }
 
   storyStateMachine.endStory = function(){
