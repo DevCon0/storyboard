@@ -1,6 +1,6 @@
 angular.module('storyBoard.singleStory', [])
 
-.controller('singleStoryCtrl', function ($scope, StoryStorage, StoryStateMachine, $stateParams, localStorageService, $window) {
+.controller('singleStoryCtrl', function ($scope, StoryStorage, StoryStateMachine, $stateParams, localStorageService) {
   $scope.storyTitle = null;
   $scope.storyUsername = null;
   $scope.act1divclass = '';
@@ -37,9 +37,4 @@ angular.module('storyBoard.singleStory', [])
   $scope.replay = function () {
     StoryStateMachine.restartStory();
   };
-
-  $scope.goToProfile = function(username) {
-    console.log('Switching to %s\'s profile', username);
-    $window.location.href = '/#/profile/' + username;
-  }
 });

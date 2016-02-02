@@ -6,14 +6,17 @@
         <div class="row">
             <div class="act1 col-md-4 player-video" ng-class="act1divclass">
                 <div id="player1" class="center-it"></div>
+                <div id="player1Audio" style="display: none"></div>
             </div>
 
             <div class="act2 col-md-4 player-video" ng-class="act2divclass">
                 <div id="player2" class="center-it"></div>
+                <div id="player2Audio" style="display: none"></div>
             </div>
 
             <div class="act3 col-md-4 player-video" ng-class="act3divclass">
                 <div id="player3" class="center-it"></div>
+                <div id="player3Audio" style="display: none"></div>
             </div>
         </div>
         <div id="player0" style="visibility:hidden;"></div>
@@ -24,7 +27,7 @@
                 <div class="panel-heading">
                     <div class="panel-title panel-title-font">
                         {{storyTitle}}
-                        <span style="float: right; padding-right: 5px;">Made with<iron-icon icon="icons:favorite" class="icon-margin-left"></iron-icon> by <a class="username" ng-click="goToProfile(storyUsername)">{{storyUsername}}</a></span>
+                        <span style="float: right; padding-right: 5px;">Made with<iron-icon icon="icons:favorite" class="icon-margin-left"></iron-icon> by <a class="username" ng-href="#/profile/{{storyUsername}}">{{storyUsername}}</a></span>
                     </div>
                 </div>
                 <div class="panel-body panel-body-font">
