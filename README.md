@@ -34,6 +34,20 @@ $ go test -v
 The tech stack is MongoDB, Angular, and Go.
 
 #Release Notes
+##### 1/29/2016 - alpha v0.3.6
+A user add an Image or GIF file and set a duration in a story.
+
+A user add text that will be converted to speech in a story.
+
+A user can add an optional audio track to the story.
+
+A user can set the audio levels of all video tracks.
+
+A user can replay a story after viewing it.
+
+A user can see a rough outline of their videos in their dashboard.
+
+
 ##### 1/22/2016 - alpha v0.1.4
 A user can preview a Story before saving it.
 
