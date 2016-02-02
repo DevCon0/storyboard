@@ -26,6 +26,16 @@ angular.module('storyBoard.storyStorageService', [])
     });
   };
 
+  storyStorage.getUserProfile = function (username) {
+    return $http({
+      method: 'GET',
+      url: '/api/users/profile/' + username,
+    })
+    .then(function (resp) {
+      return resp.data;
+    });
+  };
+
   storyStorage.saveStory = function (story,token) {
     return $http({
      method: 'POST',
