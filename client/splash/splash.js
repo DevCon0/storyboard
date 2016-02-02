@@ -1,6 +1,6 @@
 angular.module('storyBoard.splash', ['ngAnimate'])
 
-.controller('splashCtrl', function ($rootScope, $scope, $state, $window, StoryStorage, $stateParams) {
+.controller('splashCtrl', function ($rootScope, $scope, $state, StoryStorage, $stateParams) {
 
   // Set a bool to indicate whether this is the signed-in user's dashboard
   //   or another user's dashboard.
