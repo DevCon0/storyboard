@@ -302,7 +302,7 @@ angular.module('storyBoard.createStory', [])
           imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0,
           /* Not applicable $scope.frame0NarrationText*/
           narrationText: null,
-          narrationDelay: null
+          narrationDelay: 0
         },
         {
           mediaType: parseInt($scope.frame1MediaType),

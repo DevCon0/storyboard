@@ -52,10 +52,6 @@ type Frame struct {
 	ImageDuration  int      `json:"imageDuration"`
 	NarrationText  string   `json:"narrationText"`
 	NarrationDelay float32  `json:"narrationDelay"`
-	AudioId        string   `json:"audioId"`
-	AudioStart     float32  `json:"audioStart"`
-	AudioEnd       float32  `json:"audioEnd"`
-	AudioDelay     float32  `json:"audioDelay"`
 }
 
 // Vote Model - separate collection

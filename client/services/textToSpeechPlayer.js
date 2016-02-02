@@ -38,15 +38,21 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
   };
 
   TextToSpeechPlayer.prototype.play = function(){
-    var textToSpeechPlayer = this;
-    setTimeout(function() {
-      if ( ! textToSpeechPlayer.isBackgroundPlayer ) {
-        var paragraphTagStr = textToSpeechPlayer.playerDiv.children();
-        paragraphTagStr.addClass('showImagePlayerFrame');
-      }
-      window.speechSynthesis.speak(textToSpeechPlayer.utterance);
-    }, textToSpeechPlayer.narrationDelay * 1000);
+    if (this.narrationDelay) {
+      setTimeout(this._play.bind(this), this.narrationDelay * 1000);
+    } else {
+      this._play();
+    }
   };
+
+  TextToSpeechPlayer.prototype._play = function(){
+    if ( ! this.isBackgroundPlayer ) {
+      var paragraphTagStr = this.playerDiv.children();
+      paragraphTagStr.addClass('showImagePlayerFrame');
+    }
+    window.speechSynthesis.speak(this.utterance);
+  };
+
 
   TextToSpeechPlayer.prototype._getBrowserSupportedVoice = function(){
     var voicePreferences = [
