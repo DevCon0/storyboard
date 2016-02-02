@@ -5,6 +5,7 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
     this.isBackgroundPlayer = isBackgroundPlayer || false;
     this.playerDiv = null;
     this.utterance = null;
+    this.narrationDelay = 0;
   }
 
   TextToSpeechPlayer.prototype = Object.create(Player.prototype);
@@ -12,6 +13,8 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
   TextToSpeechPlayer.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
     this.utterance = new SpeechSynthesisUtterance(storyFrame.narrationText);
     this.utterance.voice = this._getBrowserSupportedVoice();
+
+    this.narrationDelay = storyFrame.narrationDelay || 0;
 
     this.utterance.onend = endPlaybackCallback;
 
@@ -35,6 +38,14 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
   };
 
   TextToSpeechPlayer.prototype.play = function(){
+    if (this.narrationDelay) {
+      setTimeout(this._play.bind(this), this.narrationDelay * 1000);
+    } else {
+      this._play();
+    }
+  };
+
+  TextToSpeechPlayer.prototype._play = function(){
     if ( ! this.isBackgroundPlayer ) {
       var paragraphTagStr = this.playerDiv.children();
       paragraphTagStr.addClass('showImagePlayerFrame');
