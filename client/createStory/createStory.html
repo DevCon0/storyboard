@@ -14,8 +14,8 @@
             <label for="storyThumbnailUrlInput">Story Thumbnail URL</label>
             <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
           </div>
-          <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg">
-          <input type="button" class="btn btn-default" value="{{audioTrackDisplay}}" ng-click="toggleSoundTrack()">
+          <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
+          <input type="button" class="btn btn-default" value="{{audioButtonLabel}}" ng-click="toggleSoundtrack()"></input>
           <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button>
       </form>
       <div class="row clean"></div>
@@ -74,15 +74,20 @@
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
+        <input type="button" class="btn btn-default" value="{{$parent.narration1ButtonLabel}}" ng-click="$parent.toggleNarration(1)"></input>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act I NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame1MediaType == 2">
+      <div ng-if="frame1MediaType == 2 || (addNarration1 && frame1MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(1)">
           <div class="form-group">
             <label for="textToSpeechNarration1">Narration</label>
             <textarea  maxlength="600" ng-model="$parent.frame1NarrationText" id="textToSpeechNarration1" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="delay1">Delay (sec)</label>
+            <input type="text" ng-model="$parent.frame1NarrationDelay" class="form-control" id="narrationDelay1" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -138,15 +143,20 @@
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
+        <input type="button" class="btn btn-default" value="{{$parent.narration2ButtonLabel}}" ng-click="$parent.toggleNarration(2)"></input>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act II NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame2MediaType == 2">
+      <div ng-if="frame2MediaType == 2 || (addNarration2 && frame2MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(2)">
           <div class="form-group">
             <label for="textToSpeechNarration2">Narration</label>
             <textarea  maxlength="600" ng-model="$parent.frame2NarrationText" id="textToSpeechNarration2" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="delay2">Delay (sec)</label>
+            <input type="text" ng-model="$parent.frame2NarrationDelay" class="form-control" id="narrationDelay2" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -202,15 +212,20 @@
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
+        <input type="button" class="btn btn-default" value="{{$parent.narration3ButtonLabel}}" ng-click="$parent.toggleNarration(3)"></input>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame3ImagePreview"><img ng-src="{{$parent.frame3ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act III NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame3MediaType == 2">
+      <div ng-if="frame3MediaType == 2 || (addNarration3 && frame3MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(3)">
           <div class="form-group">
             <label for="textToSpeechNarration3">Narration</label>
             <textarea  maxlength="600" ng-model="$parent.frame3NarrationText" id="textToSpeechNarration3" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="endTime3">Delay (sec)</label>
+            <input type="text" ng-model="$parent.frame3NarrationDelay" class="form-control" id="narrationDelay3" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -219,7 +234,7 @@
     </paper-card>
   </div>
  <!-- Act Zero AUDIO /////////////////////////////////////////////////////////////////////// -->
-  <div ng-show="addSoundTrack" class="creationFrameDiv col-md-2">
+  <div ng-show="addSoundtrack" class="creationFrameDiv col-md-2">
     <paper-card heading="Audio Track" elevation="3" class="create-story-paper-card">
  <!-- Act Zero AUDIO  ******************************** -->
         <form ng-submit="previewFrame(0)">
