@@ -1,6 +1,6 @@
 angular.module('storyBoard.singleStory', [])
 
-.controller('singleStoryCtrl', function ($scope, StoryStorage, StoryStateMachine, $stateParams, localStorageService) {
+.controller('singleStoryCtrl', function ($scope, StoryStorage, StoryStateMachine, $stateParams, localStorageService, $window) {
   $scope.storyTitle = null;
   $scope.storyUsername = null;
   $scope.act1divclass = '';
@@ -27,15 +27,19 @@ angular.module('storyBoard.singleStory', [])
   $scope.voteUp = function () {
     console.log('Vote Up recieved');
     StoryStorage.voteStory(storyID, token, 'up');
-
-  }
+  };
 
   $scope.voteDown = function () {
     console.log('Vote Down recieved');
     StoryStorage.voteStory(storyID, token, 'down');
+  };
 
-  }
   $scope.replay = function () {
     StoryStateMachine.restartStory();
+  };
+
+  $scope.goToProfile = function(username) {
+    console.log('Switching to %s\'s profile', username);
+    $window.location.href = '/#/profile/' + username;
   }
 });
