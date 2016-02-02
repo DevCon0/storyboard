@@ -46,7 +46,7 @@ angular.module('storyBoard.createStory', [])
     if (editStory.frames[0].videoId !== "") {
       $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
       $scope.addSoundTrack = true;
-      $scope.audioTrackDisplay = 'Destroy Soundtrack';
+      $scope.audioTrackDisplay = 'Remove Soundtrack';
     } else {
       $scope.frame0YoutubeUrl = "";
       $scope.addSoundTrack = false;
@@ -547,7 +547,7 @@ angular.module('storyBoard.createStory', [])
   $scope.toggleSoundTrack = function () {
     $scope.addSoundTrack = !$scope.addSoundTrack;
     if ($scope.addSoundTrack) {
-      $scope.audioTrackDisplay = "Destory Soundtrack";
+      $scope.audioTrackDisplay = "Remove Soundtrack";
     } else {
       $scope.audioTrackDisplay = "Add Soundtrack";
     }
