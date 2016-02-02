@@ -46,6 +46,7 @@ angular.module('storyBoard.createStory', [])
     if (editStory.frames[0].videoId !== "") {
       $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
       $scope.addSoundTrack = true;
+      $scope.audioTrackDisplay = 'Destroy Soundtrack';
     } else {
       $scope.frame0YoutubeUrl = "";
       $scope.addSoundTrack = false;
