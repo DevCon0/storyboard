@@ -130,7 +130,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1ImageUrl = null;
     $scope.frame1UrlDuration = null;
     $scope.frame1NarrationText = null;
-    $scope.frame1NarrationDelay = null;
+    $scope.frame1NarrationDelay = "0";
 
     $scope.frame2MediaType = null;
     $scope.frame2YoutubeUrl = null;
@@ -140,7 +140,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2ImageUrl = null;
     $scope.frame2UrlDuration = null;
     $scope.frame2NarrationText = null;
-    $scope.frame2NarrationDelay = null;
+    $scope.frame2NarrationDelay = "0";
 
     $scope.frame3MediaType = null;
     $scope.frame3YoutubeUrl = null;
@@ -150,7 +150,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
     $scope.frame3NarrationText = null;
-    $scope.frame3NarrationDelay = null;
+    $scope.frame3NarrationDelay = "0";
   }
 
   $scope.prepopulateInputs = function(){
@@ -174,6 +174,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1ImageUrl = "http://i.imgur.com/7j15tXU.jpg";
     $scope.frame1UrlDuration = 2;
     $scope.frame1NarrationText = 'A long time ago, in a galaxy far, far away';
+    $scope.frame1NarrationDelay = 0;
 
     $scope.frame2MediaType = "1";
     $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=b8cCsUBYSkw";
@@ -183,6 +184,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2ImageUrl = "http://gifstumblr.com/images/bird-vs-action-figure_1509.gif";
     $scope.frame2UrlDuration = 3;
     $scope.frame2NarrationText = 'Why don\'t you just tell me what movie you want to see!';
+    $scope.frame2NarrationDelay = 0;
 
     $scope.frame3MediaType = "2";
     $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
@@ -192,6 +194,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
     $scope.frame3UrlDuration = 1;
     $scope.frame3NarrationText = 'By Jove, I\'ve got a cheeky idea, let\'s have Milco solve the matrix.';
+    $scope.frame3NarrationDelay = 0;
   };
 
   $scope.checkRequiredFields = function(){
@@ -591,7 +594,7 @@ angular.module('storyBoard.createStory', [])
       } else {
         $scope.narration1Display = "Add Narration";
         $scope.frame1NarrationText = null;
-        $scope.frame1NarrationDelay = null;
+        $scope.frame1NarrationDelay = "0";
       }
       break;
     case 2:
@@ -601,7 +604,7 @@ angular.module('storyBoard.createStory', [])
       } else {
         $scope.narration2Display = "Add Narration";
         $scope.frame2NarrationText = null;
-        $scope.frame2NarrationDelay = null;
+        $scope.frame2NarrationDelay = "0";
       }
       break;
     case 3:
@@ -611,11 +614,10 @@ angular.module('storyBoard.createStory', [])
       } else {
         $scope.narration3Display = "Add Narration";
         $scope.frame3NarrationText = null;
-        $scope.frame3NarrationDelay = null;
+        $scope.frame3NarrationDelay = "0";
       }
       break;
     }
   }
 
 });
-
