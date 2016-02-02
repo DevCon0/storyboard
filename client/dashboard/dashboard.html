@@ -1,8 +1,9 @@
 <div class="row">
-    <h1>Welcome {{username}}</h1>
+    <h1 ng-show="isSignedInUser">Welcome {{username}}</h1>
 </div>
 <div class='row'>
-    <h2 class="bannertitle">Created Stories:</h2>
+    <h2 ng-show="isSignedInUser" class="bannertitle">Created Stories:</h2>
+    <h2 ng-hide="isSignedInUser" class="bannertitle">{{username}}'s Stories:</h2>
 </div>
 
 <div class="row">
@@ -41,7 +42,7 @@
 
                 </a>
 
-                <div class="modificationButtons">
+                <div class="modificationButtons" ng-show="isSignedInUser">
                     <div class="modificationButtonsContainer">
                         <button class="btn btn-lg btn-success edit-button" ng-click="editStory(story.storyId)">
                             <iron-icon icon="image:edit" class="icon-margin-left"></iron-icon>
