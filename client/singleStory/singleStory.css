@@ -3,3 +3,13 @@
     width:760px;
     margin-left: 20%;
 }
+
+.panel .panel-heading .panel-title .username {
+  color: white;
+}
+
+.panel .panel-heading .panel-title .username:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: #ddd;
+}
