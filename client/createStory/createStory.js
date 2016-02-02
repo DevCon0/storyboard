@@ -583,17 +583,10 @@ angular.module('storyBoard.createStory', [])
                                      playbackFinishedCallback);
   };
 
-<<<<<<< HEAD
-  $scope.toggleSoundtrack = function () {
-    $scope.addSoundtrack = !$scope.addSoundtrack;
-    if ($scope.addSoundtrack) {
-      $scope.audioButtonLabel = "Remove Soundtrack";
-=======
   $scope.toggleSoundTrack = function () {
     $scope.addSoundTrack = !$scope.addSoundTrack;
     if ($scope.addSoundTrack) {
       $scope.audioTrackDisplay = "Remove Soundtrack";
->>>>>>> master
     } else {
       $scope.audioButtonLabel = "Add Soundtrack";
       $scope.frame0MediaType = 3;
