@@ -332,3 +332,12 @@ paper-spinner-lite.blueSpinner{
 .view-count{
     float:right;
 }
+
+.narration-icon{
+    padding-left:5px;
+}
+
+.single-story-button {
+    width:180px;
+    height:36px;
+}
