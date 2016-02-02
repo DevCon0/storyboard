@@ -15,7 +15,7 @@
             <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
           </div>
           <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <input type="button" class="btn btn-default" value="{{audioTrackDisplay}}" ng-click="toggleSoundtrack()"></input>
+          <input type="button" class="btn btn-default" value="{{audioButtonLabel}}" ng-click="toggleSoundtrack()"></input>
           <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button>
       </form>
       <div class="row clean"></div>
@@ -74,7 +74,7 @@
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
-        <input type="button" class="btn btn-default" value="{{narration1Display}}" ng-click="$parent.toggleNarration(1)"></input>
+        <input type="button" class="btn btn-default" value="{{$parent.narration1ButtonLabel}}" ng-click="$parent.toggleNarration(1)"></input>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
@@ -143,7 +143,7 @@
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
-        <input type="button" class="btn btn-default" value="{{narration2Display}}" ng-click="$parent.toggleNarration(2)"></input>
+        <input type="button" class="btn btn-default" value="{{$parent.narration2ButtonLabel}}" ng-click="$parent.toggleNarration(2)"></input>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
@@ -212,7 +212,7 @@
           </div>
           <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
-        <input type="button" class="btn btn-default" value="{{narration3Display}}" ng-click="$parent.toggleNarration(3)"></input>
+        <input type="button" class="btn btn-default" value="{{$parent.narration3ButtonLabel}}" ng-click="$parent.toggleNarration(3)"></input>
         <div class="col-md-12 clean"></div>
         <div class="frameImagePreviewDiv" ng-show="addFrame3ImagePreview"><img ng-src="{{$parent.frame3ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>

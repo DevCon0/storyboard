@@ -28,14 +28,14 @@ angular.module('storyBoard.createStory', [])
   $scope.addFrame3ImagePreview = false;
 
   $scope.addSoundtrack = false;
-  $scope.audioTrackDisplay = "Add Soundtrack";
+  $scope.audioButtonLabel = "Add Soundtrack";
 
   $scope.addNarration1 = false;
   $scope.addNarration2 = false;
   $scope.addNarration3 = false;
-  $scope.narration1Display = "Add Narration";
-  $scope.narration2Display = "Add Narration";
-  $scope.narration3Display = "Add Narration";
+  $scope.narration1ButtonLabel = "Add Narration";
+  $scope.narration2ButtonLabel = "Add Narration";
+  $scope.narration3ButtonLabel = "Add Narration";
 
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
@@ -78,6 +78,10 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1UrlDuration = editStory.frames[1].imageDuration;
     $scope.frame1NarrationText = editStory.frames[1].narrationText;
     $scope.frame1NarrationDelay = editStory.frames[1].narrationDelay;
+    if ($scope.frame1NarrationText !== "") {
+      $scope.addNarration1 = true;
+      $scope.narration1ButtonLabel = "Remove Narration";
+    };
 
     // TODO: remove backwards compatibility
     if(editStory.frames[2].mediaType !== undefined) {
@@ -93,6 +97,10 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2UrlDuration = editStory.frames[2].imageDuration;
     $scope.frame2NarrationText = editStory.frames[2].narrationText;
     $scope.frame2NarrationDelay = editStory.frames[2].narrationDelay;
+    if ($scope.frame2NarrationText !== "") {
+      $scope.addNarration2 = true;
+      $scope.narration2ButtonLabel = "Remove Narration";
+    };
 
     // TODO: remove backwards compatibility
     if(editStory.frames[3].mediaType !== undefined) {
@@ -108,6 +116,10 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3UrlDuration = editStory.frames[3].imageDuration;
     $scope.frame3NarrationText = editStory.frames[3].narrationText;
     $scope.frame3NarrationDelay = editStory.frames[3].narrationDelay;
+    if ($scope.frame3NarrationText !== "") {
+      $scope.addNarration3 = true;
+      $scope.narration3ButtonLabel = "Remove Narration";
+    };
   } else {
     $scope.storyTitle = null;
     $scope.storyDescription = null;
@@ -572,9 +584,9 @@ angular.module('storyBoard.createStory', [])
   $scope.toggleSoundtrack = function () {
     $scope.addSoundtrack = !$scope.addSoundtrack;
     if ($scope.addSoundtrack) {
-      $scope.audioTrackDisplay = "Destory Soundtrack";
+      $scope.audioButtonLabel = "Remove Soundtrack";
     } else {
-      $scope.audioTrackDisplay = "Add Soundtrack";
+      $scope.audioButtonLabel = "Add Soundtrack";
       $scope.frame0MediaType = 3;
       $scope.frame0YoutubeUrl = null;
       $scope.frame0StartTime = "0";
@@ -590,9 +602,9 @@ angular.module('storyBoard.createStory', [])
     case 1:
       $scope.addNarration1 = !$scope.addNarration1;
       if ($scope.addNarration1) {
-        $scope.narration1Display = "Remove Narration";
+        $scope.narration1ButtonLabel = "Remove Narration";
       } else {
-        $scope.narration1Display = "Add Narration";
+        $scope.narration1ButtonLabel = "Add Narration";
         $scope.frame1NarrationText = null;
         $scope.frame1NarrationDelay = "0";
       }
@@ -600,9 +612,9 @@ angular.module('storyBoard.createStory', [])
     case 2:
       $scope.addNarration2 = !$scope.addNarration2;
       if ($scope.addNarration2) {
-        $scope.narration2Display = "Remove Narration";
+        $scope.narration2ButtonLabel = "Remove Narration";
       } else {
-        $scope.narration2Display = "Add Narration";
+        $scope.narration2ButtonLabel = "Add Narration";
         $scope.frame2NarrationText = null;
         $scope.frame2NarrationDelay = "0";
       }
@@ -610,9 +622,9 @@ angular.module('storyBoard.createStory', [])
     case 3:
       $scope.addNarration3 = !$scope.addNarration3;
       if ($scope.addNarration3) {
-        $scope.narration3Display = "Remove Narration";
+        $scope.narration3ButtonLabel = "Remove Narration";
       } else {
-        $scope.narration3Display = "Add Narration";
+        $scope.narration3ButtonLabel = "Add Narration";
         $scope.frame3NarrationText = null;
         $scope.frame3NarrationDelay = "0";
       }
