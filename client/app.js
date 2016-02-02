@@ -75,6 +75,19 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
         }
       }
     })
+    .state('profile', {
+      url: '/profile/:username',
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
+        },
+        'content': {
+          templateUrl: '/splash/splash.html',
+          controller: 'splashCtrl'
+        }
+      }
+    })
     .state('singleStory', {
       url: '/singleStory/{storyId}',
       views: {

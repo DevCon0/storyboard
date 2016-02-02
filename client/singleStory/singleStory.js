@@ -27,15 +27,14 @@ angular.module('storyBoard.singleStory', [])
   $scope.voteUp = function () {
     console.log('Vote Up recieved');
     StoryStorage.voteStory(storyID, token, 'up');
-
-  }
+  };
 
   $scope.voteDown = function () {
     console.log('Vote Down recieved');
     StoryStorage.voteStory(storyID, token, 'down');
+  };
 
-  }
   $scope.replay = function () {
     StoryStateMachine.restartStory();
-  }
+  };
 });
