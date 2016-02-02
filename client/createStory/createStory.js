@@ -52,10 +52,12 @@ angular.module('storyBoard.createStory', [])
     // test for videoId to show or hide in create/edit view
     if (editStory.frames[0].videoId !== "") {
       $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
-      $scope.addSoundtrack = true;
+      $scope.addSoundTrack = true;
+      $scope.audioTrackDisplay = 'Remove Soundtrack';
     } else {
       $scope.frame0YoutubeUrl = "";
-      $scope.addSoundtrack = false;
+      $scope.addSoundTrack = false;
+      $scope.audioTrackDisplay = "Add Soundtrack";
     }
     $scope.frame0StartTime = editStory.frames[0].start;
     $scope.frame0EndTime = editStory.frames[0].end;
@@ -581,10 +583,17 @@ angular.module('storyBoard.createStory', [])
                                      playbackFinishedCallback);
   };
 
+<<<<<<< HEAD
   $scope.toggleSoundtrack = function () {
     $scope.addSoundtrack = !$scope.addSoundtrack;
     if ($scope.addSoundtrack) {
       $scope.audioButtonLabel = "Remove Soundtrack";
+=======
+  $scope.toggleSoundTrack = function () {
+    $scope.addSoundTrack = !$scope.addSoundTrack;
+    if ($scope.addSoundTrack) {
+      $scope.audioTrackDisplay = "Remove Soundtrack";
+>>>>>>> master
     } else {
       $scope.audioButtonLabel = "Add Soundtrack";
       $scope.frame0MediaType = 3;
