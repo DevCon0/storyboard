@@ -4,12 +4,16 @@ angular.module('storyBoard.storyStateMachineService',
    'storyBoard.textToSpeechPlayer'])
 
 .factory('StoryStateMachine', function(VideoPlayer, ImagePlayer, TextToSpeechPlayer){
-  var storyStateMachine = {};
-  storyStateMachine.story = null;
+  var storyStateMachine = {
+    story: null,
+    players: [],
+    storyRestartCallback: null
+  };
+
   var closureIsSingleStoryView = false;
   var closureStoryHasEnded = false;
-  storyStateMachine.players = [];
   var parentControllerScope = null;
+
   var AUDIO = 0;
   var FIRST = 1;
   var SECOND = 2;
@@ -32,24 +36,28 @@ angular.module('storyBoard.storyStateMachineService',
     var lastFrame = storyFrames.length - 1;
     for(var i = lastFrame; i >= 0; i--) {
       var currentStoryFrame = storyFrames[i];
-      var readyCallback = this._determineReadyCallback(i, hasSoundtrack);
+
+      var newFramePlayer = this._createPlayer(currentStoryFrame);
+      var readyCallback = this._determineReadyCallback(
+                            i,
+                            newFramePlayer,
+                            hasSoundtrack);
       var endPlayBackCallback = this._determineEndPlaybackCallback(i);
-      var newFramePlayer = this._createPlayer(currentStoryFrame.mediaType);
       var playingCallback = this._determinePlayingCallback(i);
+
       newFramePlayer.create(
         currentStoryFrame,
         readyCallback,
         endPlayBackCallback,
-        playingCallback);
+        playingCallback
+      );
+
       this.players.unshift(newFramePlayer);
     }
   };
 
   storyStateMachine.restartStory = function () {
-    var audioStoryPlayer = this.players[AUDIO];
-    this._zeroFrameReady.call(audioStoryPlayer);
-    var firstStoryPlayer = this.players[FIRST];
-    this._firstFrameReady.call(firstStoryPlayer);
+    this.storyRestartCallback();
   }
 
   storyStateMachine.endStory = function(){
@@ -58,25 +66,32 @@ angular.module('storyBoard.storyStateMachineService',
     storyPlayers.forEach(function(player){
       player.destroy();
     });
-    storyStateMachine.story = null;
-    storyStateMachine.players = [];
+
+    // Reset storyStateMachine obj properties
+    this.story = null;
+    this.players = [];
+    this.storyRestartCallback = null;
+
+    // Reset storyStateMachine closure variables
+    closureIsSingleStoryView = false;
+    closureStoryHasEnded = false;
     parentControllerScope = null;
   };
 
-  storyStateMachine._createPlayer = function(mediaType){
+  storyStateMachine._createPlayer = function(storyFrame){
     var player = null;
     // TODO: Old story backwards compatibility
-    if(mediaType === undefined){
-      mediaType = 0;
+    if(storyFrame.mediaType === undefined){
+      storyFrame.mediaType = 0;
     }
     // End backwards compatiblity
 
-    switch(mediaType){
+    switch(storyFrame.mediaType){
       case 0:
         player = new VideoPlayer();
         break;
       case 1:
-        player = new ImagePlayer();
+        player = new ImagePlayer(storyFrame.narrationText);
         break;
       case 2:
         player = new TextToSpeechPlayer();
@@ -102,19 +117,21 @@ angular.module('storyBoard.storyStateMachineService',
     return playingCallback;
   }
 
-  storyStateMachine._determineReadyCallback = function (frameNum, hasSoundtrack) {
+  storyStateMachine._determineReadyCallback = function (currentFrameNum, currentPlayer, hasSoundtrack) {
 
-    var isZeroFrame = frameNum === AUDIO;
-    var isFirstFrame = frameNum === FIRST;
+    var isZeroFrame = currentFrameNum === AUDIO;
+    var isFirstFrame = currentFrameNum === FIRST;
 
     if (hasSoundtrack) {
       if (isZeroFrame) {
+        this.storyRestartCallback = this._zeroFrameReady.bind(currentPlayer);
         return this._zeroFrameReady;
       } else if (isFirstFrame) {
         return function () { };
       }
     } else {
       if (isFirstFrame) {
+        this.storyRestartCallback = this._firstFrameReady.bind(currentPlayer);
         return this._firstFrameReady;
       } else {
         return function () { };
@@ -129,7 +146,8 @@ angular.module('storyBoard.storyStateMachineService',
   };
 
   storyStateMachine._firstFrameReady = function(){
-    if(closureIsSingleStoryView) {
+    if (closureIsSingleStoryView) {
+      parentControllerScope.isFirstFrameLoaded = true;
       _growAct1();
     }
     // Here, *this* will refer to the first frame player

@@ -1,5 +1,8 @@
 <div class="single-story-outer">
-    <div class="single-story-inner">
+    <div ng-hide="isFirstFrameLoaded" class="single-story-inner">
+        <img class="single-story-spinner" src="http://www.tenniswake.fr/tennis/annonces-tennis/images/ajax-loader-tennis.gif" />
+    </div>
+    <div ng-show="isFirstFrameLoaded" class="single-story-inner">
         <div class="row">
             <div class="act1 col-md-4 player-video" ng-class="act1divclass">
                 <div id="player1" class="center-it"></div>
@@ -13,7 +16,7 @@
                 <div id="player3" class="center-it"></div>
             </div>
         </div>
-      <div id="player0" style="visibility:hidden;"></div>
+        <div id="player0" style="visibility:hidden;"></div>
     </div>
     <div class="row">
         <div class="col-md-8">
@@ -21,7 +24,7 @@
                 <div class="panel-heading">
                     <div class="panel-title panel-title-font">
                         {{storyTitle}}
-                        <span style="float: right; padding-right: 5px;">Made with<iron-icon icon="icons:favorite" class="icon-margin-left"></iron-icon> by {{storyUsername}}</span>
+                        <span style="float: right; padding-right: 5px;">Made with<iron-icon icon="icons:favorite" class="icon-margin-left"></iron-icon> by <a class="username" ng-href="#/profile/{{storyUsername}}">{{storyUsername}}</a></span>
                     </div>
                 </div>
                 <div class="panel-body panel-body-font">

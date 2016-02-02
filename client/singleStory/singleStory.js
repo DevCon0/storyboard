@@ -6,6 +6,7 @@ angular.module('storyBoard.singleStory', [])
   $scope.act1divclass = '';
   $scope.act2divclass = '';
   $scope.act3divclass = '';
+  $scope.isFirstFrameLoaded = false;
 
   var storyID = $stateParams.storyId;
   var token = localStorageService.get('sessionToken');
@@ -26,15 +27,14 @@ angular.module('storyBoard.singleStory', [])
   $scope.voteUp = function () {
     console.log('Vote Up recieved');
     StoryStorage.voteStory(storyID, token, 'up');
-
-  }
+  };
 
   $scope.voteDown = function () {
     console.log('Vote Down recieved');
     StoryStorage.voteStory(storyID, token, 'down');
+  };
 
-  }
   $scope.replay = function () {
     StoryStateMachine.restartStory();
-  }
+  };
 });
