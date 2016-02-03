@@ -24,7 +24,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     while( ! window.youtubeApiLoadedAndReady){}
 
     if (this.audioId) {
-      this.createAudioPlayer(
+      this._createAudioPlayer(
         storyFrame, readyCallback, endPlaybackCallback, playingCallback
       );
     }
