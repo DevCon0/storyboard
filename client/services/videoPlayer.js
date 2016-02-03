@@ -56,11 +56,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype._createAudioPlayer = function(storyFrame, readyCallback, endPlaybackCallback, playingCallback){
-    var frameLength = storyFrame.start + storyFrame.end;
-    var audioLength = storyFrame.audioStart + storyFrame.audioEnd;
-    if (audioLength > frameLength) {
-      storyFrame.audioEnd = storyFrame.audioStart + (storyFrame.end - storyFrame.start)
-    }
+    storyFrame.audioEnd = storyFrame.audioStart + (storyFrame.end - storyFrame.start)
     var audioStoryFrame = {
       mediaType: 0,
       videoId: storyFrame.audioId,

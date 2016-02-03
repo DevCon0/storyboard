@@ -91,7 +91,6 @@ angular.module('storyBoard.createStory', [])
       recreateVideoUrl(editStory.frames[1].audioId) :
       '';
     $scope.frame1AudioStartTime = editStory.frames[1].audioStart;
-    $scope.frame1AudioEndTime = editStory.frames[1].audioEnd;
     $scope.frame1AudioVolume = editStory.frames[1].audioVolume;
     if ($scope.frame1AudioUrl !== '') {
       $scope.addAudio1 = true;
@@ -119,7 +118,6 @@ angular.module('storyBoard.createStory', [])
       recreateVideoUrl(editStory.frames[2].audioId) :
       '';
     $scope.frame2AudioStartTime = editStory.frames[2].audioStart;
-    $scope.frame2AudioEndTime = editStory.frames[2].audioEnd;
     $scope.frame2AudioVolume = editStory.frames[2].audioVolume;
     if ($scope.frame2AudioUrl !== '') {
       $scope.addAudio2 = true;
@@ -147,7 +145,6 @@ angular.module('storyBoard.createStory', [])
       recreateVideoUrl(editStory.frames[3].audioId) :
       '';
     $scope.frame3AudioStartTime = editStory.frames[3].audioStart;
-    $scope.frame3AudioEndTime = editStory.frames[3].audioEnd;
     $scope.frame3AudioVolume = editStory.frames[3].audioVolume;
     if ($scope.frame3AudioUrl !== '') {
       $scope.addAudio3 = true;
@@ -175,7 +172,6 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1UrlDuration = null;
     $scope.frame1AudioUrl = '';
     $scope.frame1AudioStartTime = 0;
-    $scope.frame1AudioEndTime = 0;
     $scope.frame1AudioVolume = 0;
     $scope.frame1NarrationText = null;
     $scope.frame1NarrationDelay = 0;
@@ -189,7 +185,6 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2UrlDuration = null;
     $scope.frame2AudioUrl = '';
     $scope.frame2AudioStartTime = 0;
-    $scope.frame2AudioEndTime = 0;
     $scope.frame2AudioVolume = 0;
     $scope.frame2NarrationText = null;
     $scope.frame2NarrationDelay = 0;
@@ -203,7 +198,6 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3UrlDuration = null;
     $scope.frame3AudioUrl = '';
     $scope.frame3AudioStartTime = 0;
-    $scope.frame3AudioEndTime = 0;
     $scope.frame3AudioVolume = 0;
     $scope.frame3NarrationText = null;
     $scope.frame3NarrationDelay = 0;
@@ -361,9 +355,6 @@ angular.module('storyBoard.createStory', [])
           audioStart: ($scope.frame1AudioStartTime) ?
                         parseFloat($scope.frame1AudioStartTime) :
                         0,
-          audioEnd: ($scope.frame1AudioEndTime) ?
-                        parseFloat($scope.frame1AudioEndTime) :
-                        0,
           audioVolume: ($scope.frame1AudioVolume) ?
                         parseFloat($scope.frame1AudioVolume) :
                         0,
@@ -385,9 +376,6 @@ angular.module('storyBoard.createStory', [])
           audioStart: ($scope.frame2AudioStartTime) ?
                         parseFloat($scope.frame2AudioStartTime) :
                         0,
-          audioEnd: ($scope.frame2AudioEndTime) ?
-                        parseFloat($scope.frame2AudioEndTime) :
-                        0,
           audioVolume: ($scope.frame2AudioVolume) ?
                         parseFloat($scope.frame2AudioVolume) :
                         0,
@@ -408,9 +396,6 @@ angular.module('storyBoard.createStory', [])
           audioId: stripOutVideoIdFromUrl($scope.frame3AudioUrl),
           audioStart: ($scope.frame3AudioStartTime) ?
                         parseFloat($scope.frame3AudioStartTime) :
-                        0,
-          audioEnd: ($scope.frame3AudioEndTime) ?
-                        parseFloat($scope.frame3AudioEndTime) :
                         0,
           audioVolume: ($scope.frame3AudioVolume) ?
                         parseFloat($scope.frame3AudioVolume) :
@@ -470,9 +455,6 @@ angular.module('storyBoard.createStory', [])
           audioStart: $scope.frame1AudioStartTime ?
                         parseFloat($scope.frame1AudioStartTime) :
                         0,
-          audioEnd: ($scope.frame1AudioEndTime) ?
-                        parseFloat($scope.frame1AudioEndTime) :
-                        0,
           audioVolume: ($scope.frame1AudioVolume) ?
                         parseFloat($scope.frame1AudioVolume) :
                         0,
@@ -493,9 +475,6 @@ angular.module('storyBoard.createStory', [])
           audioStart: ($scope.frame2AudioStartTime) ?
                         parseFloat($scope.frame2AudioStartTime) :
                         0,
-          audioEnd: ($scope.frame2AudioEndTime) ?
-                        parseFloat($scope.frame2AudioEndTime) :
-                        0,
           audioVolume: ($scope.frame2AudioVolume) ?
                         parseFloat($scope.frame2AudioVolume) :
                         0,
@@ -515,9 +494,6 @@ angular.module('storyBoard.createStory', [])
           audioId: stripOutVideoIdFromUrl($scope.frame3AudioUrl),
           audioStart: ($scope.frame3AudioStartTime) ?
                         parseFloat($scope.frame3AudioStartTime) :
-                        0,
-          audioEnd: ($scope.frame3AudioEndTime) ?
-                        parseFloat($scope.frame3AudioEndTime) :
                         0,
           audioVolume: ($scope.frame3AudioVolume) ?
                         parseFloat($scope.frame3AudioVolume) :
@@ -615,7 +591,7 @@ angular.module('storyBoard.createStory', [])
       console.log('$scope.frame1AudioUrl', $scope.frame1AudioUrl);
         frameYoutubeUrl = $scope.frame1AudioUrl;
         frameStartTime = $scope.frame1AudioStartTime;
-        frameEndTime = $scope.frame1AudioEndTime;
+        frameEndTime = $scope.frame1EndTime;
         frameVolume = $scope.frame1AudioVolume;
         frameDivId = 'frame1PreviewAudio';
         framePlayerName = 'frame1';
@@ -624,7 +600,7 @@ angular.module('storyBoard.createStory', [])
       case 2:
         frameYoutubeUrl = $scope.frame2AudioUrl;
         frameStartTime = $scope.frame2AudioStartTime;
-        frameEndTime = $scope.frame2AudioEndTime;
+        frameEndTime = $scope.frame2EndTime;
         frameVolume = $scope.frame2AudioVolume;
         frameDivId = 'frame2PreviewAudio';
         framePlayerName = 'frame2';
@@ -633,7 +609,7 @@ angular.module('storyBoard.createStory', [])
       case 3:
         frameYoutubeUrl = $scope.frame3AudioUrl;
         frameStartTime = $scope.frame3AudioStartTime;
-        frameEndTime = $scope.frame3AudioEndTime;
+        frameEndTime = $scope.frame3EndTime;
         frameVolume = $scope.frame3AudioVolume;
         frameDivId = 'frame3PreviewAudio';
         framePlayerName = 'frame3';
