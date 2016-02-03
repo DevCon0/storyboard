@@ -15,7 +15,9 @@
             <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
           </div>
           <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <button type="button" class="btn btn-success single-story-button" ng-click="toggleSoundtrack()"><span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{audioButtonLabel}}</button>
+          <button type="button" class="btn btn-success single-story-button" ng-click="toggleSoundtrack()">
+            <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{audioButtonLabel}}
+          </button>
           <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button>
       </form>
       <div class="row clean"></div>
@@ -56,7 +58,6 @@
             <span class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
             <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
             <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
-
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
@@ -126,7 +127,7 @@
           <div class="form-group">
             <label for="volume2">Volume (0-100%)</label>
             <input type="text" ng-model="$parent.frame2Volume" class="form-control" id="volume2" placeholder="100">
-            <span class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
+            <span class="volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
             <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
             <input type="range" min="0" max="100" ng-model="$parent.frame2Volume"/>
           </div>
@@ -198,7 +199,7 @@
           <div class="form-group">
             <label for="volume3">Volume (0-100%)</label>
             <input type="text" ng-model="$parent.frame3Volume" class="form-control" id="volume3" placeholder="100">
-            <span class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
+            <span class="volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
             <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
             <input type="range" min="0" max="100" ng-model="$parent.frame3Volume"/>
           </div>
@@ -263,7 +264,7 @@
           <div class="form-group">
             <label for="volume0">Volume (0-100%)</label>
             <input type="text" ng-model="frame0Volume" class="form-control" id="volume0" placeholder="100">
-            <span class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
+            <span class="volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
             <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
             <input type="range" min="0" max="100" ng-model="frame0Volume"/>
           </div>
