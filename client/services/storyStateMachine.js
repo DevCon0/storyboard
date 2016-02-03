@@ -55,6 +55,10 @@ angular.module('storyBoard.storyStateMachineService',
       this.players.unshift(newFramePlayer);
     }
 
+    this._registerNavigateAwayListener();
+  };
+
+  storyStateMachine._registerNavigateAwayListener = function () {
     var originalURL = document.URL;
 
     var checkingIfNavigatedAway = setInterval(function() {
