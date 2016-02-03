@@ -94,6 +94,35 @@
         </form>
         <div class="col-md-12 clean"></div>
       </div>
+ <!-- Act I AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+      <button ng-if="!addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio1 = true">Add Audio Track</button>
+      <button ng-if="addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio1 = false">Remove Audio Track</button>
+      <div ng-if="addAudio1 && (frame1MediaType == 0)">
+        <form ng-submit="previewAudioFrame(1)">
+          <div class="form-group">
+            <h4>Audio Track</h4>
+            <label for="youtubeAudioUrl1">Youtube URL (Audio)</label>
+            <input type="url" ng-model="$parent.frame1AudioUrl" class="form-control" id="youtubeAudioUrl1" placeholder="https://www.youtube.com">
+          </div>
+          <div class="form-group">
+            <label for="startTime1">Start Time (sec)</label>
+            <input type="text" ng-model="$parent.frame1AudioStartTime" class="form-control" id="audioStartTime1" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="endTime1">End Time (sec)</label>
+            <input type="text" ng-model="$parent.frame1AudioEndTime" class="form-control" id="audioEndTime1" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="volume1">Volume (0-100%)</label>
+            <input type="text" ng-model="$parent.frame1AudioVolume" class="form-control" id="audioVolume1" placeholder="100">
+            <input type="range" min="0" max="100" ng-model="$parent.frame1AudioVolume"/>
+          </div>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
+        </form>
+        <div class="col-md-12 clean"></div>
+        <div id="frame1PreviewAudio" class="col-md-12"></div>
+      </div>
     </paper-card>
   </div>
  <!-- Act II ///////////////////////////////////////////////////////////////////////////// -->
@@ -163,6 +192,35 @@
           <button type="submit" class="btn btn-success single-story-button">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
         <div class="col-md-12 clean"></div>
+      </div>
+<!-- Act II AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+      <button ng-if="!addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio2 = true">Add Audio Track</button>
+      <button ng-if="addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio2 = false">Remove Audio Track</button>
+      <div ng-if="addAudio2 && (frame2MediaType == 0)">
+        <form ng-submit="previewAudioFrame(2)">
+          <div class="form-group">
+            <h4>Audio Track</h4>
+            <label for="youtubeAudioUrl2">Youtube URL (Audio)</label>
+            <input type="url" ng-model="$parent.frame2AudioUrl" class="form-control" id="youtubeAudioUrl2" placeholder="https://www.youtube.com">
+          </div>
+          <div class="form-group">
+            <label for="startTime2">Start Time (sec)</label>
+            <input type="text" ng-model="$parent.frame2AudioStartTime" class="form-control" id="audioStartTime2" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="endTime2">End Time (sec)</label>
+            <input type="text" ng-model="$parent.frame2AudioEndTime" class="form-control" id="audioEndTime2" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="volume2">Volume (0-100%)</label>
+            <input type="text" ng-model="$parent.frame2AudioVolume" class="form-control" id="audioVolume2" placeholder="100">
+            <input type="range" min="0" max="100" ng-model="$parent.frame2AudioVolume"/>
+          </div>
+          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <span><paper-spinner-lite ng-if="showSpinner2" class="blueSpinner" active></paper-spinner-lite></span>
+        </form>
+        <div class="col-md-12 clean"></div>
+        <div id="frame2PreviewAudio" class="col-md-12"></div>
       </div>
     </paper-card>
   </div>
@@ -234,6 +292,35 @@
         </form>
         <div class="col-md-12 clean"></div>
       </div>
+<!-- Act III AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+      <button ng-if="!addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio3 = true">Add Audio Track</button>
+      <button ng-if="addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio3 = false">Remove Audio Track</button>
+      <div ng-if="addAudio3 && (frame3MediaType == 0)">
+        <form ng-submit="previewAudioFrame(3)">
+          <div class="form-group">
+            <h4>Audio Track</h4>
+            <label for="youtubeAudioUrl3">Youtube URL (Audio)</label>
+            <input type="url" ng-model="$parent.frame3AudioUrl" class="form-control" id="youtubeAudioUrl3" placeholder="https://www.youtube.com">
+          </div>
+          <div class="form-group">
+            <label for="startTime3">Start Time (sec)</label>
+            <input type="text" ng-model="$parent.frame3AudioStartTime" class="form-control" id="audioStartTime3" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="endTime3">End Time (sec)</label>
+            <input type="text" ng-model="$parent.frame3AudioEndTime" class="form-control" id="audioEndTime3" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="volume3">Volume (0-100%)</label>
+            <input type="text" ng-model="$parent.frame3AudioVolume" class="form-control" id="audioVolume3" placeholder="100">
+            <input type="range" min="0" max="100" ng-model="$parent.frame3AudioVolume"/>
+          </div>
+          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <span><paper-spinner-lite ng-if="showSpinner3" class="blueSpinner" active></paper-spinner-lite></span>
+        </form>
+        <div class="col-md-12 clean"></div>
+        <div id="frame3PreviewAudio" class="col-md-12"></div>
+      </div>
     </paper-card>
   </div>
  <!-- Act Zero AUDIO /////////////////////////////////////////////////////////////////////// -->
@@ -274,8 +361,11 @@
             <div class="modal-header preview-modal-header">
                 <h1>Preview</h1>
                 <div id="player1" style="display:inline;"></div>
+                <div id="player1Audio" style="display:none;"></div>
                 <div id="player2" style="display:inline;"></div>
+                <div id="player2Audio" style="display:none;"></div>
                 <div id="player3" style="display:inline;"></div>
+                <div id="player3Audio" style="display:none;"></div>
                 <div ng-show="!!$parent.frame0YoutubeUrl" id="player0" style="display:inline;"></div>
                 <div class="modal-footer preview-modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal"  data-target="#myModal" ng-click="saveStory(true)">Save your story<iron-icon icon="icons:save" class="icon-margin-left"></iron-icon></button>
