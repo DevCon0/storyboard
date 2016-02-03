@@ -101,6 +101,7 @@ body {
 }
 
 .create-previewThumbnail {
+  margin-left: 5px;
   width: 100px;
   height: 100px;
 }
@@ -338,6 +339,11 @@ paper-spinner-lite.blueSpinner{
 }
 
 .single-story-button {
+    margin-left: 6px;
     width:180px;
     height:36px;
+}
+
+.volume-up {
+  float:right;
 }
