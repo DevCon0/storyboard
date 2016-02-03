@@ -12,7 +12,7 @@ angular.module('storyBoard.storyStorageService', [])
       return resp.data;
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
   };
 
@@ -28,7 +28,7 @@ angular.module('storyBoard.storyStorageService', [])
       return resp.data;
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
   };
 
@@ -41,7 +41,7 @@ angular.module('storyBoard.storyStorageService', [])
       return resp.data;
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
   };
 
@@ -58,7 +58,7 @@ angular.module('storyBoard.storyStorageService', [])
       return resp.body;
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
   };
 

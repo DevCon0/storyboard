@@ -14,7 +14,7 @@ angular.module('storyBoard.dashboard', [])
       $state.go('createStory', { story: resp.data });
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
 
   };
@@ -26,7 +26,7 @@ angular.module('storyBoard.dashboard', [])
       console.log('resp from deleteStory', resp);
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     })
     .then(function () {
       StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))

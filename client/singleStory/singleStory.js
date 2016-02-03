@@ -24,7 +24,7 @@ angular.module('storyBoard.singleStory', [])
     StoryStateMachine.setStory(story.data, isSingleStoryView, $scope);
   })
   .catch(function (error) {
-      console.log('incoming error', error);
+    $state.go('errorPage');
   });
 
   $scope.voteUp = function () {
