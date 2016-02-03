@@ -16,6 +16,7 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.storyStateMachineService',
                                    'storyBoard.storyStorageService',
                                    'storyBoard.authService',
+                                   'storyBoard.errorPage',
 ]);
 
 storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
@@ -116,6 +117,15 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
           controller: 'createStoryCtrl'
         }
       }
-    });
+    })
+  .state('errorPage', {
+    url: "/errorPage",
+    views: {
+      'content': {
+        templateUrl: '/errorPage/errorPage.html',
+        controller: 'errorPageCtrl'
+      }
+    }
+  });
 });
 
