@@ -33,6 +33,8 @@ $ go test -v
 
 The tech stack is MongoDB, Angular, and Go.
 
+![alt tag](http://s18.postimg.org/st43pwo7d/MAG.jpg)
+
 #Release Notes
 ##### 1/29/2016 - alpha v0.3.6
 A user add an Image or GIF file and set a duration in a story.
