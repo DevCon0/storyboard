@@ -17,16 +17,18 @@ angular.module('storyBoard.createStory', [])
 
   $scope.showSpinner0 = false;
   $scope.addFrame0ImagePreview = false;
-  $scope.addAudio1 = false;
 
   $scope.showSpinner1 = false;
   $scope.addFrame1ImagePreview = false;
+  $scope.addAudio1 = false;
 
   $scope.showSpinner2 = false;
   $scope.addFrame2ImagePreview = false;
+  $scope.addAudio2 = false;
 
   $scope.showSpinner3 = false;
   $scope.addFrame3ImagePreview = false;
+  $scope.addAudio3 = false;
 
   $scope.addSoundtrack = false;
   $scope.audioButtonLabel = "Add Soundtrack";
