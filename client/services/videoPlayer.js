@@ -24,8 +24,9 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     while( ! window.youtubeApiLoadedAndReady){}
 
     if (this.audioId) {
+      var dummyEndPlaybackCallback = function() {};
       this._createAudioPlayer(
-        storyFrame, readyCallback, endPlaybackCallback, playingCallback
+        storyFrame, readyCallback, dummyEndPlaybackCallback, playingCallback
       );
     }
 
