@@ -88,7 +88,7 @@ angular.module('storyBoard.storyStateMachineService',
 
     switch(storyFrame.mediaType){
       case 0:
-        player = new VideoPlayer();
+        player = new VideoPlayer(storyFrame.audioId);
         break;
       case 1:
         player = new ImagePlayer(storyFrame.narrationText);
