@@ -23,25 +23,9 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     var VIDEO_WIDTH = 356;
     while( ! window.youtubeApiLoadedAndReady){}
 
-    if (storyFrame.audioId) {
-      var frameLength = storyFrame.start + storyFrame.end;
-      var audioLength = storyFrame.audioStart + storyFrame.audioEnd;
-      if (audioLength > frameLength) {
-        storyFrame.audioEnd = storyFrame.audioStart + (storyFrame.end - storyFrame.start)
-      }
-      var audioStoryFrame = {
-        mediaType: 0,
-        videoId: storyFrame.audioId,
-        volume: storyFrame.audioVolume,
-        start: storyFrame.audioStart,
-        end: storyFrame.audioEnd,
-        playerDiv: storyFrame.playerDiv + 'Audio',
-        player: {}
-      };
-
-      this.audioPlayer.create(
-        audioStoryFrame, readyCallback,
-        endPlaybackCallback, playingCallback
+    if (this.audioId) {
+      this.createAudioPlayer(
+        storyFrame, readyCallback, endPlaybackCallback, playingCallback
       );
     }
 
@@ -68,6 +52,28 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     this.endPlaybackCallback = endPlaybackCallback;
     this.playingCallback = playingCallback;
     this.volume = storyFrame.volume;
+  };
+
+  VideoPlayer.prototype.createAudioPlayer = function(storyFrame, readyCallback, endPlaybackCallback, playingCallback){
+    var frameLength = storyFrame.start + storyFrame.end;
+    var audioLength = storyFrame.audioStart + storyFrame.audioEnd;
+    if (audioLength > frameLength) {
+      storyFrame.audioEnd = storyFrame.audioStart + (storyFrame.end - storyFrame.start)
+    }
+    var audioStoryFrame = {
+      mediaType: 0,
+      videoId: storyFrame.audioId,
+      volume: storyFrame.audioVolume,
+      start: storyFrame.audioStart,
+      end: storyFrame.audioEnd,
+      playerDiv: storyFrame.playerDiv + 'Audio',
+      player: {}
+    };
+
+    this.audioPlayer.create(
+      audioStoryFrame, readyCallback,
+      endPlaybackCallback, playingCallback
+    );
   };
 
   VideoPlayer.prototype.destroy = function(){
