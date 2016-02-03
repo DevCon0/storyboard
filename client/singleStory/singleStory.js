@@ -22,9 +22,6 @@ angular.module('storyBoard.singleStory', [])
     $scope.storyCreatedAt = createdAtString;
     var isSingleStoryView = true;
     StoryStateMachine.setStory(story.data, isSingleStoryView, $scope);
-  })
-  .catch(function (error) {
-    $state.go('errorPage');
   });
 
   $scope.voteUp = function () {
