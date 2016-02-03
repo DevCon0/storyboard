@@ -12,7 +12,7 @@ angular.module('storyBoard.createStory', [])
                                          VideoPlayer) {
 
   if ( ! (Auth.isAuth()) ) {
-    $state.go('login')
+    $state.go('login');
   }
 
   $scope.showSpinner0 = false;
@@ -86,14 +86,13 @@ angular.module('storyBoard.createStory', [])
     if ($scope.frame1NarrationText !== "") {
       $scope.addNarration1 = true;
       $scope.narration1ButtonLabel = "Remove Narration";
-    };
-    $scope.frame1AudioUrl = (editStory.frames[1].audioId)
-      ? recreateVideoUrl(editStory.frames[1].audioId)
-      : '';
+    }
+    $scope.frame1AudioUrl = (editStory.frames[1].audioId) ?
+      recreateVideoUrl(editStory.frames[1].audioId) :
+      '';
     $scope.frame1AudioStartTime = editStory.frames[1].audioStart;
-    $scope.frame1AudioEndTime = editStory.frames[1].audioEnd;
     $scope.frame1AudioVolume = editStory.frames[1].audioVolume;
-    if ($scope.frame1AudioUrl != '') {
+    if ($scope.frame1AudioUrl !== '') {
       $scope.addAudio1 = true;
     }
 
@@ -114,14 +113,13 @@ angular.module('storyBoard.createStory', [])
     if ($scope.frame2NarrationText !== "") {
       $scope.addNarration2 = true;
       $scope.narration2ButtonLabel = "Remove Narration";
-    };
-    $scope.frame2AudioUrl = (editStory.frames[2].audioId)
-      ? recreateVideoUrl(editStory.frames[2].audioId)
-      : '';
+    }
+    $scope.frame2AudioUrl = (editStory.frames[2].audioId) ?
+      recreateVideoUrl(editStory.frames[2].audioId) :
+      '';
     $scope.frame2AudioStartTime = editStory.frames[2].audioStart;
-    $scope.frame2AudioEndTime = editStory.frames[2].audioEnd;
     $scope.frame2AudioVolume = editStory.frames[2].audioVolume;
-    if ($scope.frame2AudioUrl != '') {
+    if ($scope.frame2AudioUrl !== '') {
       $scope.addAudio2 = true;
     }
 
@@ -142,14 +140,13 @@ angular.module('storyBoard.createStory', [])
     if ($scope.frame3NarrationText !== "") {
       $scope.addNarration3 = true;
       $scope.narration3ButtonLabel = "Remove Narration";
-    };
-    $scope.frame3AudioUrl = (editStory.frames[3].audioId)
-      ? recreateVideoUrl(editStory.frames[3].audioId)
-      : '';
+    }
+    $scope.frame3AudioUrl = (editStory.frames[3].audioId) ?
+      recreateVideoUrl(editStory.frames[3].audioId) :
+      '';
     $scope.frame3AudioStartTime = editStory.frames[3].audioStart;
-    $scope.frame3AudioEndTime = editStory.frames[3].audioEnd;
     $scope.frame3AudioVolume = editStory.frames[3].audioVolume;
-    if ($scope.frame3AudioUrl != '') {
+    if ($scope.frame3AudioUrl !== '') {
       $scope.addAudio3 = true;
     }
   } else {
@@ -175,7 +172,6 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1UrlDuration = null;
     $scope.frame1AudioUrl = '';
     $scope.frame1AudioStartTime = 0;
-    $scope.frame1AudioEndTime = 0;
     $scope.frame1AudioVolume = 0;
     $scope.frame1NarrationText = null;
     $scope.frame1NarrationDelay = 0;
@@ -189,7 +185,6 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2UrlDuration = null;
     $scope.frame2AudioUrl = '';
     $scope.frame2AudioStartTime = 0;
-    $scope.frame2AudioEndTime = 0;
     $scope.frame2AudioVolume = 0;
     $scope.frame2NarrationText = null;
     $scope.frame2NarrationDelay = 0;
@@ -203,7 +198,6 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3UrlDuration = null;
     $scope.frame3AudioUrl = '';
     $scope.frame3AudioStartTime = 0;
-    $scope.frame3AudioEndTime = 0;
     $scope.frame3AudioVolume = 0;
     $scope.frame3NarrationText = null;
     $scope.frame3NarrationDelay = 0;
@@ -213,7 +207,7 @@ angular.module('storyBoard.createStory', [])
     //TODO: remove once done with development
     $scope.storyTitle = "Panama ....";
     $scope.storyDescription = "Reach down ...";
-    $scope.storyThumbnailUrl = "http://assets.rollingstone.com/assets/images/artists/van-halen.jpg"
+    $scope.storyThumbnailUrl = "http://assets.rollingstone.com/assets/images/artists/van-halen.jpg";
 
     $scope.frame0YoutubeUrl = "https://www.youtube.com/watch?v=fuKDBPw8wQA";
     $scope.frame0StartTime = "0";
@@ -246,7 +240,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
     $scope.frame3StartTime = "0";
     $scope.frame3EndTime = "13";
-    $scope.frame3Volume = "60"
+    $scope.frame3Volume = "60";
     $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
     $scope.frame3UrlDuration = 1;
     $scope.frame3NarrationText = 'By Jove, I\'ve got a cheeky idea, let\'s have Milco solve the matrix.';
@@ -314,7 +308,7 @@ angular.module('storyBoard.createStory', [])
       frame3Ready;
 
     return allFieldsReady;
-  }
+  };
 
   $scope.saveStory = function(isPreviewModal){
     if(isPreviewModal){
@@ -358,15 +352,12 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame1AudioUrl),
-          audioStart: ($scope.frame1AudioStartTime)
-                        ? parseFloat($scope.frame1AudioStartTime)
-                        : 0,
-          audioEnd: ($scope.frame1AudioEndTime)
-                        ? parseFloat($scope.frame1AudioEndTime)
-                        : 0,
-          audioVolume: ($scope.frame1AudioVolume)
-                        ? parseFloat($scope.frame1AudioVolume)
-                        : 0,
+          audioStart: ($scope.frame1AudioStartTime) ?
+                        parseFloat($scope.frame1AudioStartTime) :
+                        0,
+          audioVolume: ($scope.frame1AudioVolume) ?
+                        parseFloat($scope.frame1AudioVolume) :
+                        0,
           narrationText: $scope.frame1NarrationText,
           narrationDelay: $scope.frame1NarrationDelay ? parseFloat($scope.frame1NarrationDelay) : 0
         },
@@ -382,15 +373,12 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame2AudioUrl),
-          audioStart: ($scope.frame2AudioStartTime)
-                        ? parseFloat($scope.frame2AudioStartTime)
-                        : 0,
-          audioEnd: ($scope.frame2AudioEndTime)
-                        ? parseFloat($scope.frame2AudioEndTime)
-                        : 0,
-          audioVolume: ($scope.frame2AudioVolume)
-                        ? parseFloat($scope.frame2AudioVolume)
-                        : 0,
+          audioStart: ($scope.frame2AudioStartTime) ?
+                        parseFloat($scope.frame2AudioStartTime) :
+                        0,
+          audioVolume: ($scope.frame2AudioVolume) ?
+                        parseFloat($scope.frame2AudioVolume) :
+                        0,
           narrationText: $scope.frame2NarrationText,
           narrationDelay: $scope.frame2NarrationDelay ? parseFloat($scope.frame2NarrationDelay) : 0
         },
@@ -406,26 +394,23 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame3ImageUrl,
           imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame3AudioUrl),
-          audioStart: ($scope.frame3AudioStartTime)
-                        ? parseFloat($scope.frame3AudioStartTime)
-                        : 0,
-          audioEnd: ($scope.frame3AudioEndTime)
-                        ? parseFloat($scope.frame3AudioEndTime)
-                        : 0,
-          audioVolume: ($scope.frame3AudioVolume)
-                        ? parseFloat($scope.frame3AudioVolume)
-                        : 0,
+          audioStart: ($scope.frame3AudioStartTime) ?
+                        parseFloat($scope.frame3AudioStartTime) :
+                        0,
+          audioVolume: ($scope.frame3AudioVolume) ?
+                        parseFloat($scope.frame3AudioVolume) :
+                        0,
           narrationText: $scope.frame3NarrationText,
           narrationDelay: $scope.frame3NarrationDelay ? parseFloat($scope.frame3NarrationDelay) : 0
         }
       ]
-    }
+    };
 
     if (wasPassed) {
       StoryStorage.editStory(story, editStory.storyId, token)
         .then(function (data) {
           $state.go('dashboard');
-      })
+      });
     } else {
       StoryStorage.saveStory(story, token)
         .then(function (data) {
@@ -467,15 +452,12 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame1ImageUrl,
           imageDuration: $scope.frame1UrlDuration,
           audioId: stripOutVideoIdFromUrl($scope.frame1AudioUrl),
-          audioStart: $scope.frame1AudioStartTime
-                        ? parseFloat($scope.frame1AudioStartTime)
-                        : 0,
-          audioEnd: ($scope.frame1AudioEndTime)
-                        ? parseFloat($scope.frame1AudioEndTime)
-                        : 0,
-          audioVolume: ($scope.frame1AudioVolume)
-                        ? parseFloat($scope.frame1AudioVolume)
-                        : 0,
+          audioStart: $scope.frame1AudioStartTime ?
+                        parseFloat($scope.frame1AudioStartTime) :
+                        0,
+          audioVolume: ($scope.frame1AudioVolume) ?
+                        parseFloat($scope.frame1AudioVolume) :
+                        0,
           narrationText: $scope.frame1NarrationText,
           narrationDelay: $scope.frame1NarrationDelay
         },
@@ -490,15 +472,12 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame2ImageUrl,
           imageDuration: $scope.frame2UrlDuration,
           audioId: stripOutVideoIdFromUrl($scope.frame2AudioUrl),
-          audioStart: ($scope.frame2AudioStartTime)
-                        ? parseFloat($scope.frame2AudioStartTime)
-                        : 0,
-          audioEnd: ($scope.frame2AudioEndTime)
-                        ? parseFloat($scope.frame2AudioEndTime)
-                        : 0,
-          audioVolume: ($scope.frame2AudioVolume)
-                        ? parseFloat($scope.frame2AudioVolume)
-                        : 0,
+          audioStart: ($scope.frame2AudioStartTime) ?
+                        parseFloat($scope.frame2AudioStartTime) :
+                        0,
+          audioVolume: ($scope.frame2AudioVolume) ?
+                        parseFloat($scope.frame2AudioVolume) :
+                        0,
           narrationText: $scope.frame2NarrationText,
           narrationDelay: $scope.frame2NarrationDelay
         },
@@ -513,20 +492,17 @@ angular.module('storyBoard.createStory', [])
           imageUrl: $scope.frame3ImageUrl,
           imageDuration: $scope.frame3UrlDuration,
           audioId: stripOutVideoIdFromUrl($scope.frame3AudioUrl),
-          audioStart: ($scope.frame3AudioStartTime)
-                        ? parseFloat($scope.frame3AudioStartTime)
-                        : 0,
-          audioEnd: ($scope.frame3AudioEndTime)
-                        ? parseFloat($scope.frame3AudioEndTime)
-                        : 0,
-          audioVolume: ($scope.frame3AudioVolume)
-                        ? parseFloat($scope.frame3AudioVolume)
-                        : 0,
+          audioStart: ($scope.frame3AudioStartTime) ?
+                        parseFloat($scope.frame3AudioStartTime) :
+                        0,
+          audioVolume: ($scope.frame3AudioVolume) ?
+                        parseFloat($scope.frame3AudioVolume) :
+                        0,
           narrationText: $scope.frame3NarrationText,
           narrationDelay: $scope.frame3NarrationDelay
         }
       ]
-    }
+    };
     var isSingleStoryView = false;
     var scope = null;
     StoryStateMachine.setStory(story, isSingleStoryView, scope);
@@ -550,7 +526,6 @@ angular.module('storyBoard.createStory', [])
     var frameVolume = null;
     var frameDivId = null;
     var framePlayerName = null;
-    console.log('prev frameId', frameId)
     switch(frameId){
       case 0:
         frameYoutubeUrl = $scope.frame0YoutubeUrl;
@@ -616,7 +591,7 @@ angular.module('storyBoard.createStory', [])
       console.log('$scope.frame1AudioUrl', $scope.frame1AudioUrl);
         frameYoutubeUrl = $scope.frame1AudioUrl;
         frameStartTime = $scope.frame1AudioStartTime;
-        frameEndTime = $scope.frame1AudioEndTime;
+        frameEndTime = $scope.frame1EndTime;
         frameVolume = $scope.frame1AudioVolume;
         frameDivId = 'frame1PreviewAudio';
         framePlayerName = 'frame1';
@@ -625,7 +600,7 @@ angular.module('storyBoard.createStory', [])
       case 2:
         frameYoutubeUrl = $scope.frame2AudioUrl;
         frameStartTime = $scope.frame2AudioStartTime;
-        frameEndTime = $scope.frame2AudioEndTime;
+        frameEndTime = $scope.frame2EndTime;
         frameVolume = $scope.frame2AudioVolume;
         frameDivId = 'frame2PreviewAudio';
         framePlayerName = 'frame2';
@@ -634,7 +609,7 @@ angular.module('storyBoard.createStory', [])
       case 3:
         frameYoutubeUrl = $scope.frame3AudioUrl;
         frameStartTime = $scope.frame3AudioStartTime;
-        frameEndTime = $scope.frame3AudioEndTime;
+        frameEndTime = $scope.frame3EndTime;
         frameVolume = $scope.frame3AudioVolume;
         frameDivId = 'frame3PreviewAudio';
         framePlayerName = 'frame3';
@@ -671,8 +646,7 @@ angular.module('storyBoard.createStory', [])
   function recreateVideoUrl(youtubeID) {
     var header = "https://www.youtube.com/watch?v=";
     return header + youtubeID;
-  };
-
+  }
 
   var previewAudioVideoFrame = function(currentFrameObject) {
     var previewAudioVideoPlayer = new VideoPlayer();
@@ -700,7 +674,7 @@ angular.module('storyBoard.createStory', [])
     switch(frameId){
       case 0:
         throw('Whoa, amazing, you put an image in an audio track');
-        break;
+        //break; jshint complains that this break is unreachable, which is true
       case 1:
         $scope.addFrame1ImagePreview = !$scope.addFrame1ImagePreview;
         break;
@@ -789,6 +763,6 @@ angular.module('storyBoard.createStory', [])
       }
       break;
     }
-  }
+  };
 
 });
