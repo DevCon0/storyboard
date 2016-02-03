@@ -100,7 +100,7 @@
       </div>
  <!-- Act I AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <button ng-if="!addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio1 = true">Add Audio Track</button>
-      <button ng-if="addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio1 = false">Remove Audio Track</button>
+      <button ng-if="addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio1 = false">Remove Audio Track</button>
       <div ng-if="addAudio1 && (frame1MediaType == 0)">
         <form ng-submit="previewAudioFrame(1)">
           <div class="form-group">
@@ -200,8 +200,8 @@
         <div class="col-md-12 clean"></div>
       </div>
 <!-- Act II AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <button ng-if="!addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio2 = true">Add Audio Track</button>
-      <button ng-if="addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio2 = false">Remove Audio Track</button>
+      <button ng-if="!addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio2 = true">Add Audio Track</button>
+      <button ng-if="addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio2 = false">Remove Audio Track</button>
       <div ng-if="addAudio2 && (frame2MediaType == 0)">
         <form ng-submit="previewAudioFrame(2)">
           <div class="form-group">
@@ -222,7 +222,7 @@
             <input type="text" ng-model="$parent.frame2AudioVolume" class="form-control" id="audioVolume2" placeholder="100">
             <input type="range" min="0" max="100" ng-model="$parent.frame2AudioVolume"/>
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showAudioSpinner2" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
@@ -261,7 +261,7 @@
             <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
             <input type="range" min="0" max="100" ng-model="$parent.frame3Volume"/>
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner3" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
@@ -301,8 +301,8 @@
         <div class="col-md-12 clean"></div>
       </div>
 <!-- Act III AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <button ng-if="!addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio3 = true">Add Audio Track</button>
-      <button ng-if="addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success" ng-click="$parent.addAudio3 = false">Remove Audio Track</button>
+      <button ng-if="!addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio3 = true">Add Audio Track</button>
+      <button ng-if="addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio3 = false">Remove Audio Track</button>
       <div ng-if="addAudio3 && (frame3MediaType == 0)">
         <form ng-submit="previewAudioFrame(3)">
           <div class="form-group">
@@ -323,7 +323,7 @@
             <input type="text" ng-model="$parent.frame3AudioVolume" class="form-control" id="audioVolume3" placeholder="100">
             <input type="range" min="0" max="100" ng-model="$parent.frame3AudioVolume"/>
           </div>
-          <button type="submit" class="btn btn-success">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
+          <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showAudioSpinner3" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
