@@ -54,7 +54,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     this.volume = storyFrame.volume;
   };
 
-  VideoPlayer.prototype.createAudioPlayer = function(storyFrame, readyCallback, endPlaybackCallback, playingCallback){
+  VideoPlayer.prototype._createAudioPlayer = function(storyFrame, readyCallback, endPlaybackCallback, playingCallback){
     var frameLength = storyFrame.start + storyFrame.end;
     var audioLength = storyFrame.audioStart + storyFrame.audioEnd;
     if (audioLength > frameLength) {
