@@ -160,10 +160,14 @@ angular.module('storyBoard.storyStateMachineService',
     var isFirstFrame  = frameNum === FIRST;
     var isSecondFrame = frameNum === SECOND;
     var isThirdFrame  = frameNum === THIRD;
+    var originalURL = document.URL;
     var storyStateMachine = this;
     if(isFirstFrame) {
       endPlayBackCallback = function(){
-        if(closureIsSingleStoryView) {
+        var haveNavigatedAway = document.URL !== originalURL;
+        if (haveNavigatedAway) {
+          return;
+        } else if(closureIsSingleStoryView) {
           _shrinkAct1AndGrowAct2();
         }
 
@@ -178,7 +182,10 @@ angular.module('storyBoard.storyStateMachineService',
       };
     } else if(isSecondFrame) {
       endPlayBackCallback = function(){
-        if(closureIsSingleStoryView) {
+        var haveNavigatedAway = document.URL !== originalURL;
+        if (haveNavigatedAway) {
+          return;
+        } else if(closureIsSingleStoryView) {
           _shrinkAct2AndGrowAct3();
         }
 
@@ -193,7 +200,10 @@ angular.module('storyBoard.storyStateMachineService',
       };
     } else if(isThirdFrame) {
       endPlayBackCallback = function(){
-        if(closureIsSingleStoryView) {
+        var haveNavigatedAway = document.URL !== originalURL;
+        if (haveNavigatedAway) {
+          return;
+        } else if(closureIsSingleStoryView) {
           _shrinkAct3();
         }
 
