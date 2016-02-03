@@ -7,7 +7,7 @@ angular.module('storyBoard.auth', [])
     console.log('Sign Up requested for', $scope.user);
     Auth.signup($scope.user)
       .then(function (resp) {
-        console.log('Sign Up response', resp)
+        console.log('Sign Up response', resp);
         localStorageService.set('sessiontoken', resp.data.token);
         localStorageService.set('username', resp.data.username);
         $location.path('/');
@@ -37,4 +37,4 @@ angular.module('storyBoard.auth', [])
 
   localStorageService.clearAll();
 
-})
+});

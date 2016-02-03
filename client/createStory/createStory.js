@@ -12,7 +12,7 @@ angular.module('storyBoard.createStory', [])
                                          VideoPlayer) {
 
   if ( ! (Auth.isAuth()) ) {
-    $state.go('login')
+    $state.go('login');
   }
 
   $scope.showSpinner0 = false;
@@ -83,7 +83,7 @@ angular.module('storyBoard.createStory', [])
     if ($scope.frame1NarrationText !== "") {
       $scope.addNarration1 = true;
       $scope.narration1ButtonLabel = "Remove Narration";
-    };
+    }
 
     // TODO: remove backwards compatibility
     if(editStory.frames[2].mediaType !== undefined) {
@@ -102,7 +102,7 @@ angular.module('storyBoard.createStory', [])
     if ($scope.frame2NarrationText !== "") {
       $scope.addNarration2 = true;
       $scope.narration2ButtonLabel = "Remove Narration";
-    };
+    }
 
     // TODO: remove backwards compatibility
     if(editStory.frames[3].mediaType !== undefined) {
@@ -121,7 +121,7 @@ angular.module('storyBoard.createStory', [])
     if ($scope.frame3NarrationText !== "") {
       $scope.addNarration3 = true;
       $scope.narration3ButtonLabel = "Remove Narration";
-    };
+    }
   } else {
     $scope.storyTitle = null;
     $scope.storyDescription = null;
@@ -171,7 +171,7 @@ angular.module('storyBoard.createStory', [])
     //TODO: remove once done with development
     $scope.storyTitle = "Panama ....";
     $scope.storyDescription = "Reach down ...";
-    $scope.storyThumbnailUrl = "http://assets.rollingstone.com/assets/images/artists/van-halen.jpg"
+    $scope.storyThumbnailUrl = "http://assets.rollingstone.com/assets/images/artists/van-halen.jpg";
 
     $scope.frame0YoutubeUrl = "https://www.youtube.com/watch?v=fuKDBPw8wQA";
     $scope.frame0StartTime = "0";
@@ -204,7 +204,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
     $scope.frame3StartTime = "0";
     $scope.frame3EndTime = "13";
-    $scope.frame3Volume = "60"
+    $scope.frame3Volume = "60";
     $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
     $scope.frame3UrlDuration = 1;
     $scope.frame3NarrationText = 'By Jove, I\'ve got a cheeky idea, let\'s have Milco solve the matrix.';
@@ -272,7 +272,7 @@ angular.module('storyBoard.createStory', [])
       frame3Ready;
 
     return allFieldsReady;
-  }
+  };
 
   $scope.saveStory = function(isPreviewModal){
     if(isPreviewModal){
@@ -347,13 +347,13 @@ angular.module('storyBoard.createStory', [])
           narrationDelay: $scope.frame3NarrationDelay ? parseFloat($scope.frame3NarrationDelay) : 0
         }
       ]
-    }
+    };
 
     if (wasPassed) {
       StoryStorage.editStory(story, editStory.storyId, token)
         .then(function (data) {
           $state.go('dashboard');
-      })
+      });
     } else {
       StoryStorage.saveStory(story, token)
         .then(function (data) {
@@ -424,7 +424,7 @@ angular.module('storyBoard.createStory', [])
           narrationDelay: $scope.frame3NarrationDelay
         }
       ]
-    }
+    };
     var isSingleStoryView = false;
     var scope = null;
     StoryStateMachine.setStory(story, isSingleStoryView, scope);
@@ -448,7 +448,7 @@ angular.module('storyBoard.createStory', [])
     var frameVolume = null;
     var frameDivId = null;
     var framePlayerName = null;
-    console.log('prev frameId', frameId)
+
     switch(frameId){
       case 0:
         frameYoutubeUrl = $scope.frame0YoutubeUrl;
@@ -517,7 +517,7 @@ angular.module('storyBoard.createStory', [])
   function recreateVideoUrl(youtubeID) {
     var header = "https://www.youtube.com/watch?v=";
     return header + youtubeID;
-  };
+  }
 
 
   var previewAudioVideoFrame = function(currentFrameObject) {
@@ -543,7 +543,7 @@ angular.module('storyBoard.createStory', [])
     switch(frameId){
       case 0:
         throw('Whoa, amazing, you put an image in an audio track');
-        break;
+        //break; Linter complains this is unreachable after 'throw'
       case 1:
         $scope.addFrame1ImagePreview = !$scope.addFrame1ImagePreview;
         break;
@@ -632,6 +632,6 @@ angular.module('storyBoard.createStory', [])
       }
       break;
     }
-  }
+  };
 
 });
