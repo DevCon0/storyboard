@@ -1,12 +1,19 @@
 angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
 
 .factory('VideoPlayer', function(Player){
-  function VideoPlayer(){
+  function VideoPlayer(audioId){
     this.storyFrame = null;
     this.endPlaybackCallback = null;
     this.playingCallback = null;
     this.volume = null;
     this.alreadyStopped = false;
+    this.audioPlayer = null;
+
+    this.audioId = audioId || '';
+    var hasAlternateAudio = this.audioId !== '';
+    if (hasAlternateAudio) {
+      this.audioPlayer = new VideoPlayer();
+    }
   }
 
   VideoPlayer.prototype = Object.create(Player.prototype);
@@ -15,6 +22,13 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     var VIDEO_HEIGHT = 200;
     var VIDEO_WIDTH = 356;
     while( ! window.youtubeApiLoadedAndReady){}
+
+    if (this.audioId) {
+      this._createAudioPlayer(
+        storyFrame, readyCallback, endPlaybackCallback, playingCallback
+      );
+    }
+
     storyFrame.player =
       new YT.Player(
         storyFrame.playerDiv,
@@ -40,18 +54,48 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     this.volume = storyFrame.volume;
   };
 
+  VideoPlayer.prototype._createAudioPlayer = function(storyFrame, readyCallback, endPlaybackCallback, playingCallback){
+    var frameLength = storyFrame.start + storyFrame.end;
+    var audioLength = storyFrame.audioStart + storyFrame.audioEnd;
+    if (audioLength > frameLength) {
+      storyFrame.audioEnd = storyFrame.audioStart + (storyFrame.end - storyFrame.start)
+    }
+    var audioStoryFrame = {
+      mediaType: 0,
+      videoId: storyFrame.audioId,
+      volume: storyFrame.audioVolume,
+      start: storyFrame.audioStart,
+      end: storyFrame.audioEnd,
+      playerDiv: storyFrame.playerDiv + 'Audio',
+      player: {}
+    };
+
+    this.audioPlayer.create(
+      audioStoryFrame, readyCallback,
+      endPlaybackCallback, playingCallback
+    );
+  };
+
   VideoPlayer.prototype.destroy = function(){
     this.storyFrame.player.destroy();
+    if (this.audioPlayer) {
+      this.audioPlayer.destroy();
+    }
   };
 
   VideoPlayer.prototype.play = function () {
     this.alreadyStopped = false;
-    console.log('volume in vp.play: ' ,this.volume)
+    if (this.audioPlayer) {
+      this.audioPlayer.play();
+    }
     this.storyFrame.player.setVolume(parseInt(this.volume));
     this.storyFrame.player.playVideo();
   };
 
   VideoPlayer.prototype.pause = function(){
+    if (this.audioPlayer) {
+      this.audioPlayer.pause();
+    }
     this.storyFrame.player.pauseVideo();
   };
 
@@ -63,6 +107,9 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
         'endSeconds': this.storyFrame.end
       }
     );
+    if (this.audioPlayer) {
+      this.audioPlayer._reset();
+    }
   };
 
   VideoPlayer.prototype._onEventListener = function(event){
