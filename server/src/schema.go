@@ -54,7 +54,6 @@ type Frame struct {
 	NarrationDelay float32  `json:"narrationDelay"`
 	AudioId        string   `json:"audioId"`
 	AudioStart     float32  `json:"audioStart"`
-	AudioEnd       float32  `json:"audioEnd"`
 	AudioVolume    float32  `json:"audioVolume"`
 }
 
