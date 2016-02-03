@@ -13,8 +13,11 @@ angular.module('storyBoard.dashboard', [])
     .then(function (resp) {
       $state.go('createStory', { story: resp.data });
     })
+    .catch(function (error) {
+      console.log('incoming error', error);
+    });
 
-  }
+  };
 
   $scope.deleteStory = function (storyId) {
     console.log('deleteStory function (controller) run with', storyId);
@@ -22,12 +25,16 @@ angular.module('storyBoard.dashboard', [])
     .then(function (resp) {
       console.log('resp from deleteStory', resp);
     })
+    .catch(function (error) {
+      console.log('incoming error', error);
+    })
     .then(function () {
       StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))
       .then(function (library) {
         $scope.userLibrary = library;
       });
     })
+
   }
 
   StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))
