@@ -621,7 +621,7 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame1AudioVolume;
         frameDivId = 'frame1PreviewAudio';
         framePlayerName = 'frame1';
-        $scope.showSpinner1 = true;
+        $scope.showAudioSpinner1 = true;
         break;
       case 2:
         frameYoutubeUrl = $scope.frame2AudioUrl;
@@ -630,7 +630,7 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame2AudioVolume;
         frameDivId = 'frame2PreviewAudio';
         framePlayerName = 'frame2';
-        $scope.showSpinner2 = true;
+        $scope.showAudioSpinner2 = true;
         break;
       case 3:
         frameYoutubeUrl = $scope.frame3AudioUrl;
@@ -639,7 +639,7 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame3AudioVolume;
         frameDivId = 'frame3PreviewAudio';
         framePlayerName = 'frame3';
-        $scope.showSpinner3 = true;
+        $scope.showAudioSpinner3 = true;
         break;
     }
 
@@ -687,6 +687,9 @@ angular.module('storyBoard.createStory', [])
     $scope.showSpinner1 = false;
     $scope.showSpinner2 = false;
     $scope.showSpinner3 = false;
+    $scope.showAudioSpinner1 = false;
+    $scope.showAudioSpinner2 = false;
+    $scope.showAudioSpinner3 = false;
 
     previewAudioVideoPlayer.create(currentFrameObject,
                                      readyCallback,
