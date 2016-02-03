@@ -51,9 +51,19 @@ angular.module('storyBoard.storyStateMachineService',
         endPlayBackCallback,
         playingCallback
       );
-
+  
       this.players.unshift(newFramePlayer);
     }
+
+    var originalURL = document.URL;
+
+    var checkingIfNavigatedAway = setInterval(function() {
+      var haveNavigatedAway = (document.URL !== originalURL);
+      if (haveNavigatedAway) {
+        this.endStory();
+        clearInterval(checkingIfNavigatedAway);
+      }
+    }.bind(this), 100);
   };
 
   storyStateMachine.restartStory = function () {
@@ -160,14 +170,10 @@ angular.module('storyBoard.storyStateMachineService',
     var isFirstFrame  = frameNum === FIRST;
     var isSecondFrame = frameNum === SECOND;
     var isThirdFrame  = frameNum === THIRD;
-    var originalURL = document.URL;
     var storyStateMachine = this;
     if(isFirstFrame) {
       endPlayBackCallback = function(){
-        var haveNavigatedAway = document.URL !== originalURL;
-        if (haveNavigatedAway) {
-          return;
-        } else if(closureIsSingleStoryView) {
+        if(closureIsSingleStoryView) {
           _shrinkAct1AndGrowAct2();
         }
 
@@ -182,10 +188,7 @@ angular.module('storyBoard.storyStateMachineService',
       };
     } else if(isSecondFrame) {
       endPlayBackCallback = function(){
-        var haveNavigatedAway = document.URL !== originalURL;
-        if (haveNavigatedAway) {
-          return;
-        } else if(closureIsSingleStoryView) {
+        if(closureIsSingleStoryView) {
           _shrinkAct2AndGrowAct3();
         }
 
@@ -200,10 +203,7 @@ angular.module('storyBoard.storyStateMachineService',
       };
     } else if(isThirdFrame) {
       endPlayBackCallback = function(){
-        var haveNavigatedAway = document.URL !== originalURL;
-        if (haveNavigatedAway) {
-          return;
-        } else if(closureIsSingleStoryView) {
+        if(closureIsSingleStoryView) {
           _shrinkAct3();
         }
 
