@@ -124,7 +124,6 @@ angular.module('storyBoard.createStory', [])
     if ($scope.frame2AudioUrl != '') {
       $scope.addAudio2 = true;
     }
-    // console.log('$scope.frame2AudioUrl:', $scope.frame2AudioUrl);
 
     // TODO: remove backwards compatibility
     if(editStory.frames[3].mediaType !== undefined) {
