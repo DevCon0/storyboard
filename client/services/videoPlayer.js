@@ -8,7 +8,6 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     this.volume = null;
     this.alreadyStopped = false;
     this.audioPlayer = null;
-    this.audioDelay = null;
 
     this.audioId = audioId || '';
     var hasAlternateAudio = this.audioId !== '';
@@ -69,7 +68,6 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     this.endPlaybackCallback = endPlaybackCallback;
     this.playingCallback = playingCallback;
     this.volume = storyFrame.volume;
-    this.audioDelay = storyFrame.audioDelay || 0;
   };
 
   VideoPlayer.prototype.destroy = function(){
@@ -80,15 +78,12 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype.play = function () {
-    var videoPlayer = this;
-    setTimeout(function(){
-      videoPlayer.alreadyStopped = false;
-      if (videoPlayer.audioPlayer) {
-        videoPlayer.audioPlayer.play();
-      }
-      videoPlayer.storyFrame.player.setVolume(parseInt(videoPlayer.volume));
-      videoPlayer.storyFrame.player.playVideo();
-    }, videoPlayer.audioDelay * 1000);
+    this.alreadyStopped = false;
+    if (this.audioPlayer) {
+      this.audioPlayer.play();
+    }
+    this.storyFrame.player.setVolume(parseInt(this.volume));
+    this.storyFrame.player.playVideo();
   };
 
   VideoPlayer.prototype.pause = function(){
