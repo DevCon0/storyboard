@@ -15,18 +15,39 @@ angular.module('storyBoard.createStory', [])
     $state.go('login');
   }
 
-  $scope.showSpinner0 = false;
+  $scope.framePreviewOptions = [
+    {
+      videoPlaying: false,
+      showVideoSpinner: false
+    },
+    {
+      videoPlaying: false,
+      showVideoSpinner: false,
+      audioPlaying: false,
+      showAudioSpinner: false
+    },
+    {
+      videoPlaying: false,
+      showVideoSpinner: false,
+      audioPlaying: false,
+      showAudioSpinner: false
+    },
+    {
+      videoPlaying: false,
+      showVideoSpinner: false,
+      audioPlaying: false,
+      showAudioSpinner: false
+    }
+  ]
+
   $scope.addFrame0ImagePreview = false;
 
-  $scope.showSpinner1 = false;
   $scope.addFrame1ImagePreview = false;
   $scope.addAudio1 = false;
 
-  $scope.showSpinner2 = false;
   $scope.addFrame2ImagePreview = false;
   $scope.addAudio2 = false;
 
-  $scope.showSpinner3 = false;
   $scope.addFrame3ImagePreview = false;
   $scope.addAudio3 = false;
 
@@ -520,12 +541,19 @@ angular.module('storyBoard.createStory', [])
   };
 
   $scope.previewFrame = function(frameId) {
+    if ($scope.framePreviewOptions[frameId].videoPlaying) {
+      return;
+    }
+    $scope.framePreviewOptions[frameId].videoPlaying = true;
+    $scope.framePreviewOptions[frameId].showVideoSpinner = true;
+
     var frameYoutubeUrl = null;
     var frameStartTime = null;
     var frameEndTime = null;
     var frameVolume = null;
     var frameDivId = null;
     var framePlayerName = null;
+
     switch(frameId){
       case 0:
         frameYoutubeUrl = $scope.frame0YoutubeUrl;
@@ -534,7 +562,6 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame0Volume;
         frameDivId = 'frame0Preview';
         framePlayerName = 'frame0';
-        $scope.showSpinner0 = true;
         break;
       case 1:
         frameYoutubeUrl = $scope.frame1YoutubeUrl;
@@ -543,7 +570,6 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame1Volume;
         frameDivId = 'frame1Preview';
         framePlayerName = 'frame1';
-        $scope.showSpinner1 = true;
         break;
       case 2:
         frameYoutubeUrl = $scope.frame2YoutubeUrl;
@@ -552,7 +578,6 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame2Volume;
         frameDivId = 'frame2Preview';
         framePlayerName = 'frame2';
-        $scope.showSpinner2 = true;
         break;
       case 3:
         frameYoutubeUrl = $scope.frame3YoutubeUrl;
@@ -561,13 +586,12 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame3Volume;
         frameDivId = 'frame3Preview';
         framePlayerName = 'frame3';
-        $scope.showSpinner3 = true;
         break;
     }
 
     var videoId = stripOutVideoIdFromUrl(frameYoutubeUrl);
 
-    var currentFrame = {
+    var currentFrameObject = {
       playerDiv: frameDivId,
       videoId: videoId,
       start: frameStartTime,
@@ -576,26 +600,36 @@ angular.module('storyBoard.createStory', [])
       playerName: framePlayerName
     };
 
-    previewAudioVideoFrame(currentFrame);
+    var currentFrameInfo = {
+      frameId: frameId,
+      frameType: 'video'
+    };
+
+    previewAudioVideoFrame(currentFrameObject, currentFrameInfo);
   };
 
   $scope.previewAudioFrame = function(frameId) {
+    if ($scope.framePreviewOptions[frameId].audioPlaying) {
+      return
+    }
+    $scope.framePreviewOptions[frameId].audioPlaying = true;
+    $scope.framePreviewOptions[frameId].showAudioSpinner = true;
+
     var frameYoutubeUrl = null;
     var frameStartTime = null;
     var frameEndTime = null;
     var frameVolume = null;
     var frameDivId = null;
     var framePlayerName = null;
+
     switch(frameId){
       case 1:
-      console.log('$scope.frame1AudioUrl', $scope.frame1AudioUrl);
         frameYoutubeUrl = $scope.frame1AudioUrl;
         frameStartTime = $scope.frame1AudioStartTime;
         frameEndTime = $scope.frame1EndTime;
         frameVolume = $scope.frame1AudioVolume;
         frameDivId = 'frame1PreviewAudio';
         framePlayerName = 'frame1';
-        $scope.showAudioSpinner1 = true;
         break;
       case 2:
         frameYoutubeUrl = $scope.frame2AudioUrl;
@@ -604,7 +638,6 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame2AudioVolume;
         frameDivId = 'frame2PreviewAudio';
         framePlayerName = 'frame2';
-        $scope.showAudioSpinner2 = true;
         break;
       case 3:
         frameYoutubeUrl = $scope.frame3AudioUrl;
@@ -613,7 +646,6 @@ angular.module('storyBoard.createStory', [])
         frameVolume = $scope.frame3AudioVolume;
         frameDivId = 'frame3PreviewAudio';
         framePlayerName = 'frame3';
-        $scope.showAudioSpinner3 = true;
         break;
     }
 
@@ -628,7 +660,12 @@ angular.module('storyBoard.createStory', [])
       playerName: framePlayerName
     };
 
-    previewAudioVideoFrame(currentFrame);
+    var currentFrameInfo = {
+      frameId: frameId,
+      frameType: 'audio'
+    };
+
+    previewAudioVideoFrame(currentFrame, currentFrameInfo);
   };
 
   var stripOutVideoIdFromUrl = function(url){
@@ -648,21 +685,45 @@ angular.module('storyBoard.createStory', [])
     return header + youtubeID;
   }
 
-  var previewAudioVideoFrame = function(currentFrameObject) {
+  var previewAudioVideoFrame = function(currentFrameObject, currentFrameInfo) {
+    var frameId = currentFrameInfo.frameId;
+    var frameType = currentFrameInfo.frameType;
+
     var previewAudioVideoPlayer = new VideoPlayer();
-    var readyCallback =
-      previewAudioVideoPlayer.play.bind(previewAudioVideoPlayer);
-    var playbackFinishedCallback =
-      previewAudioVideoPlayer.destroy.bind(previewAudioVideoPlayer);
+    var readyCallback = function () {};
+    var playbackFinishedCallback = function () {};
     var playingCallback = function () {};
 
-    $scope.showSpinner0 = false;
-    $scope.showSpinner1 = false;
-    $scope.showSpinner2 = false;
-    $scope.showSpinner3 = false;
-    $scope.showAudioSpinner1 = false;
-    $scope.showAudioSpinner2 = false;
-    $scope.showAudioSpinner3 = false;
+    switch (frameType) {
+    case 'video':
+      readyCallback = function() {
+        $scope.$apply(function() {
+          $scope.framePreviewOptions[frameId].showVideoSpinner = false;
+        });
+        previewAudioVideoPlayer.play();
+      };
+      playbackFinishedCallback = function() {
+        $scope.$apply(function() {
+          $scope.framePreviewOptions[frameId].videoPlaying = false;
+        });
+        previewAudioVideoPlayer.destroy();
+      };
+      break;
+    case 'audio':
+      readyCallback = function() {
+        $scope.$apply(function() {
+          $scope.framePreviewOptions[frameId].showAudioSpinner = false;
+        });
+        previewAudioVideoPlayer.play();
+      };
+      playbackFinishedCallback = function() {
+        $scope.$apply(function() {
+          $scope.framePreviewOptions[frameId].audioPlaying = false;
+        });
+        previewAudioVideoPlayer.destroy();
+      };
+      break;
+    }
 
     previewAudioVideoPlayer.create(currentFrameObject,
                                      readyCallback,
