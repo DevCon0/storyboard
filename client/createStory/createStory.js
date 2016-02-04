@@ -541,9 +541,6 @@ angular.module('storyBoard.createStory', [])
   };
 
   $scope.previewFrame = function(frameId) {
-    if ($scope.framePreviewOptions[frameId].videoPlaying) {
-      return;
-    }
     $scope.framePreviewOptions[frameId].videoPlaying = true;
     $scope.framePreviewOptions[frameId].showVideoSpinner = true;
 
@@ -609,9 +606,6 @@ angular.module('storyBoard.createStory', [])
   };
 
   $scope.previewAudioFrame = function(frameId) {
-    if ($scope.framePreviewOptions[frameId].audioPlaying) {
-      return
-    }
     $scope.framePreviewOptions[frameId].audioPlaying = true;
     $scope.framePreviewOptions[frameId].showAudioSpinner = true;
 
