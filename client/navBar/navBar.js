@@ -11,7 +11,10 @@ angular.module('storyBoard.navBar', [])
   $scope.logout = function () {
     var token = localStorageService.get('sessiontoken');
     $scope.currentUserLoggedIn = false;
-    Auth.logout(token);
+    Auth.logout(token)
+    .catch(function (error) {
+      console.log('incoming error', error);
+    });
   }
 
 })

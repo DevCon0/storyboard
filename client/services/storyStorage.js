@@ -4,14 +4,17 @@ angular.module('storyBoard.storyStorageService', [])
   var storyStorage = {};
 
   storyStorage.getShowcase = function () {
-    return $http ({
+    return $http({
       method: 'GET',
       url: 'api/stories/showcase'
     })
     .then(function (resp) {
       return resp.data;
     })
-  }
+    .catch(function (error) {
+      console.log('incoming error', error);
+    });
+  };
 
   storyStorage.getUserLibrary = function (token) {
     return $http({
@@ -23,6 +26,9 @@ angular.module('storyBoard.storyStorageService', [])
     })
     .then(function (resp) {
       return resp.data;
+    })
+    .catch(function (error) {
+      console.log('incoming error', error);
     });
   };
 
@@ -33,22 +39,28 @@ angular.module('storyBoard.storyStorageService', [])
     })
     .then(function (resp) {
       return resp.data;
+    })
+    .catch(function (error) {
+      console.log('incoming error', error);
     });
   };
 
-  storyStorage.saveStory = function (story,token) {
+  storyStorage.saveStory = function (story, token) {
     return $http({
-     method: 'POST',
-     url: '/api/stories/story',
-     headers: {
-       'token': token
-     },
-     data: story
+      method: 'POST',
+      url: '/api/stories/story',
+      headers: {
+        'token': token
+      },
+      data: story
     })
     .then(function (resp) {
       return resp.body;
+    })
+    .catch(function (error) {
+      console.log('incoming error', error);
     });
-  }
+  };
 
   storyStorage.getStory = function (id) {
       return $http({
