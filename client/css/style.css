@@ -179,8 +179,15 @@ paper-spinner-lite.blueSpinner{
 }
 
 .frameImageUrlPreview {
-  height: 160px;
+  height: auto;
+  max-height: 160px;
   width: auto;
+  max-width: 100%;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
 }
 
 .frameImagePreviewDiv {
