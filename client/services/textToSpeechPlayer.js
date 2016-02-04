@@ -48,7 +48,7 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
   TextToSpeechPlayer.prototype._play = function(){
     if ( ! this.isBackgroundPlayer ) {
       var text2SpeechDiv = this.playerDiv.children();
-      text2speechDiv.addClass('showImagePlayerFrame');
+      text2SpeechDiv.addClass('showImagePlayerFrame');
     }
 
     window.speechSynthesis.speak(this.utterance);
