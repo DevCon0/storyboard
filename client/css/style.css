@@ -397,3 +397,22 @@ paper-spinner-lite.blueSpinner{
 .form-group {
   margin-bottom: 10px;
 }
+
+.story-preview {
+  position: relative;
+  width: 100%;
+}
+
+.story-preview .act-preview {
+  position: relative;
+  display: inline-block;
+  width: 32%;
+  margin: auto;
+}
+
+.story-preview .act-preview img,
+.story-preview .act-preview svg {
+  display: block;
+  width: auto;
+  margin: auto;
+}
