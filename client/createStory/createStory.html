@@ -103,8 +103,11 @@
         <div class="col-md-12 clean"></div>
       </div>
  <!-- Act I AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <button ng-if="!addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio1 = true">Add Audio Track</button>
-      <button ng-if="addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio1 = false">Remove Audio Track</button>
+     <div ng-if="frame1MediaType == 0">
+       <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleActAudioTrack(1)">
+          <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{$parent.audioAct1ButtonLabel}}
+        </button>
+      </div>
       <div ng-if="addAudio1 && (frame1MediaType == 0)">
         <form ng-submit="previewAudioFrame(1)">
           <div class="form-group">
@@ -128,7 +131,7 @@
         </form>
         <div class="col-md-12 clean"></div>
         <div id="frame1PreviewAudio" class="col-md-12"></div>
-      </div>
+      </div> <!-- audio track end -->
     </paper-card>
   </div>
  <!-- Act II ///////////////////////////////////////////////////////////////////////////// -->
@@ -206,8 +209,11 @@
         <div class="col-md-12 clean"></div>
       </div>
 <!-- Act II AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <button ng-if="!addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio2 = true">Add Audio Track</button>
-      <button ng-if="addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio2 = false">Remove Audio Track</button>
+      <div ng-if="frame2MediaType == 0">
+       <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleActAudioTrack(2)">
+          <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{$parent.audioAct2ButtonLabel}}
+        </button>
+      </div>
       <div ng-if="addAudio2 && (frame2MediaType == 0)">
         <form ng-submit="previewAudioFrame(2)">
           <div class="form-group">
@@ -309,8 +315,11 @@
         <div class="col-md-12 clean"></div>
       </div>
 <!-- Act III AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <button ng-if="!addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio3 = true">Add Audio Track</button>
-      <button ng-if="addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio3 = false">Remove Audio Track</button>
+      <div ng-if="frame3MediaType == 0">
+       <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleActAudioTrack(3)">
+          <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{$parent.audioAct3ButtonLabel}}
+        </button>
+      </div>
       <div ng-if="addAudio3 && (frame3MediaType == 0)">
         <form ng-submit="previewAudioFrame(3)">
           <div class="form-group">
