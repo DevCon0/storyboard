@@ -18,7 +18,7 @@
           <button type="button" class="btn btn-success single-story-button" ng-click="toggleSoundtrack()">
             <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{audioButtonLabel}}
           </button>
-          <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button>
+          <!-- <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button> -->
       </form>
       <div class="row clean"></div>
       <div ng-show="checkRequiredFields()">
@@ -45,19 +45,23 @@
             <input type="url" ng-model="$parent.frame1YoutubeUrl" class="form-control" id="youtubeUrl1" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
-            <label for="startTime1">Start Time (sec)</label>
-            <input type="text" ng-model="$parent.frame1StartTime" class="form-control" id="startTime1" placeholder="0">
+            <div class="start-time-block">
+              <label for="startTime1">Start (sec)</label>
+              <input type="text" ng-model="$parent.frame1StartTime" class="form-control" id="startTime1" placeholder="0">
+            </div>
+            <div class="end-time-block">
+              <label for="endTime1">End (sec)</label>
+              <input type="text" ng-model="$parent.frame1EndTime" class="form-control" id="endTime1" placeholder="0">
+            </div>
           </div>
           <div class="form-group">
-            <label for="endTime1">End Time (sec)</label>
-            <input type="text" ng-model="$parent.frame1EndTime" class="form-control" id="endTime1" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label for="volume1">Volume (0-100%)</label>
-            <input type="text" ng-model="$parent.frame1Volume" class="form-control" id="volume1" placeholder="100"></input>
-            <span class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
-            <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
-            <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
+              <label class="volume-label" for="volume1">Volume</label>
+              <input type="text" ng-model="$parent.frame1Volume" class="volume-input form-control" id="volume1" placeholder="100"></input>
+              <div class="volume-controls">
+                <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
+                <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
+                <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
+              </div>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>

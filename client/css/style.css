@@ -168,6 +168,11 @@ paper-spinner-lite.blueSpinner{
   resize: none;
 }
 
+.text-to-speech-image {
+  height: 200px;
+  width: auto;
+}
+
 .frameImageUrlPreview {
   height: 160px;
   width: auto;
@@ -338,12 +343,40 @@ paper-spinner-lite.blueSpinner{
     padding-left:5px;
 }
 
-.single-story-button {
-    margin-left: 6px;
-    width:180px;
+.single-story-button .btn {
+    margin-left: 1px 6px;
+    padding: 4px 8px;
+    width: 180px;
     height:36px;
 }
 
 .volume-up {
   float:right;
+}
+
+.start-time-block {
+  display: inline-block;
+  width: 5em;
+}
+
+.end-time-block {
+  display: inline-block;
+  float: right;
+  width: 5em;
+}
+
+.volume-controls {
+  margin-top: 15px;
+}
+
+.volume-label {
+  display: inline-block;
+ /* height: 5px;*/
+  width: 4em;
+}
+
+.volume-input {
+  display: inline-block;
+  float: right;
+  width: 4em;
 }

@@ -2,6 +2,8 @@ angular.module('storyBoard.navBar', [])
 
 .controller('navBarCtrl', function ($scope, Auth, localStorageService) {
 
+  $scope.currentLocation = ""
+
   if (Auth.isAuth()) {
     $scope.currentUserLoggedIn = true;
   }
