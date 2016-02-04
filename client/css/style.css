@@ -134,6 +134,12 @@ body {
   margin: 0px;
 }
 
+.blueSpinnerContainer {
+  position: absolute;
+  bottom: 120px;
+  left: 90px;
+}
+
 paper-spinner-lite.blueSpinner{
   --paper-spinner-color: var(--google-blue-500);
 }
@@ -285,7 +291,8 @@ paper-spinner-lite.blueSpinner{
     margin: 0 auto;
 }
 
-.center-it img {
+.center-it img,
+.center-it svg {
     display:block;
     margin: auto;
 }
