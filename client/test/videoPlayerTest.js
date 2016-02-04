@@ -62,4 +62,20 @@ describe('VideoPlayerTest', function(){
         playingCallback);
     expect(testStoryFrame.player).not.toBeNull();
   });
+
+  it('should call the end callback only once', function(){
+    var testEndCallbackCount = 0;
+    var testEndCallback = function() {
+      testEndCallbackCount++;
+    }
+
+    newVideoPlayer.create(
+        testStoryFrame,
+        readyCallback,
+        testEndCallback,
+        playingCallback);
+
+    newVideoPlayer.play();
+    expect(testEndCallbackCount).toEqual(1);
+  });
 });
