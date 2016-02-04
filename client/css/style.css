@@ -66,7 +66,6 @@ body {
     color:red;
 }
 
-
 @media (min-width: 992px) {
   .modal-lg {
     width: 1120px;
@@ -147,7 +146,7 @@ paper-spinner-lite.blueSpinner{
 
 .create-story-media-type-select {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 20px;
+  font-size: 19px;
   margin-bottom: 10px;
   box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
 }
@@ -166,6 +165,11 @@ paper-spinner-lite.blueSpinner{
 
 .textToSpeechTextArea {
   resize: none;
+}
+
+.text-to-speech-image {
+  height: 200px;
+  width: auto;
 }
 
 .frameImageUrlPreview {
@@ -212,8 +216,7 @@ paper-spinner-lite.blueSpinner{
     transform-origin:left top;
 }
 
-
-.growact1{
+.growact1 {
     -webkit-transform: scale( 2.8 );
     -moz-transform: scale(2.8);
     -o-transform: scale( 2.8 );
@@ -224,7 +227,6 @@ paper-spinner-lite.blueSpinner{
     transform-origin:left top;
     vertical-align: middle;
 }
-
 
 .act2 {
     -webkit-transform: scale( 0.9 );
@@ -252,7 +254,6 @@ paper-spinner-lite.blueSpinner{
     vertical-align: middle;
 }
 
-
 .act3 {
     -webkit-transform: scale( 0.9 );
     -moz-transform: scale( 0.9 );
@@ -266,7 +267,8 @@ paper-spinner-lite.blueSpinner{
     transition: all 0.75s ease-in-out;
     transform-origin:right top;
 }
-.growact3{
+
+.growact3 {
     -webkit-transform: scale( 2.8 );
     -moz-transform: scale( 2.8 );
     -o-transform: scale( 2.8 );
@@ -277,7 +279,6 @@ paper-spinner-lite.blueSpinner{
     transform-origin:right top;
     vertical-align: middle;
 }
-
 
 .center-it {
     display:block;
@@ -337,13 +338,55 @@ paper-spinner-lite.blueSpinner{
 .narration-icon{
     padding-left:5px;
 }
-
-.single-story-button {
-    margin-left: 6px;
-    width:180px;
+/*mitch zone*/
+.single-story-button .btn {
+    margin-left: 1px 6px;
+    padding: 4px 8px;
+    width: 180px;
     height:36px;
 }
 
 .volume-up {
   float:right;
+}
+
+.start-time-block {
+  display: inline-block;
+  width: 5em;
+}
+
+.end-time-block {
+  display: inline-block;
+  float: right;
+  width: 5em;
+}
+
+.bonus-audio-block {
+  display: inline-block;
+  float: right;
+  width: 5em;
+}
+
+.volume-controls {
+  margin-top: 15px;
+}
+
+.volume-label {
+  display: inline-block;
+ /* height: 5px;*/
+  width: 4em;
+}
+
+.volume-input {
+  display: inline-block;
+  float: right;
+  width: 4em;
+}
+/*paper overrides*/
+.header.paper-card .title-text.paper-card {
+  padding: 10px;
+}
+
+.form-group {
+  margin-bottom: 10px;
 }
