@@ -774,7 +774,7 @@ angular.module('storyBoard.createStory', [])
       if ($scope.addAudio2) {
         $scope.audioAct2ButtonLabel = "Remove Audio";
       } else {
-        $scope.audioAct2ButtonLabel = "Add Audio";
+        $scope.audioAct2ButtonLabel = "Add Audio Track";
         $scope.frame2AudioUrl = null;
         $scope.frame1AudioStartTime = null;
         $scope.frame2AudioVolume = null;
@@ -785,7 +785,7 @@ angular.module('storyBoard.createStory', [])
       if ($scope.addAudio3) {
         $scope.audioAct3ButtonLabel = "Remove Audio";
       } else {
-        $scope.audioAct3ButtonLabel = "Add Audio";
+        $scope.audioAct3ButtonLabel = "Add Audio Track";
         $scope.frame3AudioUrl = null;
         $scope.frame1AudioStartTime = null;
         $scope.frame3AudioVolume = null;
