@@ -20,14 +20,16 @@ fi;
 
 declare os="$(uname -a | awk '{print $1;}')";
 
-#files=($(ls --hide='*_test.go' | grep .go)); gomon "${files[@]}"
 if [[ os == "Linux" ]]; then
-    # files=($(ls --hide='*_test.go' | grep .go));
     files=($(find . -name '*.go' \( ! -name '*_test.go' \)));
 elif [[ "${os}" == "Darwin" ]]; then
     files=($(find . -name '*.go' \( ! -name '*_test.go' \)));
 else
     files=($(find . -name '*.go' \( ! -name '*_test.go' \)));
+fi;
+
+if [ -z "${STORYBOARD_DB_URL}" ] && [ -e "../db-url" ]; then
+    export STORYBOARD_DB_URL="$(cat "../db-url")";
 fi;
 
 go run "${files[@]}"

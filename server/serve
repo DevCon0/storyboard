@@ -31,3 +31,7 @@ elif [[ "${os}" == "Darwin" ]]; then
 else
     ./server.exe;
 fi;
+
+if [ -z "${STORYBOARD_DB_URL}" ] && [ -e "../db-url" ]; then
+    export STORYBOARD_DB_URL="$(cat "../db-url")";
+fi;

@@ -77,7 +77,7 @@ func initDb() {
 	connectedToDb = false
 
 	var err error
-	url := "mongodb://devcon0:devcon0@ds037415.mongolab.com:37415/devcon0"
+	url := os.Getenv("STORYBOARD_DB_URL")
 	session, err = mgo.Dial(url)
 	if err != nil {
 		fmt.Printf("Error: Failed to connect to mongodb: %v\n", err)
