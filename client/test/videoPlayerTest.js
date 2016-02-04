@@ -1,6 +1,6 @@
 'use strict';
 
-describe('PlayerTest', function(){
+describe('VideoPlayerTest', function(){
   var newVideoPlayer;
   var testStoryFrame;
   var readyCallback = function(){};
