@@ -113,13 +113,15 @@
             <input type="url" ng-model="$parent.frame1AudioUrl" class="form-control" id="youtubeAudioUrl1" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
-            <label for="startTime1">Start Time (sec)</label>
-            <input type="text" ng-model="$parent.frame1AudioStartTime" class="form-control" id="audioStartTime1" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label for="volume1">Volume (0-100%)</label>
-            <input type="text" ng-model="$parent.frame1AudioVolume" class="form-control" id="audioVolume1" placeholder="100">
-            <input type="range" min="0" max="100" ng-model="$parent.frame1AudioVolume"/>
+            <div class="start-time-block">
+              <label for="startTime1">Start (sec)</label>
+              <input type="text" ng-model="$parent.frame1AudioStartTime" class="form-control" id="audioStartTime1" placeholder="0">
+            </div>
+            <div class="bonus-audio-block">
+              <label for="volume1">Volume</label>
+              <input type="text" ng-model="$parent.frame1AudioVolume" class="form-control" id="audioVolume1" placeholder="100">
+            </div>
+              <input type="range" min="0" max="100" ng-model="$parent.frame1AudioVolume"/>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showAudioSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
@@ -146,22 +148,26 @@
             <input type="url" ng-model="$parent.frame2YoutubeUrl" class="form-control" id="youtubeUrl2" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
-            <label for="startTime2">Start Time (sec)</label>
-            <input type="text" ng-model="$parent.frame2StartTime" class="form-control" id="startTime2" placeholder="0">
+            <div class="start-time-block">
+              <label for="startTime2">Start (sec)</label>
+              <input type="text" ng-model="$parent.frame2StartTime" class="form-control" id="startTime2" placeholder="0">
+            </div>
+            <div class="end-time-block">
+              <label for="endTime2">End (sec)</label>
+              <input type="text" ng-model="$parent.frame2EndTime" class="form-control" id="endTime2" placeholder="0">
+            </div>
           </div>
           <div class="form-group">
-            <label for="endTime2">End Time (sec)</label>
-            <input type="text" ng-model="$parent.frame2EndTime" class="form-control" id="endTime2" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label for="volume2">Volume (0-100%)</label>
-            <input type="text" ng-model="$parent.frame2Volume" class="form-control" id="volume2" placeholder="100">
-            <span class="volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
-            <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
-            <input type="range" min="0" max="100" ng-model="$parent.frame2Volume"/>
+              <label class="volume-label" for="volume2">Volume</label>
+              <input type="text" ng-model="$parent.frame2Volume" class="volume-input form-control" id="volume2" placeholder="100"></input>
+              <div class="volume-controls">
+                <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
+                <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
+                <input type="range" min="0" max="100" ng-model="$parent.frame2Volume"></input>
+              </div>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
-          <span><paper-spinner-lite ng-if="showSpinner2" class="blueSpinner" active></paper-spinner-lite></span>
+          <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
         <div id="frame2Preview" class="col-md-12"></div>
@@ -210,13 +216,15 @@
             <input type="url" ng-model="$parent.frame2AudioUrl" class="form-control" id="youtubeAudioUrl2" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
-            <label for="startTime2">Start Time (sec)</label>
-            <input type="text" ng-model="$parent.frame2AudioStartTime" class="form-control" id="audioStartTime2" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label for="volume2">Volume (0-100%)</label>
-            <input type="text" ng-model="$parent.frame2AudioVolume" class="form-control" id="audioVolume2" placeholder="100">
-            <input type="range" min="0" max="100" ng-model="$parent.frame2AudioVolume"/>
+            <div class="start-time-block">
+              <label for="startTime2">Start (sec)</label>
+              <input type="text" ng-model="$parent.frame2AudioStartTime" class="form-control" id="audioStartTime2" placeholder="0">
+            </div>
+            <div class="bonus-audio-block">
+              <label for="volume2">Volume</label>
+              <input type="text" ng-model="$parent.frame2AudioVolume" class="form-control" id="audioVolume2" placeholder="100">
+            </div>
+              <input type="range" min="0" max="100" ng-model="$parent.frame2AudioVolume"/>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showAudioSpinner2" class="blueSpinner" active></paper-spinner-lite></span>
@@ -243,19 +251,23 @@
             <input type="url" ng-model="$parent.frame3YoutubeUrl" class="form-control" id="youtubeUrl3" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
-            <label for="startTime3">Start Time (sec)</label>
-            <input type="text" ng-model="$parent.frame3StartTime" class="form-control" id="startTime3" placeholder="0">
+            <div class="start-time-block">
+              <label for="startTime3">Start (sec)</label>
+              <input type="text" ng-model="$parent.frame3StartTime" class="form-control" id="startTime3" placeholder="0">
+            </div>
+            <div class="end-time-block">
+              <label for="endTime3">End (sec)</label>
+              <input type="text" ng-model="$parent.frame3EndTime" class="form-control" id="endTime3" placeholder="0">
+            </div>
           </div>
           <div class="form-group">
-            <label for="endTime3">End Time (sec)</label>
-            <input type="text" ng-model="$parent.frame3EndTime" class="form-control" id="endTime3" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label for="volume3">Volume (0-100%)</label>
-            <input type="text" ng-model="$parent.frame3Volume" class="form-control" id="volume3" placeholder="100">
-            <span class="volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
-            <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
-            <input type="range" min="0" max="100" ng-model="$parent.frame3Volume"/>
+              <label class="volume-label" for="volume3">Volume</label>
+              <input type="text" ng-model="$parent.frame3Volume" class="volume-input form-control" id="volume3" placeholder="100"></input>
+              <div class="volume-controls">
+                <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
+                <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
+                <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
+              </div>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner3" class="blueSpinner" active></paper-spinner-lite></span>
@@ -307,13 +319,15 @@
             <input type="url" ng-model="$parent.frame3AudioUrl" class="form-control" id="youtubeAudioUrl3" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
-            <label for="startTime3">Start Time (sec)</label>
-            <input type="text" ng-model="$parent.frame3AudioStartTime" class="form-control" id="audioStartTime3" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label for="volume3">Volume (0-100%)</label>
-            <input type="text" ng-model="$parent.frame3AudioVolume" class="form-control" id="audioVolume3" placeholder="100">
-            <input type="range" min="0" max="100" ng-model="$parent.frame3AudioVolume"/>
+            <div class="start-time-block">
+              <label for="startTime3">Start (sec)</label>
+              <input type="text" ng-model="$parent.frame3AudioStartTime" class="form-control" id="audioStartTime3" placeholder="0">
+            </div>
+            <div class="bonus-audio-block">
+              <label for="volume3">Volume</label>
+              <input type="text" ng-model="$parent.frame3AudioVolume" class="form-control" id="audioVolume3" placeholder="100">
+            </div>
+              <input type="range" min="0" max="100" ng-model="$parent.frame3AudioVolume"/>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showAudioSpinner3" class="blueSpinner" active></paper-spinner-lite></span>
@@ -333,19 +347,23 @@
             <input type="url" ng-model="frame0YoutubeUrl" class="form-control" id="youtubeUrl0" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
-            <label for="startTime0">Start Time (sec)</label>
-            <input type="text" ng-model="frame0StartTime" class="form-control" id="startTime0" placeholder="0">
+            <div class="start-time-block">
+              <label for="startTime0">Start (sec)</label>
+              <input type="text" ng-model="frame0StartTime" class="form-control" id="startTime0" placeholder="0">
+            </div>
+            <div class="end-time-block">
+              <label for="endTime0">End (sec)</label>
+              <input type="text" ng-model="frame0EndTime" class="form-control" id="endTime0" placeholder="0">
+            </div>
           </div>
           <div class="form-group">
-            <label for="endTime0">End Time (sec)</label>
-            <input type="text" ng-model="frame0EndTime" class="form-control" id="endTime0" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label for="volume0">Volume (0-100%)</label>
-            <input type="text" ng-model="frame0Volume" class="form-control" id="volume0" placeholder="100">
-            <span class="volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></span>
-            <span class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></span>
-            <input type="range" min="0" max="100" ng-model="frame0Volume"/>
+              <label class="volume-label" for="volume0">Volume</label>
+              <input type="text" ng-model="frame0Volume" class="volume-input form-control" id="volume0" placeholder="100"></input>
+              <div class="volume-controls">
+                <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
+                <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
+                <input type="range" min="0" max="100" ng-model="frame0Volume"></input>
+              </div>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner0" class="blueSpinner" active></paper-spinner-lite></span>

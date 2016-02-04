@@ -365,6 +365,12 @@ paper-spinner-lite.blueSpinner{
   width: 5em;
 }
 
+.bonus-audio-block {
+  display: inline-block;
+  float: right;
+  width: 5em;
+}
+
 .volume-controls {
   margin-top: 15px;
 }
