@@ -2,23 +2,23 @@
   <div class="col-md-3">
     <paper-card heading="Story Creation" elevation="3" class="create-story-paper-card">
       <form>
-          <div class="form-group">
-            <label for="storyTitleInput">Story Title</label>
-            <input type="text" ng-model="storyTitle" class="form-control" placeholder="My Story" maxlength="50">
-          </div>
-          <div class="form-group">
-            <label for="storyDescriptionInput">Story Description</label>
-            <input type="text" ng-model="storyDescription" class="form-control" placeholder="Once upon a time..." maxlength="255">
-          </div>
-          <div class="form-group">
-            <label for="storyThumbnailUrlInput">Story Thumbnail URL</label>
-            <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
-          </div>
-          <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
-          <button type="button" class="btn btn-success single-story-button" ng-click="toggleSoundtrack()">
-            <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{audioButtonLabel}}
-          </button>
-          <!-- <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button> -->
+        <div class="form-group">
+          <label for="storyTitleInput">Story Title</label>
+          <input type="text" ng-model="storyTitle" class="form-control" placeholder="My Story" maxlength="50">
+        </div>
+        <div class="form-group">
+          <label for="storyDescriptionInput">Story Description</label>
+          <input type="text" ng-model="storyDescription" class="form-control" placeholder="Once upon a time..." maxlength="255">
+        </div>
+        <div class="form-group">
+          <label for="storyThumbnailUrlInput">Story Thumbnail URL</label>
+          <input type="text" ng-model="storyThumbnailUrl" class="form-control" placeholder="http://www">
+        </div>
+        <img class="create-previewThumbnail" ng-src="{{storyThumbnailUrl}}" on-url-error="http://rationalwiki.org/w/images/f/f5/Error_icon.svg"></img>
+        <button type="button" class="btn btn-success single-story-button" ng-click="toggleSoundtrack()">
+          <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{audioButtonLabel}}
+        </button>
+        <!-- <button type="button" ng-click="prepopulateInputs()" class="btn btn-danger">DEMO</button> -->
       </form>
       <div class="row clean"></div>
       <div ng-show="checkRequiredFields()">
@@ -55,13 +55,13 @@
             </div>
           </div>
           <div class="form-group">
-              <label class="volume-label" for="volume1">Volume</label>
-              <input type="text" ng-model="$parent.frame1Volume" class="volume-input form-control" id="volume1" placeholder="100"></input>
-              <div class="volume-controls">
-                <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
-                <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-                <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
-              </div>
+            <label class="volume-label" for="volume1">Volume</label>
+            <input type="text" ng-model="$parent.frame1Volume" class="volume-input form-control" id="volume1" placeholder="100"></input>
+            <div class="volume-controls">
+              <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
+              <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
+              <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
+            </div>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
@@ -158,13 +158,13 @@
             </div>
           </div>
           <div class="form-group">
-              <label class="volume-label" for="volume2">Volume</label>
-              <input type="text" ng-model="$parent.frame2Volume" class="volume-input form-control" id="volume2" placeholder="100"></input>
-              <div class="volume-controls">
-                <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
-                <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-                <input type="range" min="0" max="100" ng-model="$parent.frame2Volume"></input>
-              </div>
+            <label class="volume-label" for="volume2">Volume</label>
+            <input type="text" ng-model="$parent.frame2Volume" class="volume-input form-control" id="volume2" placeholder="100"></input>
+            <div class="volume-controls">
+              <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
+              <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
+              <input type="range" min="0" max="100" ng-model="$parent.frame2Volume"></input>
+            </div>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner1" class="blueSpinner" active></paper-spinner-lite></span>
@@ -261,13 +261,13 @@
             </div>
           </div>
           <div class="form-group">
-              <label class="volume-label" for="volume3">Volume</label>
-              <input type="text" ng-model="$parent.frame3Volume" class="volume-input form-control" id="volume3" placeholder="100"></input>
-              <div class="volume-controls">
-                <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
-                <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-                <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
-              </div>
+            <label class="volume-label" for="volume3">Volume</label>
+            <input type="text" ng-model="$parent.frame3Volume" class="volume-input form-control" id="volume3" placeholder="100"></input>
+            <div class="volume-controls">
+              <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
+              <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
+              <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
+            </div>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner3" class="blueSpinner" active></paper-spinner-lite></span>
@@ -357,13 +357,13 @@
             </div>
           </div>
           <div class="form-group">
-              <label class="volume-label" for="volume0">Volume</label>
-              <input type="text" ng-model="frame0Volume" class="volume-input form-control" id="volume0" placeholder="100"></input>
-              <div class="volume-controls">
-                <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
-                <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-                <input type="range" min="0" max="100" ng-model="frame0Volume"></input>
-              </div>
+            <label class="volume-label" for="volume0">Volume</label>
+            <input type="text" ng-model="frame0Volume" class="volume-input form-control" id="volume0" placeholder="100"></input>
+            <div class="volume-controls">
+              <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
+              <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
+              <input type="range" min="0" max="100" ng-model="frame0Volume"></input>
+            </div>
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span><paper-spinner-lite ng-if="showSpinner0" class="blueSpinner" active></paper-spinner-lite></span>
@@ -375,25 +375,24 @@
 </div>
 
 <div id="myModal" class="modal" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal Content-->
-        <div class="modal-content">
-            <div class="modal-header preview-modal-header">
-                <h1>Preview</h1>
-                <div id="player1" style="display:inline;"></div>
-                <div id="player1Audio" style="display:none;"></div>
-                <div id="player2" style="display:inline;"></div>
-                <div id="player2Audio" style="display:none;"></div>
-                <div id="player3" style="display:inline;"></div>
-                <div id="player3Audio" style="display:none;"></div>
-                <div ng-show="!!$parent.frame0YoutubeUrl" id="player0" style="display:inline;"></div>
-                <div class="modal-footer preview-modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal"  data-target="#myModal" ng-click="saveStory(true)">Save your story<iron-icon icon="icons:save" class="icon-margin-left"></iron-icon></button>
-                    <button type="button" class="btn btn-danger" ng-click="destroyFrames()" data-dismiss="modal">Close<iron-icon icon="icons:close" class="icon-margin-left"></iron-icon></button>
-                </div>
-            </div>
+  <div class="modal-dialog modal-lg">
+    <!-- Modal Content-->
+    <div class="modal-content">
+      <div class="modal-header preview-modal-header">
+        <h1>Preview</h1>
+        <div id="player1" style="display:inline;"></div>
+        <div id="player1Audio" style="display:none;"></div>
+        <div id="player2" style="display:inline;"></div>
+        <div id="player2Audio" style="display:none;"></div>
+        <div id="player3" style="display:inline;"></div>
+        <div id="player3Audio" style="display:none;"></div>
+        <div ng-show="!!$parent.frame0YoutubeUrl" id="player0" style="display:inline;"></div>
+        <div class="modal-footer preview-modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal"  data-target="#myModal" ng-click="saveStory(true)">Save your story<iron-icon icon="icons:save" class="icon-margin-left"></iron-icon></button>
+        <button type="button" class="btn btn-danger" ng-click="destroyFrames()" data-dismiss="modal">Close<iron-icon icon="icons:close" class="icon-margin-left"></iron-icon></button>
         </div>
-        <!-- End Modal Content-->
+      </div>
     </div>
+        <!-- End Modal Content-->
+  </div>
 </div>
-

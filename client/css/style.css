@@ -66,7 +66,6 @@ body {
     color:red;
 }
 
-
 @media (min-width: 992px) {
   .modal-lg {
     width: 1120px;
@@ -217,8 +216,7 @@ paper-spinner-lite.blueSpinner{
     transform-origin:left top;
 }
 
-
-.growact1{
+.growact1 {
     -webkit-transform: scale( 2.8 );
     -moz-transform: scale(2.8);
     -o-transform: scale( 2.8 );
@@ -229,7 +227,6 @@ paper-spinner-lite.blueSpinner{
     transform-origin:left top;
     vertical-align: middle;
 }
-
 
 .act2 {
     -webkit-transform: scale( 0.9 );
@@ -257,7 +254,6 @@ paper-spinner-lite.blueSpinner{
     vertical-align: middle;
 }
 
-
 .act3 {
     -webkit-transform: scale( 0.9 );
     -moz-transform: scale( 0.9 );
@@ -271,7 +267,8 @@ paper-spinner-lite.blueSpinner{
     transition: all 0.75s ease-in-out;
     transform-origin:right top;
 }
-.growact3{
+
+.growact3 {
     -webkit-transform: scale( 2.8 );
     -moz-transform: scale( 2.8 );
     -o-transform: scale( 2.8 );
@@ -282,7 +279,6 @@ paper-spinner-lite.blueSpinner{
     transform-origin:right top;
     vertical-align: middle;
 }
-
 
 .center-it {
     display:block;
