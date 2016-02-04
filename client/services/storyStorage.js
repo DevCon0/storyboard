@@ -1,6 +1,6 @@
 angular.module('storyBoard.storyStorageService', [])
 
-.factory('StoryStorage', function ($http, $rootScope, $location, $window) {
+.factory('StoryStorage', function ($http, $rootScope, $location, $window ,$state) {
   var storyStorage = {};
 
   storyStorage.getShowcase = function () {
@@ -12,7 +12,7 @@ angular.module('storyBoard.storyStorageService', [])
       return resp.data;
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
   };
 
@@ -28,7 +28,7 @@ angular.module('storyBoard.storyStorageService', [])
       return resp.data;
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
   };
 
@@ -41,7 +41,7 @@ angular.module('storyBoard.storyStorageService', [])
       return resp.data;
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
   };
 
@@ -58,7 +58,7 @@ angular.module('storyBoard.storyStorageService', [])
       return resp.body;
     })
     .catch(function (error) {
-      console.log('incoming error', error);
+      $state.go('errorPage');
     });
   };
 
@@ -67,6 +67,9 @@ angular.module('storyBoard.storyStorageService', [])
         method: 'GET',
         url: '/api/stories/story/' + id,
         data: id
+      })
+      .catch(function (error) {
+        $state.go('errorPage');
       })
   };
 
