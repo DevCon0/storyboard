@@ -43,16 +43,20 @@ angular.module('storyBoard.createStory', [])
   $scope.addFrame0ImagePreview = false;
 
   $scope.addFrame1ImagePreview = false;
-  $scope.addAudio1 = false;
 
   $scope.addFrame2ImagePreview = false;
-  $scope.addAudio2 = false;
 
   $scope.addFrame3ImagePreview = false;
-  $scope.addAudio3 = false;
 
   $scope.addSoundtrack = false;
   $scope.audioButtonLabel = "Add Soundtrack";
+
+  $scope.addAudio1 = false;
+  $scope.addAudio2 = false;
+  $scope.addAudio3 = false;
+  $scope.audioAct1ButtonLabel = "Add Audio Track";
+  $scope.audioAct2ButtonLabel = "Add Audio Track";
+  $scope.audioAct3ButtonLabel = "Add Audio Track";
 
   $scope.addNarration1 = false;
   $scope.addNarration2 = false;
@@ -104,17 +108,24 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1UrlDuration = editStory.frames[1].imageDuration;
     $scope.frame1NarrationText = editStory.frames[1].narrationText;
     $scope.frame1NarrationDelay = editStory.frames[1].narrationDelay;
+
     if ($scope.frame1NarrationText !== "") {
       $scope.addNarration1 = true;
       $scope.narration1ButtonLabel = "Remove Narration";
-    }
-    $scope.frame1AudioUrl = (editStory.frames[1].audioId) ?
-      recreateVideoUrl(editStory.frames[1].audioId) :
-      '';
-    $scope.frame1AudioStartTime = editStory.frames[1].audioStart;
-    $scope.frame1AudioVolume = editStory.frames[1].audioVolume;
-    if ($scope.frame1AudioUrl !== '') {
+     }
+
+     $scope.frame1AudioUrl = recreateVideoUrl(editStory.frames[1].audioId)
+    if ($scope.frame1AudioUrl !== 'https://www.youtube.com/watch?v=') {
       $scope.addAudio1 = true;
+      $scope.audioAct1ButtonLabel = "Remove Audio Track";
+      $scope.frame1AudioStartTime = editStory.frames[1].audioStart;
+     $scope.frame1AudioVolume = editStory.frames[1].audioVolume;
+    } else {
+      $scope.frame1AudioUrl = ""
+      $scope.addAudio1 = false;
+      $scope.audioAct1ButtonLabel = "Add Audio Track";
+      $scope.frame1AudioStartTime = "0";
+      $scope.frame1AudioVolume = "100";
     }
 
     // TODO: remove backwards compatibility
@@ -131,17 +142,24 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2UrlDuration = editStory.frames[2].imageDuration;
     $scope.frame2NarrationText = editStory.frames[2].narrationText;
     $scope.frame2NarrationDelay = editStory.frames[2].narrationDelay;
+
     if ($scope.frame2NarrationText !== "") {
       $scope.addNarration2 = true;
       $scope.narration2ButtonLabel = "Remove Narration";
     }
-    $scope.frame2AudioUrl = (editStory.frames[2].audioId) ?
-      recreateVideoUrl(editStory.frames[2].audioId) :
-      '';
-    $scope.frame2AudioStartTime = editStory.frames[2].audioStart;
-    $scope.frame2AudioVolume = editStory.frames[2].audioVolume;
-    if ($scope.frame2AudioUrl !== '') {
+
+    $scope.frame2AudioUrl = recreateVideoUrl(editStory.frames[2].audioId)
+    if ($scope.frame2AudioUrl !== 'https://www.youtube.com/watch?v=') {
       $scope.addAudio2 = true;
+      $scope.audioAct2ButtonLabel = "Remove Audio Track";
+      $scope.frame2AudioStartTime = editStory.frames[2].audioStart;
+      $scope.frame2AudioVolume = editStory.frames[2].audioVolume;
+    } else {
+      $scope.frame2AudioUrl = ""
+      $scope.addAudio2 = false;
+      $scope.audioAct2ButtonLabel = "Add Audio Track";
+      $scope.frame2AudioStartTime = "0";
+      $scope.frame2AudioVolume = "100";
     }
 
     // TODO: remove backwards compatibility
@@ -158,18 +176,26 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3UrlDuration = editStory.frames[3].imageDuration;
     $scope.frame3NarrationText = editStory.frames[3].narrationText;
     $scope.frame3NarrationDelay = editStory.frames[3].narrationDelay;
+
     if ($scope.frame3NarrationText !== "") {
       $scope.addNarration3 = true;
       $scope.narration3ButtonLabel = "Remove Narration";
     }
-    $scope.frame3AudioUrl = (editStory.frames[3].audioId) ?
-      recreateVideoUrl(editStory.frames[3].audioId) :
-      '';
-    $scope.frame3AudioStartTime = editStory.frames[3].audioStart;
-    $scope.frame3AudioVolume = editStory.frames[3].audioVolume;
-    if ($scope.frame3AudioUrl !== '') {
+
+    $scope.frame3AudioUrl = recreateVideoUrl(editStory.frames[3].audioId)
+    if ($scope.frame3AudioUrl !== 'https://www.youtube.com/watch?v=') {
       $scope.addAudio3 = true;
+      $scope.audioAct3ButtonLabel = "Remove Audio Track";
+      $scope.frame3AudioStartTime = editStory.frames[3].audioStart;
+      $scope.frame3AudioVolume = editStory.frames[3].audioVolume;
+    } else {
+      $scope.frame3AudioUrl = ""
+      $scope.addAudio3 = false;
+      $scope.audioAct3ButtonLabel = "Add Audio Track";
+      $scope.frame3AudioStartTime = "0";
+      $scope.frame3AudioVolume = "100";
     }
+
   } else {
     $scope.storyTitle = null;
     $scope.storyDescription = null;
@@ -191,9 +217,9 @@ angular.module('storyBoard.createStory', [])
     $scope.frame1Volume = "100";
     $scope.frame1ImageUrl = null;
     $scope.frame1UrlDuration = null;
-    $scope.frame1AudioUrl = '';
+    $scope.frame1AudioUrl = null;
     $scope.frame1AudioStartTime = 0;
-    $scope.frame1AudioVolume = 0;
+    $scope.frame1AudioVolume = "100";
     $scope.frame1NarrationText = null;
     $scope.frame1NarrationDelay = 0;
 
@@ -204,9 +230,9 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2Volume = "100";
     $scope.frame2ImageUrl = null;
     $scope.frame2UrlDuration = null;
-    $scope.frame2AudioUrl = '';
+    $scope.frame2AudioUrl = null;
     $scope.frame2AudioStartTime = 0;
-    $scope.frame2AudioVolume = 0;
+    $scope.frame2AudioVolume = "100";
     $scope.frame2NarrationText = null;
     $scope.frame2NarrationDelay = 0;
 
@@ -217,9 +243,9 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3Volume = "100";
     $scope.frame3ImageUrl = null;
     $scope.frame3UrlDuration = null;
-    $scope.frame3AudioUrl = '';
+    $scope.frame3AudioUrl = null;
     $scope.frame3AudioStartTime = 0;
-    $scope.frame3AudioVolume = 0;
+    $scope.frame3AudioVolume = "100";
     $scope.frame3NarrationText = null;
     $scope.frame3NarrationDelay = 0;
   }
@@ -782,6 +808,44 @@ angular.module('storyBoard.createStory', [])
       $scope.frame0Volume = "100";
       $scope.frame0ImageUrl = null;
       $scope.frame0UrlDuration = null;
+    }
+  };
+
+  $scope.toggleActAudioTrack = function (frameId) {
+    switch (frameId) {
+    case 1:
+      $scope.addAudio1 = !$scope.addAudio1;
+      if ($scope.addAudio1) {
+        $scope.audioAct1ButtonLabel = "Remove Audio Track";
+      } else {
+        $scope.audioAct1ButtonLabel = "Add Audio Track";
+        $scope.frame1AudioUrl = null;
+        $scope.frame1AudioStartTime = null;
+        $scope.frame1AudioVolume = null;
+      }
+      break;
+    case 2:
+      $scope.addAudio2 = !$scope.addAudio2;
+      if ($scope.addAudio2) {
+        $scope.audioAct2ButtonLabel = "Remove Audio";
+      } else {
+        $scope.audioAct2ButtonLabel = "Add Audio Track";
+        $scope.frame2AudioUrl = null;
+        $scope.frame1AudioStartTime = null;
+        $scope.frame2AudioVolume = null;
+      }
+      break;
+    case 3:
+      $scope.addAudio3 = !$scope.addAudio3;
+      if ($scope.addAudio3) {
+        $scope.audioAct3ButtonLabel = "Remove Audio";
+      } else {
+        $scope.audioAct3ButtonLabel = "Add Audio Track";
+        $scope.frame3AudioUrl = null;
+        $scope.frame1AudioStartTime = null;
+        $scope.frame3AudioVolume = null;
+      }
+      break;
     }
   };
 
