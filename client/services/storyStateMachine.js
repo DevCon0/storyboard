@@ -51,9 +51,23 @@ angular.module('storyBoard.storyStateMachineService',
         endPlayBackCallback,
         playingCallback
       );
-
+  
       this.players.unshift(newFramePlayer);
     }
+
+    this._registerNavigateAwayListener();
+  };
+
+  storyStateMachine._registerNavigateAwayListener = function () {
+    var originalURL = document.URL;
+
+    var checkingIfNavigatedAway = setInterval(function() {
+      var haveNavigatedAway = (document.URL !== originalURL);
+      if (haveNavigatedAway) {
+        this.endStory();
+        clearInterval(checkingIfNavigatedAway);
+      }
+    }.bind(this), 100);
   };
 
   storyStateMachine.restartStory = function () {

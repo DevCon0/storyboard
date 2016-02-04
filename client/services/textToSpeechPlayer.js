@@ -50,6 +50,7 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
       var paragraphTagStr = this.playerDiv.children();
       paragraphTagStr.addClass('showImagePlayerFrame');
     }
+
     window.speechSynthesis.speak(this.utterance);
   };
 
