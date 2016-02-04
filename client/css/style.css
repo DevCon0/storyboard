@@ -291,7 +291,8 @@ paper-spinner-lite.blueSpinner{
     margin: 0 auto;
 }
 
-.center-it img {
+.center-it img,
+.center-it svg {
     display:block;
     margin: auto;
 }
