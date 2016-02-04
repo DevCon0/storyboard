@@ -4,6 +4,14 @@ angular.module('storyBoard.mockYoutubePlayer', [])
   window.youtubeApiLoadedAndReady = true;
 
   function MockYoutubePlayer(targetDomElement, playerOptions) {
+    // Register the same window constants that Youtube IFrame API does
+    window.YT = {
+      PlayerState: {
+        ENDED: 0,
+        PAUSED: 2
+      }
+    };
+
     this.mockName = "Mock Youtube Player";
     this.targetDomElement = targetDomElement;
     this.playerOptions = playerOptions;
@@ -15,27 +23,23 @@ angular.module('storyBoard.mockYoutubePlayer', [])
   }
 
   MockYoutubePlayer.prototype.playVideo = function() {
-    window.YT = {
-      PlayerState: {
-        ENDED: 0,
-        PAUSED: 2
-      }
-    };
-
-    var event = {
-      data: window.YT.PlayerState.PAUSED
-    };
-    this.stateChangeCallback(event);
-
-    event.data = window.YT.PlayerState.ENDED;
-    this.stateChangeCallback(event);
-  }
+    // Immediately stop "playing"
+    this._simulateEvent(window.YT.PlayerState.PAUSED);
+    this._simulateEvent(window.YT.PlayerState.ENDED);
+  };
 
   MockYoutubePlayer.prototype.setVolume = function() {
-  }
+  };
 
   MockYoutubePlayer.prototype.cueVideoById = function() {
-  }
+  };
+
+  MockYoutubePlayer.prototype._simulateEvent = function(eventData) {
+    var event = {
+      data: eventData
+    };
+    this.stateChangeCallback(event);
+  };
 
   return MockYoutubePlayer;
 });
