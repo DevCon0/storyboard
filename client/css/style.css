@@ -147,7 +147,7 @@ paper-spinner-lite.blueSpinner{
 
 .create-story-media-type-select {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 20px;
+  font-size: 19px;
   margin-bottom: 10px;
   box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
 }
@@ -342,7 +342,7 @@ paper-spinner-lite.blueSpinner{
 .narration-icon{
     padding-left:5px;
 }
-
+/*mitch zone*/
 .single-story-button .btn {
     margin-left: 1px 6px;
     padding: 4px 8px;
@@ -379,4 +379,12 @@ paper-spinner-lite.blueSpinner{
   display: inline-block;
   float: right;
   width: 4em;
+}
+/*paper overrides*/
+.header.paper-card .title-text.paper-card {
+  padding: 10px;
+}
+
+.form-group {
+  margin-bottom: 10px;
 }
