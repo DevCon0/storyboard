@@ -179,8 +179,15 @@ paper-spinner-lite.blueSpinner{
 }
 
 .frameImageUrlPreview {
-  height: 160px;
+  height: auto;
+  max-height: 160px;
   width: auto;
+  max-width: 100%;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
 }
 
 .frameImagePreviewDiv {
@@ -396,4 +403,23 @@ paper-spinner-lite.blueSpinner{
 
 .form-group {
   margin-bottom: 10px;
+}
+
+.story-preview {
+  position: relative;
+  width: 100%;
+}
+
+.story-preview .act-preview {
+  position: relative;
+  display: inline-block;
+  width: 32%;
+  margin: auto;
+}
+
+.story-preview .act-preview img,
+.story-preview .act-preview svg {
+  display: block;
+  width: auto;
+  margin: auto;
 }
