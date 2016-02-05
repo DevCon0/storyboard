@@ -197,7 +197,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame2youtubeUrl = "https://www.youtube.com/watch?v=b8cCsUBYSkw";
     $scope.frame2start = "870";
     $scope.frame2end = "885";
-    $scope.frame2Volume = "30";
+    $scope.frame2volume = "30";
     $scope.frame2imageUrl = "http://gifstumblr.com/images/bird-vs-action-figure_1509.gif";
     $scope.frame2imageDuration = 3;
     $scope.frame2narrationText = 'Why don\'t you just tell me what movie you want to see!';
@@ -207,7 +207,7 @@ angular.module('storyBoard.createStory', [])
     $scope.frame3youtubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
     $scope.frame3start = "0";
     $scope.frame3end = "13";
-    $scope.frame3Volume = "60";
+    $scope.frame3volume = "60";
     $scope.frame3imageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
     $scope.frame3imageDuration = 1;
     $scope.frame3narrationText = 'By Jove, I\'ve got a cheeky idea, let\'s have Milco solve the matrix.';
@@ -335,7 +335,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame2youtubeUrl),
           start: $scope.frame2start ? parseFloat($scope.frame2start) : 0,
           end: $scope.frame2end ? parseFloat($scope.frame2end) : 0,
-          volume: parseInt($scope.frame2Volume),
+          volume: parseInt($scope.frame2volume),
           previewUrl: (wasPassed)? $stateParams.story.frames[2].previewUrl: "",
           imageUrl: $scope.frame2imageUrl,
           imageDuration: $scope.frame2imageDuration ? parseFloat($scope.frame2imageDuration) : 0,
@@ -356,7 +356,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame3youtubeUrl),
           start: $scope.frame3start ? parseFloat($scope.frame3start) : 0,
           end: $scope.frame3end ? parseFloat($scope.frame3end) : 0,
-          volume: parseInt($scope.frame3Volume),
+          volume: parseInt($scope.frame3volume),
           previewUrl: (wasPassed)? $stateParams.story.frames[3].previewUrl: "",
           imageUrl: $scope.frame3imageUrl,
           imageDuration: $scope.frame3imageDuration ? parseFloat($scope.frame3imageDuration) : 0,
@@ -435,7 +435,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame2youtubeUrl),
           start: $scope.frame2start,
           end: $scope.frame2end,
-          volume: $scope.frame2Volume,
+          volume: $scope.frame2volume,
           imageUrl: $scope.frame2imageUrl,
           imageDuration: $scope.frame2imageDuration,
           audioId: stripOutVideoIdFromUrl($scope.frame2AudioUrl),
@@ -455,7 +455,7 @@ angular.module('storyBoard.createStory', [])
           videoId: stripOutVideoIdFromUrl($scope.frame3youtubeUrl),
           start: $scope.frame3start,
           end: $scope.frame3end,
-          volume: $scope.frame3Volume,
+          volume: $scope.frame3volume,
           imageUrl: $scope.frame3imageUrl,
           imageDuration: $scope.frame3imageDuration,
           audioId: stripOutVideoIdFromUrl($scope.frame3AudioUrl),
@@ -518,7 +518,7 @@ angular.module('storyBoard.createStory', [])
         frameyoutubeUrl = $scope.frame2youtubeUrl;
         framestart = $scope.frame2start;
         frameend = $scope.frame2end;
-        frameVolume = $scope.frame2Volume;
+        frameVolume = $scope.frame2volume;
         frameDivId = 'frame2Preview';
         framePlayerName = 'frame2';
         break;
@@ -526,7 +526,7 @@ angular.module('storyBoard.createStory', [])
         frameyoutubeUrl = $scope.frame3youtubeUrl;
         framestart = $scope.frame3start;
         frameend = $scope.frame3end;
-        frameVolume = $scope.frame3Volume;
+        frameVolume = $scope.frame3volume;
         frameDivId = 'frame3Preview';
         framePlayerName = 'frame3';
         break;
