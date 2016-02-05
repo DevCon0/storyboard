@@ -31,54 +31,54 @@
  <!-- Act I ///////////////////////////////////////////////////////////////////////////// -->
   <div class="creationFrameDiv col-md-2">
     <paper-card heading="Act I" elevation="3" class="create-story-paper-card">
-      <select ng-model="frame1mediaType" class="create-story-media-type-select form-control">
+      <select ng-model="frame1MediaType" class="create-story-media-type-select form-control">
         <option value="" disabled selected>Select Media</option>
         <option value="0">Video</option>
         <option value="1">Image</option>
         <option value="2">Text-to-Speech</option>
       </select>
  <!-- Act I VIDEO  ******************************** -->
-      <div ng-if="frame1mediaType == 0">
+      <div ng-if="frame1MediaType == 0">
         <form ng-submit="previewFrame(1)">
           <div class="form-group">
             <label for="youtubeUrl1">Youtube URL</label>
-            <input type="url" ng-model="$parent.frame1youtubeUrl" class="form-control" id="youtubeUrl1" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame1YoutubeUrl" class="form-control" id="youtubeUrl1" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <div class="start-time-block">
               <label for="startTime1">Start (sec)</label>
-              <input type="text" ng-model="$parent.frame1start" class="form-control" id="startTime1" placeholder="0">
+              <input type="text" ng-model="$parent.frame1StartTime" class="form-control" id="startTime1" placeholder="0">
             </div>
             <div class="end-time-block">
               <label for="endTime1">End (sec)</label>
-              <input type="text" ng-model="$parent.frame1end" class="form-control" id="endTime1" placeholder="0">
+              <input type="text" ng-model="$parent.frame1EndTime" class="form-control" id="endTime1" placeholder="0">
             </div>
           </div>
           <div class="form-group">
             <label class="volume-label" for="volume1">Volume</label>
-            <input type="text" ng-model="$parent.frame1volume" class="volume-input form-control" id="volume1" placeholder="100"></input>
+            <input type="text" ng-model="$parent.frame1Volume" class="volume-input form-control" id="volume1" placeholder="100"></input>
             <div class="volume-controls">
               <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
               <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-              <input type="range" min="0" max="100" ng-model="$parent.frame1volume"></input>
+              <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
             </div>
           </div>
           <button ng-hide="$parent.framePreviewOptions[1].videoPlaying" type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[1].showVideoSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame1preview" class="col-md-12"></div>
+        <div id="frame1Preview" class="col-md-12"></div>
       </div>
  <!-- Act I IMAGE  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame1mediaType == 1">
+      <div ng-if="frame1MediaType == 1">
         <form ng-submit="previewImageFrame(1)">
           <div class="form-group">
             <label for="imageUrl1">Image URL</label>
-            <input type="url" ng-model="$parent.frame1imageUrl" class="form-control" id="imageUrl1" placeholder="https://www">
+            <input type="url" ng-model="$parent.frame1ImageUrl" class="form-control" id="imageUrl1" placeholder="https://www">
           </div>
           <div class="form-group">
             <label for="imageUrl1Duration">Duration (sec)</label>
-            <input type="text" ng-model="$parent.frame1imageDuration" class="form-control" id="imageUrl1Duration" placeholder="0">
+            <input type="text" ng-model="$parent.frame1UrlDuration" class="form-control" id="imageUrl1Duration" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -88,103 +88,100 @@
         <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act I NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame1mediaType == 2 || (addNarration1 && frame1mediaType == 1)">
+      <div ng-if="frame1MediaType == 2 || (addNarration1 && frame1MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(1)">
           <div class="form-group">
             <label for="textToSpeechNarration1">Narration</label>
-            <textarea  maxlength="600" ng-model="$parent.frame1narrationText" id="textToSpeechNarration1" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+            <textarea  maxlength="600" ng-model="$parent.frame1NarrationText" id="textToSpeechNarration1" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
           </div>
           <div class="form-group">
             <label for="delay1">Delay (sec)</label>
-            <input type="text" ng-model="$parent.frame1narrationDelay" class="form-control" id="narrationDelay1" placeholder="0">
+            <input type="text" ng-model="$parent.frame1NarrationDelay" class="form-control" id="narrationDelay1" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
         <div class="col-md-12 clean"></div>
       </div>
  <!-- Act I AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-     <div ng-if="frame1mediaType == 0">
-       <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleActAudioTrack(1)">
-          <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{$parent.audioAct1ButtonLabel}}
-        </button>
-      </div>
-      <div ng-if="addAudio1 && (frame1mediaType == 0)">
+      <button ng-if="!addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio1 = true">Add Audio Track</button>
+      <button ng-if="addAudio1 && (frame1MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio1 = false">Remove Audio Track</button>
+      <div ng-if="addAudio1 && (frame1MediaType == 0)">
         <form ng-submit="previewAudioFrame(1)">
           <div class="form-group">
             <h4>Audio Track</h4>
             <label for="youtubeAudioUrl1">Youtube URL (Audio)</label>
-            <input type="url" ng-model="$parent.frame1audioUrl" class="form-control" id="youtubeAudioUrl1" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame1AudioUrl" class="form-control" id="youtubeAudioUrl1" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <div class="start-time-block">
               <label for="startTime1">Start (sec)</label>
-              <input type="text" ng-model="$parent.frame1audioStartTime" class="form-control" id="audioStartTime1" placeholder="0">
+              <input type="text" ng-model="$parent.frame1AudioStartTime" class="form-control" id="audioStartTime1" placeholder="0">
             </div>
             <div class="bonus-audio-block">
               <label for="volume1">Volume</label>
-              <input type="text" ng-model="$parent.frame1audioVolume" class="form-control" id="audioVolume1" placeholder="100">
+              <input type="text" ng-model="$parent.frame1AudioVolume" class="form-control" id="audioVolume1" placeholder="100">
             </div>
-              <input type="range" min="0" max="100" ng-model="$parent.frame1audioVolume"/>
+              <input type="range" min="0" max="100" ng-model="$parent.frame1AudioVolume"/>
           </div>
           <button ng-hide="$parent.framePreviewOptions[1].audioPlaying" type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[1].showAudioSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame1previewAudio" class="col-md-12"></div>
+        <div id="frame1PreviewAudio" class="col-md-12"></div>
       </div>
     </paper-card>
   </div>
  <!-- Act II ///////////////////////////////////////////////////////////////////////////// -->
   <div class="creationFrameDiv col-md-2">
     <paper-card heading="Act II" elevation="3" class="create-story-paper-card">
-      <select ng-model="frame2mediaType" class="create-story-media-type-select form-control">
+      <select ng-model="frame2MediaType" class="create-story-media-type-select form-control">
         <option value="" disabled selected>Select Media</option>
         <option value="0">Video</option>
         <option value="1">Image</option>
         <option value="2">Text-to-Speech</option>
       </select>
  <!-- Act II VIDEO  ******************************** -->
-      <div ng-if="frame2mediaType == 0">
+      <div ng-if="frame2MediaType == 0">
         <form ng-submit="previewFrame(2)">
           <div class="form-group">
             <label for="youtubeUrl2">Youtube URL</label>
-            <input type="url" ng-model="$parent.frame2youtubeUrl" class="form-control" id="youtubeUrl2" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame2YoutubeUrl" class="form-control" id="youtubeUrl2" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <div class="start-time-block">
               <label for="startTime2">Start (sec)</label>
-              <input type="text" ng-model="$parent.frame2start" class="form-control" id="startTime2" placeholder="0">
+              <input type="text" ng-model="$parent.frame2StartTime" class="form-control" id="startTime2" placeholder="0">
             </div>
             <div class="end-time-block">
               <label for="endTime2">End (sec)</label>
-              <input type="text" ng-model="$parent.frame2end" class="form-control" id="endTime2" placeholder="0">
+              <input type="text" ng-model="$parent.frame2EndTime" class="form-control" id="endTime2" placeholder="0">
             </div>
           </div>
           <div class="form-group">
             <label class="volume-label" for="volume2">Volume</label>
-            <input type="text" ng-model="$parent.frame2volume" class="volume-input form-control" id="volume2" placeholder="100"></input>
+            <input type="text" ng-model="$parent.frame2Volume" class="volume-input form-control" id="volume2" placeholder="100"></input>
             <div class="volume-controls">
               <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
               <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-              <input type="range" min="0" max="100" ng-model="$parent.frame2volume"></input>
+              <input type="range" min="0" max="100" ng-model="$parent.frame2Volume"></input>
             </div>
           </div>
           <button ng-hide="$parent.framePreviewOptions[2].videoPlaying" type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[2].showVideoSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame2preview" class="col-md-12"></div>
+        <div id="frame2Preview" class="col-md-12"></div>
       </div>
  <!-- Act II IMAGE  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame2mediaType == 1">
+      <div ng-if="frame2MediaType == 1">
         <form ng-submit="previewImageFrame(2)">
           <div class="form-group">
             <label for="imageUrl2">Image URL</label>
-            <input type="url" ng-model="$parent.frame2imageUrl" class="form-control" id="imageUrl2" placeholder="https://www">
+            <input type="url" ng-model="$parent.frame2ImageUrl" class="form-control" id="imageUrl2" placeholder="https://www">
           </div>
           <div class="form-group">
             <label for="imageUrl2Duration">Duration (sec)</label>
-            <input type="text" ng-model="$parent.frame2imageDuration" class="form-control" id="imageUrl2Duration" placeholder="0">
+            <input type="text" ng-model="$parent.frame2UrlDuration" class="form-control" id="imageUrl2Duration" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
@@ -194,155 +191,149 @@
         <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act II NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame2mediaType == 2 || (addNarration2 && frame2mediaType == 1)">
+      <div ng-if="frame2MediaType == 2 || (addNarration2 && frame2MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(2)">
           <div class="form-group">
             <label for="textToSpeechNarration2">Narration</label>
-            <textarea  maxlength="600" ng-model="$parent.frame2narrationText" id="textToSpeechNarration2" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+            <textarea  maxlength="600" ng-model="$parent.frame2NarrationText" id="textToSpeechNarration2" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
           </div>
           <div class="form-group">
             <label for="delay2">Delay (sec)</label>
-            <input type="text" ng-model="$parent.frame2narrationDelay" class="form-control" id="narrationDelay2" placeholder="0">
+            <input type="text" ng-model="$parent.frame2NarrationDelay" class="form-control" id="narrationDelay2" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
         <div class="col-md-12 clean"></div>
       </div>
 <!-- Act II AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame2mediaType == 0">
-       <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleActAudioTrack(2)">
-          <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{$parent.audioAct2ButtonLabel}}
-        </button>
-      </div>
-      <div ng-if="addAudio2 && (frame2mediaType == 0)">
+      <button ng-if="!addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio2 = true">Add Audio Track</button>
+      <button ng-if="addAudio2 && (frame2MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio2 = false">Remove Audio Track</button>
+      <div ng-if="addAudio2 && (frame2MediaType == 0)">
         <form ng-submit="previewAudioFrame(2)">
           <div class="form-group">
             <h4>Audio Track</h4>
             <label for="youtubeAudioUrl2">Youtube URL (Audio)</label>
-            <input type="url" ng-model="$parent.frame2audioUrl" class="form-control" id="youtubeAudioUrl2" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame2AudioUrl" class="form-control" id="youtubeAudioUrl2" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <div class="start-time-block">
               <label for="startTime2">Start (sec)</label>
-              <input type="text" ng-model="$parent.frame2audioStart" class="form-control" id="audioStartTime2" placeholder="0">
+              <input type="text" ng-model="$parent.frame2AudioStartTime" class="form-control" id="audioStartTime2" placeholder="0">
             </div>
             <div class="bonus-audio-block">
               <label for="volume2">Volume</label>
-              <input type="text" ng-model="$parent.frame2audioVolume" class="form-control" id="audioVolume2" placeholder="100">
+              <input type="text" ng-model="$parent.frame2AudioVolume" class="form-control" id="audioVolume2" placeholder="100">
             </div>
-              <input type="range" min="0" max="100" ng-model="$parent.frame2audioVolume"/>
+              <input type="range" min="0" max="100" ng-model="$parent.frame2AudioVolume"/>
           </div>
           <button ng-hide="$parent.framePreviewOptions[2].audioPlaying" type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[2].showAudioSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame2previewAudio" class="col-md-12"></div>
+        <div id="frame2PreviewAudio" class="col-md-12"></div>
       </div>
     </paper-card>
   </div>
  <!-- Act III ///////////////////////////////////////////////////////////////////////////// -->
   <div class="creationFrameDiv col-md-2">
     <paper-card heading="Act III" elevation="3" class="create-story-paper-card">
-      <select ng-model="frame3mediaType" class="create-story-media-type-select form-control">
+      <select ng-model="frame3MediaType" class="create-story-media-type-select form-control">
         <option value="" disabled selected>Select Media</option>
         <option value="0">Video</option>
         <option value="1">Image</option>
         <option value="2">Text-to-Speech</option>
       </select>
  <!-- Act III VIDEO  ******************************** -->
-      <div ng-if="frame3mediaType == 0">
+      <div ng-if="frame3MediaType == 0">
         <form ng-submit="previewFrame(3)">
           <div class="form-group">
             <label for="youtubeUrl3">Youtube URL</label>
-            <input type="url" ng-model="$parent.frame3youtubeUrl" class="form-control" id="youtubeUrl3" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame3YoutubeUrl" class="form-control" id="youtubeUrl3" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <div class="start-time-block">
               <label for="startTime3">Start (sec)</label>
-              <input type="text" ng-model="$parent.frame3start" class="form-control" id="startTime3" placeholder="0">
+              <input type="text" ng-model="$parent.frame3StartTime" class="form-control" id="startTime3" placeholder="0">
             </div>
             <div class="end-time-block">
               <label for="endTime3">End (sec)</label>
-              <input type="text" ng-model="$parent.frame3end" class="form-control" id="endTime3" placeholder="0">
+              <input type="text" ng-model="$parent.frame3EndTime" class="form-control" id="endTime3" placeholder="0">
             </div>
           </div>
           <div class="form-group">
             <label class="volume-label" for="volume3">Volume</label>
-            <input type="text" ng-model="$parent.frame3volume" class="volume-input form-control" id="volume3" placeholder="100"></input>
+            <input type="text" ng-model="$parent.frame3Volume" class="volume-input form-control" id="volume3" placeholder="100"></input>
             <div class="volume-controls">
               <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
               <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-              <input type="range" min="0" max="100" ng-model="$parent.frame3volume"></input>
+              <input type="range" min="0" max="100" ng-model="$parent.frame1Volume"></input>
             </div>
           </div>
           <button ng-hide="$parent.framePreviewOptions[3].videoPlaying" type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[3].showVideoSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame3preview" class="col-md-12"></div>
+        <div id="frame3Preview" class="col-md-12"></div>
       </div>
  <!-- Act III IMAGE  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame3mediaType == 1">
+      <div ng-if="frame3MediaType == 1">
         <form ng-submit="previewImageFrame(3)">
           <div class="form-group">
             <label for="imageUrl3">Image URL</label>
-            <input type="url" ng-model="$parent.frame3imageUrl" class="form-control" id="imageUrl3" placeholder="https://www">
+            <input type="url" ng-model="$parent.frame3ImageUrl" class="form-control" id="imageUrl3" placeholder="https://www">
           </div>
           <div class="form-group">
             <label for="imageUrl3Duration">Duration (sec)</label>
-            <input type="text" ng-model="$parent.frame3imageDuration" class="form-control" id="imageUrl3Duration" placeholder="0">
+            <input type="text" ng-model="$parent.frame3UrlDuration" class="form-control" id="imageUrl3Duration" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
           <br />
           <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleNarration(3)">{{$parent.narration3ButtonLabel}} <span class="narration-icon glyphicon glyphicon-user" aria-hidden="true"></span></button>
         <div class="col-md-12 clean"></div>
-        <div class="frameImagePreviewDiv" ng-show="addFrame3ImagePreview"><img ng-src="{{$parent.frame3imageUrl}}" class="frameImageUrlPreview"></div>
+        <div class="frameImagePreviewDiv" ng-show="addFrame3ImagePreview"><img ng-src="{{$parent.frame3ImageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act III NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame3mediaType == 2 || (addNarration3 && frame3mediaType == 1)">
+      <div ng-if="frame3MediaType == 2 || (addNarration3 && frame3MediaType == 1)">
         <form ng-submit="previewTextToSpeechFrame(3)">
           <div class="form-group">
             <label for="textToSpeechNarration3">Narration</label>
-            <textarea  maxlength="600" ng-model="$parent.frame3narrationText" id="textToSpeechNarration3" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
+            <textarea  maxlength="600" ng-model="$parent.frame3NarrationText" id="textToSpeechNarration3" class="textToSpeechTextArea form-control" rows="3" placeholder="Once upon a time..."></textarea>
           </div>
           <div class="form-group">
             <label for="endTime3">Delay (sec)</label>
-            <input type="text" ng-model="$parent.frame3narrationDelay" class="form-control" id="narrationDelay3" placeholder="0">
+            <input type="text" ng-model="$parent.frame3NarrationDelay" class="form-control" id="narrationDelay3" placeholder="0">
           </div>
           <button type="submit" class="btn btn-success single-story-button">Preview Narration<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
         </form>
         <div class="col-md-12 clean"></div>
       </div>
 <!-- Act III AUDIO  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-      <div ng-if="frame3MediaType == 0">
-       <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleActAudioTrack(3)">
-          <span class="glyphicon glyphicon-music" aria-hidden="true"></span> {{$parent.audioAct3ButtonLabel}}
-        </button>
-      </div>
-      <div ng-if="addAudio3 && (frame3mediaType == 0)">
+      <button ng-if="!addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio3 = true">Add Audio Track</button>
+      <button ng-if="addAudio3 && (frame3MediaType == 0)" type="button" class="btn btn-success single-story-button" ng-click="$parent.addAudio3 = false">Remove Audio Track</button>
+      <div ng-if="addAudio3 && (frame3MediaType == 0)">
         <form ng-submit="previewAudioFrame(3)">
           <div class="form-group">
             <h4>Audio Track</h4>
             <label for="youtubeAudioUrl3">Youtube URL (Audio)</label>
-            <input type="url" ng-model="$parent.frame3audioUrl" class="form-control" id="youtubeAudioUrl3" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="$parent.frame3AudioUrl" class="form-control" id="youtubeAudioUrl3" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <div class="start-time-block">
               <label for="startTime3">Start (sec)</label>
-              <input type="text" ng-model="$parent.frame3audioStart" class="form-control" id="audioStartTime3" placeholder="0">
+              <input type="text" ng-model="$parent.frame3AudioStartTime" class="form-control" id="audioStartTime3" placeholder="0">
             </div>
             <div class="bonus-audio-block">
               <label for="volume3">Volume</label>
-              <input type="text" ng-model="$parent.frame3audioVolume" class="form-control" id="audioVolume3" placeholder="100">
+              <input type="text" ng-model="$parent.frame3AudioVolume" class="form-control" id="audioVolume3" placeholder="100">
             </div>
-              <input type="range" min="0" max="100" ng-model="$parent.frame3audioVolume"/>
+              <input type="range" min="0" max="100" ng-model="$parent.frame3AudioVolume"/>
           </div>
           <button ng-hide="$parent.framePreviewOptions[3].audioPlaying" type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[3].showAudioSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame3previewAudio" class="col-md-12"></div>
+        <div id="frame3PreviewAudio" class="col-md-12"></div>
       </div>
     </paper-card>
   </div>
@@ -353,32 +344,32 @@
         <form ng-submit="previewFrame(0)">
           <div class="form-group">
             <label for="youtubeUrl0">Youtube URL</label>
-            <input type="url" ng-model="frame0youtubeUrl" class="form-control" id="youtubeUrl0" placeholder="https://www.youtube.com">
+            <input type="url" ng-model="frame0YoutubeUrl" class="form-control" id="youtubeUrl0" placeholder="https://www.youtube.com">
           </div>
           <div class="form-group">
             <div class="start-time-block">
               <label for="startTime0">Start (sec)</label>
-              <input type="text" ng-model="frame0start" class="form-control" id="startTime0" placeholder="0">
+              <input type="text" ng-model="frame0StartTime" class="form-control" id="startTime0" placeholder="0">
             </div>
             <div class="end-time-block">
               <label for="endTime0">End (sec)</label>
-              <input type="text" ng-model="frame0end" class="form-control" id="endTime0" placeholder="0">
+              <input type="text" ng-model="frame0EndTime" class="form-control" id="endTime0" placeholder="0">
             </div>
           </div>
           <div class="form-group">
             <label class="volume-label" for="volume0">Volume</label>
-            <input type="text" ng-model="frame0volume" class="volume-input form-control" id="volume0" placeholder="100"></input>
+            <input type="text" ng-model="frame0Volume" class="volume-input form-control" id="volume0" placeholder="100"></input>
             <div class="volume-controls">
               <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
               <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-              <input type="range" min="0" max="100" ng-model="frame0volume"></input>
+              <input type="range" min="0" max="100" ng-model="frame0Volume"></input>
             </div>
           </div>
           <button ng-hide="$parent.framePreviewOptions[0].videoPlaying" type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[0].showVideoSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame0preview" class="col-md-12"></div>
+        <div id="frame0Preview" class="col-md-12"></div>
     </paper-card>
   </div>
 </div>

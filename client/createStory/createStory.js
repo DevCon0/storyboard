@@ -71,104 +71,184 @@ angular.module('storyBoard.createStory', [])
 
   if (wasPassed) {
     var editStory = $stateParams.story;
-    var frames = editStory.frames;
-
     $scope.storyTitle = editStory.title;
     $scope.storyDescription = editStory.description;
     $scope.storyThumbnailUrl = editStory.thumbnail;
 
-    var loadFrame = function(frame, index, collection) {
-      for (var key in frame) {
-        var name = 'frame' + index + key;
-        $scope[name] = frame[key];
-        // we should change mediatype to a string
-        if (key === 'mediaType') {
-          $scope[name] = frame[key] + "";
-        }
-
-        if (key === 'videoId' || key === 'audioId' && key !== "") {
-          if (key === 'videoId') {
-            name = 'frame' + index + 'youtubeUrl';
-            $scope[name] = recreateVideoUrl(frame[key]);
-          } else if (key === 'audioId') {
-            name = 'frame' + index + 'audioUrl';
-            $scope[name] = recreateVideoUrl(frame[key]);
-          }
-        }
-      }
-    }
-
-    frames.forEach(loadFrame);
-    // loadFrame(frames[1], 1);
-    console.log($scope.frame1mediaType,
-      $scope.frame2mediaType,
-      $scope.frame3mediaType,
-      $scope.frame0mediaType)
-
-    // // frame0 AUDIO
-    if ($scope.frame0youtubeUrl !== "https://www.youtube.com/watch?v=") {
+    // media type is always 3 for frame0 and is set on save, and confirmed here
+    $scope.frame0MediaType = editStory.frames[0].mediaType;
+    // test for videoId to show or hide in create/edit view
+    if (editStory.frames[0].videoId !== "") {
+      $scope.frame0YoutubeUrl = recreateVideoUrl(editStory.frames[0].videoId);
       $scope.addSoundtrack = true;
       $scope.audioButtonLabel = 'Remove Soundtrack';
     } else {
-      $scope.frame0youtubeUrl = "";
+      $scope.frame0YoutubeUrl = "";
       $scope.addSoundtrack = false;
       $scope.audioButtonLabel = "Add Soundtrack";
     }
-    // frame1
+    $scope.frame0StartTime = editStory.frames[0].start;
+    $scope.frame0EndTime = editStory.frames[0].end;
+    $scope.frame0Volume = editStory.frames[0].volume;
+    $scope.frame0ImageUrl = editStory.frames[0].imageUrl;
+    $scope.frame0UrlDuration = editStory.frames[0].imageDuration;
+    // Not applicable $scope.frame0NarrationText
 
-    if ($scope.frame1narrationText !== "") {
+    // TODO: remove backwards compatibility
+    if(editStory.frames[1].mediaType !== undefined) {
+      $scope.frame1MediaType = "" + editStory.frames[1].mediaType;
+    } else {
+      $scope.frame1MediaType = null;
+    }
+    $scope.frame1YoutubeUrl = recreateVideoUrl(editStory.frames[1].videoId);
+    $scope.frame1StartTime = editStory.frames[1].start;
+    $scope.frame1EndTime = editStory.frames[1].end;
+    $scope.frame1Volume = editStory.frames[1].volume;
+    $scope.frame1ImageUrl = editStory.frames[1].imageUrl;
+    $scope.frame1UrlDuration = editStory.frames[1].imageDuration;
+    $scope.frame1NarrationText = editStory.frames[1].narrationText;
+    $scope.frame1NarrationDelay = editStory.frames[1].narrationDelay;
+
+    if ($scope.frame1NarrationText !== "") {
       $scope.addNarration1 = true;
       $scope.narration1ButtonLabel = "Remove Narration";
      }
 
-    if ($scope.frame1audioUrl !== 'https://www.youtube.com/watch?v=') {
+     $scope.frame1AudioUrl = recreateVideoUrl(editStory.frames[1].audioId)
+    if ($scope.frame1AudioUrl !== 'https://www.youtube.com/watch?v=') {
       $scope.addAudio1 = true;
       $scope.audioAct1ButtonLabel = "Remove Audio Track";
+      $scope.frame1AudioStartTime = editStory.frames[1].audioStart;
+     $scope.frame1AudioVolume = editStory.frames[1].audioVolume;
     } else {
-      // clear frame audio, needs function
-      $scope.frame1audioUrl = ""
+      $scope.frame1AudioUrl = ""
       $scope.addAudio1 = false;
       $scope.audioAct1ButtonLabel = "Add Audio Track";
-      $scope.frame1audioStart = "0";
-      $scope.frame1audioVolume = "100";
+      $scope.frame1AudioStartTime = "0";
+      $scope.frame1AudioVolume = "100";
     }
 
-    // frame 2
-    if ($scope.frame2narrationText !== "") {
+    // TODO: remove backwards compatibility
+    if(editStory.frames[2].mediaType !== undefined) {
+      $scope.frame2MediaType = "" + editStory.frames[2].mediaType;
+    } else {
+      $scope.frame2MediaType = null;
+    }
+    $scope.frame2YoutubeUrl = recreateVideoUrl(editStory.frames[2].videoId);
+    $scope.frame2StartTime = editStory.frames[2].start;
+    $scope.frame2EndTime = editStory.frames[2].end;
+    $scope.frame2Volume = editStory.frames[2].volume;
+    $scope.frame2ImageUrl = editStory.frames[2].imageUrl;
+    $scope.frame2UrlDuration = editStory.frames[2].imageDuration;
+    $scope.frame2NarrationText = editStory.frames[2].narrationText;
+    $scope.frame2NarrationDelay = editStory.frames[2].narrationDelay;
+
+    if ($scope.frame2NarrationText !== "") {
       $scope.addNarration2 = true;
       $scope.narration2ButtonLabel = "Remove Narration";
-     }
+    }
 
-    if ($scope.frame2audioUrl !== 'https://www.youtube.com/watch?v=') {
+    $scope.frame2AudioUrl = recreateVideoUrl(editStory.frames[2].audioId)
+    if ($scope.frame2AudioUrl !== 'https://www.youtube.com/watch?v=') {
       $scope.addAudio2 = true;
       $scope.audioAct2ButtonLabel = "Remove Audio Track";
+      $scope.frame2AudioStartTime = editStory.frames[2].audioStart;
+      $scope.frame2AudioVolume = editStory.frames[2].audioVolume;
     } else {
-      // clear frame audio, needs function
-      $scope.frame2audioUrl = ""
+      $scope.frame2AudioUrl = ""
       $scope.addAudio2 = false;
       $scope.audioAct2ButtonLabel = "Add Audio Track";
-      $scope.frame2audioStart = "0";
-      $scope.frame2audioVolume = "100";
+      $scope.frame2AudioStartTime = "0";
+      $scope.frame2AudioVolume = "100";
     }
 
-    // frame 3
-    if ($scope.frame3narrationText !== "") {
+    // TODO: remove backwards compatibility
+    if(editStory.frames[3].mediaType !== undefined) {
+      $scope.frame3MediaType = "" + editStory.frames[3].mediaType;
+    } else {
+      $scope.frame3MediaType = null;
+    }
+    $scope.frame3YoutubeUrl = recreateVideoUrl(editStory.frames[3].videoId);
+    $scope.frame3StartTime = editStory.frames[3].start;
+    $scope.frame3EndTime = editStory.frames[3].end;
+    $scope.frame3Volume = editStory.frames[3].volume;
+    $scope.frame3ImageUrl = editStory.frames[3].imageUrl;
+    $scope.frame3UrlDuration = editStory.frames[3].imageDuration;
+    $scope.frame3NarrationText = editStory.frames[3].narrationText;
+    $scope.frame3NarrationDelay = editStory.frames[3].narrationDelay;
+
+    if ($scope.frame3NarrationText !== "") {
       $scope.addNarration3 = true;
       $scope.narration3ButtonLabel = "Remove Narration";
-     }
+    }
 
-    if ($scope.frame3audioUrl !== 'https://www.youtube.com/watch?v=') {
+    $scope.frame3AudioUrl = recreateVideoUrl(editStory.frames[3].audioId)
+    if ($scope.frame3AudioUrl !== 'https://www.youtube.com/watch?v=') {
       $scope.addAudio3 = true;
       $scope.audioAct3ButtonLabel = "Remove Audio Track";
+      $scope.frame3AudioStartTime = editStory.frames[3].audioStart;
+      $scope.frame3AudioVolume = editStory.frames[3].audioVolume;
     } else {
-      // clear frame audio, needs function
-      $scope.frame3audioUrl = ""
+      $scope.frame3AudioUrl = ""
       $scope.addAudio3 = false;
       $scope.audioAct3ButtonLabel = "Add Audio Track";
-      $scope.frame3audioStart = "0";
-      $scope.frame3audioVolume = "100";
+      $scope.frame3AudioStartTime = "0";
+      $scope.frame3AudioVolume = "100";
     }
- }
+
+  } else {
+    $scope.storyTitle = null;
+    $scope.storyDescription = null;
+    $scope.storyThumbnailUrl = null;
+
+    $scope.frame0MediaType = 3;
+    $scope.frame0YoutubeUrl = null;
+    $scope.frame0StartTime = "0";
+    $scope.frame0EndTime = null;
+    $scope.frame0Volume = "100";
+    $scope.frame0ImageUrl = null;
+    $scope.frame0UrlDuration = null;
+    // Not applicable $scope.frame0NarrationText
+
+    $scope.frame1MediaType = null;
+    $scope.frame1YoutubeUrl = null;
+    $scope.frame1StartTime = "0";
+    $scope.frame1EndTime = null;
+    $scope.frame1Volume = "100";
+    $scope.frame1ImageUrl = null;
+    $scope.frame1UrlDuration = null;
+    $scope.frame1AudioUrl = null;
+    $scope.frame1AudioStartTime = 0;
+    $scope.frame1AudioVolume = "100";
+    $scope.frame1NarrationText = null;
+    $scope.frame1NarrationDelay = 0;
+
+    $scope.frame2MediaType = null;
+    $scope.frame2YoutubeUrl = null;
+    $scope.frame2StartTime = "0";
+    $scope.frame2EndTime = null;
+    $scope.frame2Volume = "100";
+    $scope.frame2ImageUrl = null;
+    $scope.frame2UrlDuration = null;
+    $scope.frame2AudioUrl = null;
+    $scope.frame2AudioStartTime = 0;
+    $scope.frame2AudioVolume = "100";
+    $scope.frame2NarrationText = null;
+    $scope.frame2NarrationDelay = 0;
+
+    $scope.frame3MediaType = null;
+    $scope.frame3YoutubeUrl = null;
+    $scope.frame3StartTime = "0";
+    $scope.frame3EndTime = null;
+    $scope.frame3Volume = "100";
+    $scope.frame3ImageUrl = null;
+    $scope.frame3UrlDuration = null;
+    $scope.frame3AudioUrl = null;
+    $scope.frame3AudioStartTime = 0;
+    $scope.frame3AudioVolume = "100";
+    $scope.frame3NarrationText = null;
+    $scope.frame3NarrationDelay = 0;
+  }
 
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
@@ -176,42 +256,42 @@ angular.module('storyBoard.createStory', [])
     $scope.storyDescription = "Reach down ...";
     $scope.storyThumbnailUrl = "http://assets.rollingstone.com/assets/images/artists/van-halen.jpg";
 
-    $scope.frame0youtubeUrl = "https://www.youtube.com/watch?v=fuKDBPw8wQA";
-    $scope.frame0start = "0";
-    $scope.frame0end = "180";
-    $scope.frame0volume = "100";
-    $scope.frame0imageUrl = null;
-    $scope.frame0imageDuration = null;
+    $scope.frame0YoutubeUrl = "https://www.youtube.com/watch?v=fuKDBPw8wQA";
+    $scope.frame0StartTime = "0";
+    $scope.frame0EndTime = "180";
+    $scope.frame0Volume = "100";
+    $scope.frame0ImageUrl = null;
+    $scope.frame0UrlDuration = null;
 
-    $scope.frame1mediaType = "0";
-    $scope.frame1youtubeUrl = "https://www.youtube.com/watch?v=S7_Hr3iCPls";
-    $scope.frame1start = "14";
-    $scope.frame1end = "24";
-    $scope.frame1volume = "0";
-    $scope.frame1imageUrl = "http://i.imgur.com/7j15tXU.jpg";
-    $scope.frame1imageDuration = 2;
-    $scope.frame1narrationText = 'A long time ago, in a galaxy far, far away';
-    $scope.frame1narrationDelay = 0;
+    $scope.frame1MediaType = "0";
+    $scope.frame1YoutubeUrl = "https://www.youtube.com/watch?v=S7_Hr3iCPls";
+    $scope.frame1StartTime = "14";
+    $scope.frame1EndTime = "24";
+    $scope.frame1Volume = "0";
+    $scope.frame1ImageUrl = "http://i.imgur.com/7j15tXU.jpg";
+    $scope.frame1UrlDuration = 2;
+    $scope.frame1NarrationText = 'A long time ago, in a galaxy far, far away';
+    $scope.frame1NarrationDelay = 0;
 
-    $scope.frame2mediaType = "1";
-    $scope.frame2youtubeUrl = "https://www.youtube.com/watch?v=b8cCsUBYSkw";
-    $scope.frame2start = "870";
-    $scope.frame2end = "885";
-    $scope.frame2volume = "30";
-    $scope.frame2imageUrl = "http://gifstumblr.com/images/bird-vs-action-figure_1509.gif";
-    $scope.frame2imageDuration = 3;
-    $scope.frame2narrationText = 'Why don\'t you just tell me what movie you want to see!';
-    $scope.frame2narrationDelay = 0;
+    $scope.frame2MediaType = "1";
+    $scope.frame2YoutubeUrl = "https://www.youtube.com/watch?v=b8cCsUBYSkw";
+    $scope.frame2StartTime = "870";
+    $scope.frame2EndTime = "885";
+    $scope.frame2Volume = "30";
+    $scope.frame2ImageUrl = "http://gifstumblr.com/images/bird-vs-action-figure_1509.gif";
+    $scope.frame2UrlDuration = 3;
+    $scope.frame2NarrationText = 'Why don\'t you just tell me what movie you want to see!';
+    $scope.frame2NarrationDelay = 0;
 
-    $scope.frame3mediaType = "2";
-    $scope.frame3youtubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
-    $scope.frame3start = "0";
-    $scope.frame3end = "13";
-    $scope.frame3volume = "60";
-    $scope.frame3imageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
-    $scope.frame3imageDuration = 1;
-    $scope.frame3narrationText = 'By Jove, I\'ve got a cheeky idea, let\'s have Milco solve the matrix.';
-    $scope.frame3narrationDelay = 0;
+    $scope.frame3MediaType = "2";
+    $scope.frame3YoutubeUrl = "https://www.youtube.com/watch?v=N9fbRcRJY34";
+    $scope.frame3StartTime = "0";
+    $scope.frame3EndTime = "13";
+    $scope.frame3Volume = "60";
+    $scope.frame3ImageUrl = "https://s-media-cache-ak0.pinimg.com/236x/9d/4c/ea/9d4cea965b2310610c99bc0eb72fe790.jpg";
+    $scope.frame3UrlDuration = 1;
+    $scope.frame3NarrationText = 'By Jove, I\'ve got a cheeky idea, let\'s have Milco solve the matrix.';
+    $scope.frame3NarrationDelay = 0;
   };
 
   $scope.checkRequiredFields = function(){
@@ -221,15 +301,15 @@ angular.module('storyBoard.createStory', [])
       $scope.storyThumbnailUrl;
 
     var video1InfoReady =
-      $scope.frame1youtubeUrl &&
-      $scope.frame1end;
+      $scope.frame1YoutubeUrl &&
+      $scope.frame1EndTime;
 
     var image1InfoReady =
-      $scope.frame1imageUrl &&
-      $scope.frame1imageDuration;
+      $scope.frame1ImageUrl &&
+      $scope.frame1UrlDuration;
 
     var textToSpeech1Ready =
-      $scope.frame1narrationText;
+      $scope.frame1NarrationText;
 
     var frame1Ready =
       video1InfoReady ||
@@ -237,15 +317,15 @@ angular.module('storyBoard.createStory', [])
       textToSpeech1Ready;
 
     var video2InfoReady =
-      $scope.frame2youtubeUrl &&
-      $scope.frame2end;
+      $scope.frame2YoutubeUrl &&
+      $scope.frame2EndTime;
 
     var image2InfoReady =
-      $scope.frame2imageUrl &&
-      $scope.frame2imageDuration;
+      $scope.frame2ImageUrl &&
+      $scope.frame2UrlDuration;
 
     var textToSpeech2Ready =
-      $scope.frame2narrationText;
+      $scope.frame2NarrationText;
 
     var frame2Ready =
       video2InfoReady ||
@@ -253,15 +333,15 @@ angular.module('storyBoard.createStory', [])
       textToSpeech2Ready;
 
     var video3InfoReady =
-      $scope.frame3youtubeUrl &&
-      $scope.frame3end;
+      $scope.frame3YoutubeUrl &&
+      $scope.frame3EndTime;
 
     var image3InfoReady =
-      $scope.frame3imageUrl &&
-      $scope.frame3imageDuration;
+      $scope.frame3ImageUrl &&
+      $scope.frame3UrlDuration;
 
     var textToSpeech3Ready =
-      $scope.frame3narrationText;
+      $scope.frame3NarrationText;
 
     var frame3Ready =
       video3InfoReady ||
@@ -294,81 +374,81 @@ angular.module('storyBoard.createStory', [])
       FRAME3: 3,
       frames: [
         {
-          mediaType: parseInt($scope.frame0mediaType),
+          mediaType: parseInt($scope.frame0MediaType),
           player: null,
           playerDiv: 'player0',
-          videoId: stripOutVideoIdFromUrl($scope.frame0youtubeUrl),
-          start: $scope.frame0start ? parseFloat($scope.frame0start) : 0,
-          end: $scope.frame0end ? parseFloat($scope.frame0end) : 0,
-          volume: parseInt($scope.frame0volume),
-          imageUrl: $scope.frame0imageUrl,
-          imageDuration: $scope.frame0imageDuration ? parseFloat($scope.frame0imageDuration) : 0,
-          /* Not applicable $scope.frame0narrationText*/
+          videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
+          start: $scope.frame0StartTime ? parseFloat($scope.frame0StartTime) : 0,
+          end: $scope.frame0EndTime ? parseFloat($scope.frame0EndTime) : 0,
+          volume: parseInt($scope.frame0Volume),
+          imageUrl: $scope.frame0ImageUrl,
+          imageDuration: $scope.frame0UrlDuration ? parseFloat($scope.frame0UrlDuration) : 0,
+          /* Not applicable $scope.frame0NarrationText*/
           narrationText: null,
           narrationDelay: 0
         },
         {
-          mediaType: parseInt($scope.frame1mediaType),
+          mediaType: parseInt($scope.frame1MediaType),
           player: null,
           playerDiv: 'player1',
-          videoId: stripOutVideoIdFromUrl($scope.frame1youtubeUrl),
-          start: $scope.frame1start ? parseFloat($scope.frame1start) : 0,
-          end: $scope.frame1end ? parseFloat($scope.frame1end) : 0,
-          volume: parseInt($scope.frame1volume),
+          videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
+          start: $scope.frame1StartTime ? parseFloat($scope.frame1StartTime) : 0,
+          end: $scope.frame1EndTime ? parseFloat($scope.frame1EndTime) : 0,
+          volume: parseInt($scope.frame1Volume),
           previewUrl: (wasPassed)? $stateParams.story.frames[1].previewUrl: "",
-          imageUrl: $scope.frame1imageUrl,
-          imageDuration: $scope.frame1imageDuration ? parseFloat($scope.frame1imageDuration) : 0,
-          audioId: stripOutVideoIdFromUrl($scope.frame1audioUrl),
-          audioStart: ($scope.frame1audioStart) ?
-                        parseFloat($scope.frame1audioStart) :
+          imageUrl: $scope.frame1ImageUrl,
+          imageDuration: $scope.frame1UrlDuration ? parseFloat($scope.frame1UrlDuration) : 0,
+          audioId: stripOutVideoIdFromUrl($scope.frame1AudioUrl),
+          audioStart: ($scope.frame1AudioStartTime) ?
+                        parseFloat($scope.frame1AudioStartTime) :
                         0,
-          audioVolume: ($scope.frame1audioVolume) ?
-                        parseFloat($scope.frame1audioVolume) :
+          audioVolume: ($scope.frame1AudioVolume) ?
+                        parseFloat($scope.frame1AudioVolume) :
                         0,
-          narrationText: $scope.frame1narrationText,
-          narrationDelay: $scope.frame1narrationDelay ? parseFloat($scope.frame1narrationDelay) : 0
+          narrationText: $scope.frame1NarrationText,
+          narrationDelay: $scope.frame1NarrationDelay ? parseFloat($scope.frame1NarrationDelay) : 0
         },
         {
-          mediaType: parseInt($scope.frame2mediaType),
+          mediaType: parseInt($scope.frame2MediaType),
           player: null,
           playerDiv: 'player2',
-          videoId: stripOutVideoIdFromUrl($scope.frame2youtubeUrl),
-          start: $scope.frame2start ? parseFloat($scope.frame2start) : 0,
-          end: $scope.frame2end ? parseFloat($scope.frame2end) : 0,
-          volume: parseInt($scope.frame2volume),
+          videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
+          start: $scope.frame2StartTime ? parseFloat($scope.frame2StartTime) : 0,
+          end: $scope.frame2EndTime ? parseFloat($scope.frame2EndTime) : 0,
+          volume: parseInt($scope.frame2Volume),
           previewUrl: (wasPassed)? $stateParams.story.frames[2].previewUrl: "",
-          imageUrl: $scope.frame2imageUrl,
-          imageDuration: $scope.frame2imageDuration ? parseFloat($scope.frame2imageDuration) : 0,
-          audioId: stripOutVideoIdFromUrl($scope.frame2audioUrl),
-          audioStart: ($scope.frame2audioStart) ?
-                        parseFloat($scope.frame2audioStart) :
+          imageUrl: $scope.frame2ImageUrl,
+          imageDuration: $scope.frame2UrlDuration ? parseFloat($scope.frame2UrlDuration) : 0,
+          audioId: stripOutVideoIdFromUrl($scope.frame2AudioUrl),
+          audioStart: ($scope.frame2AudioStartTime) ?
+                        parseFloat($scope.frame2AudioStartTime) :
                         0,
-          audioVolume: ($scope.frame2audioVolume) ?
-                        parseFloat($scope.frame2audioVolume) :
+          audioVolume: ($scope.frame2AudioVolume) ?
+                        parseFloat($scope.frame2AudioVolume) :
                         0,
-          narrationText: $scope.frame2narrationText,
-          narrationDelay: $scope.frame2narrationDelay ? parseFloat($scope.frame2narrationDelay) : 0
+          narrationText: $scope.frame2NarrationText,
+          narrationDelay: $scope.frame2NarrationDelay ? parseFloat($scope.frame2NarrationDelay) : 0
         },
         {
-          mediaType: parseInt($scope.frame3mediaType),
+          mediaType: parseInt($scope.frame3MediaType),
           player: null,
           playerDiv: 'player3',
-          videoId: stripOutVideoIdFromUrl($scope.frame3youtubeUrl),
-          start: $scope.frame3start ? parseFloat($scope.frame3start) : 0,
-          end: $scope.frame3end ? parseFloat($scope.frame3end) : 0,
-          volume: parseInt($scope.frame3volume),
+          videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
+          start: $scope.frame3StartTime ? parseFloat($scope.frame3StartTime) : 0,
+          end: $scope.frame3EndTime ? parseFloat($scope.frame3EndTime) : 0,
+          volume: parseInt($scope.frame3Volume),
           previewUrl: (wasPassed)? $stateParams.story.frames[3].previewUrl: "",
-          imageUrl: $scope.frame3imageUrl,
-          imageDuration: $scope.frame3imageDuration ? parseFloat($scope.frame3imageDuration) : 0,
-          audioId: stripOutVideoIdFromUrl($scope.frame3audioUrl),
-          audioStart: ($scope.frame3audioStart) ?
-                        parseFloat($scope.frame3audioStart) :
+          imageUrl: $scope.frame3ImageUrl,
+          imageDuration: $scope.frame3UrlDuration ? parseFloat($scope.frame3UrlDuration) : 0,
+          audioId: stripOutVideoIdFromUrl($scope.frame3AudioUrl),
+          audioStart: ($scope.frame3AudioStartTime) ?
+                        parseFloat($scope.frame3AudioStartTime) :
                         0,
-          audioVolume: ($scope.frame3audioVolume) ?
-                        parseFloat($scope.frame3audioVolume) :
+          audioVolume: ($scope.frame3AudioVolume) ?
+                        parseFloat($scope.frame3AudioVolume) :
                         0,
-          narrationText: $scope.frame3narrationText,
-          narrationDelay: $scope.frame3narrationDelay ? parseFloat($scope.frame3narrationDelay) : 0
+          narrationText: $scope.frame3NarrationText,
+          narrationDelay: $scope.frame3NarrationDelay ? parseFloat($scope.frame3NarrationDelay) : 0
         }
       ]
     };
@@ -392,81 +472,81 @@ angular.module('storyBoard.createStory', [])
       FRAME1: 1,
       FRAME2: 2,
       FRAME3: 3,
-      hasSoundtrack: $scope.frame0youtubeUrl !== '' && $scope.frame0youtubeUrl !== null,
+      hasSoundtrack: $scope.frame0YoutubeUrl !== '' && $scope.frame0YoutubeUrl !== null,
       frames: [
         {
-          mediaType: parseInt($scope.frame0mediaType),
+          mediaType: parseInt($scope.frame0MediaType),
           player: null,
           playerDiv: 'player0',
-          videoId: stripOutVideoIdFromUrl($scope.frame0youtubeUrl),
-          start: $scope.frame0start,
-          end: $scope.frame0end,
-          volume: $scope.frame0volume,
-          imageUrl: $scope.frame0imageUrl,
-          imageDuration: $scope.frame0imageDuration,
-          /* Not applicable $scope.frame0narrationText*/
+          videoId: stripOutVideoIdFromUrl($scope.frame0YoutubeUrl),
+          start: $scope.frame0StartTime,
+          end: $scope.frame0EndTime,
+          volume: $scope.frame0Volume,
+          imageUrl: $scope.frame0ImageUrl,
+          imageDuration: $scope.frame0UrlDuration,
+          /* Not applicable $scope.frame0NarrationText*/
           narrationText: null ,
           narrationDelay: null
         },
         {
-          mediaType: parseInt($scope.frame1mediaType),
+          mediaType: parseInt($scope.frame1MediaType),
           player: null,
           playerDiv: 'player1',
-          videoId: stripOutVideoIdFromUrl($scope.frame1youtubeUrl),
-          start: $scope.frame1start,
-          end: $scope.frame1end,
-          volume: $scope.frame1volume,
-          imageUrl: $scope.frame1imageUrl,
-          imageDuration: $scope.frame1imageDuration,
-          audioId: stripOutVideoIdFromUrl($scope.frame1audioUrl),
-          audioStart: $scope.frame1audioStart ?
-                        parseFloat($scope.frame1audioStart) :
+          videoId: stripOutVideoIdFromUrl($scope.frame1YoutubeUrl),
+          start: $scope.frame1StartTime,
+          end: $scope.frame1EndTime,
+          volume: $scope.frame1Volume,
+          imageUrl: $scope.frame1ImageUrl,
+          imageDuration: $scope.frame1UrlDuration,
+          audioId: stripOutVideoIdFromUrl($scope.frame1AudioUrl),
+          audioStart: $scope.frame1AudioStartTime ?
+                        parseFloat($scope.frame1AudioStartTime) :
                         0,
-          audioVolume: ($scope.frame1audioVolume) ?
-                        parseFloat($scope.frame1audioVolume) :
+          audioVolume: ($scope.frame1AudioVolume) ?
+                        parseFloat($scope.frame1AudioVolume) :
                         0,
-          narrationText: $scope.frame1narrationText,
-          narrationDelay: $scope.frame1narrationDelay
+          narrationText: $scope.frame1NarrationText,
+          narrationDelay: $scope.frame1NarrationDelay
         },
         {
-          mediaType: parseInt($scope.frame2mediaType),
+          mediaType: parseInt($scope.frame2MediaType),
           player: null,
           playerDiv: 'player2',
-          videoId: stripOutVideoIdFromUrl($scope.frame2youtubeUrl),
-          start: $scope.frame2start,
-          end: $scope.frame2end,
-          volume: $scope.frame2volume,
-          imageUrl: $scope.frame2imageUrl,
-          imageDuration: $scope.frame2imageDuration,
-          audioId: stripOutVideoIdFromUrl($scope.frame2audioUrl),
-          audioStart: ($scope.frame2audioStart) ?
-                        parseFloat($scope.frame2audioStart) :
+          videoId: stripOutVideoIdFromUrl($scope.frame2YoutubeUrl),
+          start: $scope.frame2StartTime,
+          end: $scope.frame2EndTime,
+          volume: $scope.frame2Volume,
+          imageUrl: $scope.frame2ImageUrl,
+          imageDuration: $scope.frame2UrlDuration,
+          audioId: stripOutVideoIdFromUrl($scope.frame2AudioUrl),
+          audioStart: ($scope.frame2AudioStartTime) ?
+                        parseFloat($scope.frame2AudioStartTime) :
                         0,
-          audioVolume: ($scope.frame2audioVolume) ?
-                        parseFloat($scope.frame2audioVolume) :
+          audioVolume: ($scope.frame2AudioVolume) ?
+                        parseFloat($scope.frame2AudioVolume) :
                         0,
-          narrationText: $scope.frame2narrationText,
-          narrationDelay: $scope.frame2narrationDelay
+          narrationText: $scope.frame2NarrationText,
+          narrationDelay: $scope.frame2NarrationDelay
         },
         {
-          mediaType: parseInt($scope.frame3mediaType),
+          mediaType: parseInt($scope.frame3MediaType),
           player: null,
           playerDiv: 'player3',
-          videoId: stripOutVideoIdFromUrl($scope.frame3youtubeUrl),
-          start: $scope.frame3start,
-          end: $scope.frame3end,
-          volume: $scope.frame3volume,
-          imageUrl: $scope.frame3imageUrl,
-          imageDuration: $scope.frame3imageDuration,
-          audioId: stripOutVideoIdFromUrl($scope.frame3audioUrl),
-          audioStart: ($scope.frame3audioStart) ?
-                        parseFloat($scope.frame3audioStart) :
+          videoId: stripOutVideoIdFromUrl($scope.frame3YoutubeUrl),
+          start: $scope.frame3StartTime,
+          end: $scope.frame3EndTime,
+          volume: $scope.frame3Volume,
+          imageUrl: $scope.frame3ImageUrl,
+          imageDuration: $scope.frame3UrlDuration,
+          audioId: stripOutVideoIdFromUrl($scope.frame3AudioUrl),
+          audioStart: ($scope.frame3AudioStartTime) ?
+                        parseFloat($scope.frame3AudioStartTime) :
                         0,
-          audioVolume: ($scope.frame3audioVolume) ?
-                        parseFloat($scope.frame3audioVolume) :
+          audioVolume: ($scope.frame3AudioVolume) ?
+                        parseFloat($scope.frame3AudioVolume) :
                         0,
-          narrationText: $scope.frame3narrationText,
-          narrationDelay: $scope.frame3narrationDelay
+          narrationText: $scope.frame3NarrationText,
+          narrationDelay: $scope.frame3NarrationDelay
         }
       ]
     };
@@ -490,55 +570,55 @@ angular.module('storyBoard.createStory', [])
     $scope.framePreviewOptions[frameId].videoPlaying = true;
     $scope.framePreviewOptions[frameId].showVideoSpinner = true;
 
-    var frameyoutubeUrl = null;
-    var framestart = null;
-    var frameend = null;
+    var frameYoutubeUrl = null;
+    var frameStartTime = null;
+    var frameEndTime = null;
     var frameVolume = null;
     var frameDivId = null;
     var framePlayerName = null;
 
     switch(frameId){
       case 0:
-        frameyoutubeUrl = $scope.frame0youtubeUrl;
-        framestart = $scope.frame0start;
-        frameend = $scope.frame0end;
-        frameVolume = $scope.frame0volume;
-        frameDivId = 'frame0preview';
+        frameYoutubeUrl = $scope.frame0YoutubeUrl;
+        frameStartTime = $scope.frame0StartTime;
+        frameEndTime = $scope.frame0EndTime;
+        frameVolume = $scope.frame0Volume;
+        frameDivId = 'frame0Preview';
         framePlayerName = 'frame0';
         break;
       case 1:
-        frameyoutubeUrl = $scope.frame1youtubeUrl;
-        framestart = $scope.frame1start;
-        frameend = $scope.frame1end;
-        frameVolume = $scope.frame1volume;
-        frameDivId = 'frame1preview';
+        frameYoutubeUrl = $scope.frame1YoutubeUrl;
+        frameStartTime = $scope.frame1StartTime;
+        frameEndTime = $scope.frame1EndTime;
+        frameVolume = $scope.frame1Volume;
+        frameDivId = 'frame1Preview';
         framePlayerName = 'frame1';
         break;
       case 2:
-        frameyoutubeUrl = $scope.frame2youtubeUrl;
-        framestart = $scope.frame2start;
-        frameend = $scope.frame2end;
-        frameVolume = $scope.frame2volume;
-        frameDivId = 'frame2preview';
+        frameYoutubeUrl = $scope.frame2YoutubeUrl;
+        frameStartTime = $scope.frame2StartTime;
+        frameEndTime = $scope.frame2EndTime;
+        frameVolume = $scope.frame2Volume;
+        frameDivId = 'frame2Preview';
         framePlayerName = 'frame2';
         break;
       case 3:
-        frameyoutubeUrl = $scope.frame3youtubeUrl;
-        framestart = $scope.frame3start;
-        frameend = $scope.frame3end;
-        frameVolume = $scope.frame3volume;
-        frameDivId = 'frame3preview';
+        frameYoutubeUrl = $scope.frame3YoutubeUrl;
+        frameStartTime = $scope.frame3StartTime;
+        frameEndTime = $scope.frame3EndTime;
+        frameVolume = $scope.frame3Volume;
+        frameDivId = 'frame3Preview';
         framePlayerName = 'frame3';
         break;
     }
 
-    var videoId = stripOutVideoIdFromUrl(frameyoutubeUrl);
+    var videoId = stripOutVideoIdFromUrl(frameYoutubeUrl);
 
     var currentFrameObject = {
       playerDiv: frameDivId,
       videoId: videoId,
-      start: framestart,
-      end: frameend,
+      start: frameStartTime,
+      end: frameEndTime,
       volume: frameVolume,
       playerName: framePlayerName
     };
@@ -555,47 +635,47 @@ angular.module('storyBoard.createStory', [])
     $scope.framePreviewOptions[frameId].audioPlaying = true;
     $scope.framePreviewOptions[frameId].showAudioSpinner = true;
 
-    var frameyoutubeUrl = null;
-    var framestart = null;
-    var frameend = null;
+    var frameYoutubeUrl = null;
+    var frameStartTime = null;
+    var frameEndTime = null;
     var frameVolume = null;
     var frameDivId = null;
     var framePlayerName = null;
 
     switch(frameId){
       case 1:
-        frameyoutubeUrl = $scope.frame1audioUrl;
-        framestart = $scope.frame1audioStart;
-        frameend = $scope.frame1end;
-        frameVolume = $scope.frame1audioVolume;
-        frameDivId = 'frame1previewAudio';
+        frameYoutubeUrl = $scope.frame1AudioUrl;
+        frameStartTime = $scope.frame1AudioStartTime;
+        frameEndTime = $scope.frame1EndTime;
+        frameVolume = $scope.frame1AudioVolume;
+        frameDivId = 'frame1PreviewAudio';
         framePlayerName = 'frame1';
         break;
       case 2:
-        frameyoutubeUrl = $scope.frame2audioUrl;
-        framestart = $scope.frame2audioStart;
-        frameend = $scope.frame2end;
-        frameVolume = $scope.frame2audioVolume;
-        frameDivId = 'frame2previewAudio';
+        frameYoutubeUrl = $scope.frame2AudioUrl;
+        frameStartTime = $scope.frame2AudioStartTime;
+        frameEndTime = $scope.frame2EndTime;
+        frameVolume = $scope.frame2AudioVolume;
+        frameDivId = 'frame2PreviewAudio';
         framePlayerName = 'frame2';
         break;
       case 3:
-        frameyoutubeUrl = $scope.frame3audioUrl;
-        framestart = $scope.frame3audioStart;
-        frameend = $scope.frame3end;
-        frameVolume = $scope.frame3audioVolume;
-        frameDivId = 'frame3previewAudio';
+        frameYoutubeUrl = $scope.frame3AudioUrl;
+        frameStartTime = $scope.frame3AudioStartTime;
+        frameEndTime = $scope.frame3EndTime;
+        frameVolume = $scope.frame3AudioVolume;
+        frameDivId = 'frame3PreviewAudio';
         framePlayerName = 'frame3';
         break;
     }
 
-    var videoId = stripOutVideoIdFromUrl(frameyoutubeUrl);
+    var videoId = stripOutVideoIdFromUrl(frameYoutubeUrl);
 
     var currentFrame = {
       playerDiv: frameDivId,
       videoId: videoId,
-      start: framestart,
-      end: frameend,
+      start: frameStartTime,
+      end: frameEndTime,
       volume: frameVolume,
       playerName: framePlayerName
     };
@@ -689,20 +769,20 @@ angular.module('storyBoard.createStory', [])
   };
 
   $scope.previewTextToSpeechFrame = function(frameId){
-    var framenarrationText = null;
+    var frameNarrationText = null;
     switch(frameId){
       case 1:
-        framenarrationText = $scope.frame1narrationText;
+        frameNarrationText = $scope.frame1NarrationText;
         break;
       case 2:
-        framenarrationText = $scope.frame2narrationText;
+        frameNarrationText = $scope.frame2NarrationText;
         break;
       case 3:
-        framenarrationText = $scope.frame3narrationText;
+        frameNarrationText = $scope.frame3NarrationText;
         break;
     }
     var tempStoryFrame = {
-      narrationText: framenarrationText
+      narrationText: frameNarrationText
     };
     var previewTextToSpeechPlayer = new TextToSpeechPlayer();
     var readyCallback =
@@ -721,13 +801,13 @@ angular.module('storyBoard.createStory', [])
       $scope.audioButtonLabel = "Remove Soundtrack";
     } else {
       $scope.audioButtonLabel = "Add Soundtrack";
-      $scope.frame0mediaType = 3;
-      $scope.frame0youtubeUrl = null;
-      $scope.frame0start = "0";
-      $scope.frame0end = null;
-      $scope.frame0volume = "100";
-      $scope.frame0imageUrl = null;
-      $scope.frame0imageDuration = null;
+      $scope.frame0MediaType = 3;
+      $scope.frame0YoutubeUrl = null;
+      $scope.frame0StartTime = "0";
+      $scope.frame0EndTime = null;
+      $scope.frame0Volume = "100";
+      $scope.frame0ImageUrl = null;
+      $scope.frame0UrlDuration = null;
     }
   };
 
@@ -739,9 +819,9 @@ angular.module('storyBoard.createStory', [])
         $scope.audioAct1ButtonLabel = "Remove Audio Track";
       } else {
         $scope.audioAct1ButtonLabel = "Add Audio Track";
-        $scope.frame1audioUrl = null;
-        $scope.frame1audioStart = null;
-        $scope.frame1audioVolume = null;
+        $scope.frame1AudioUrl = null;
+        $scope.frame1AudioStartTime = null;
+        $scope.frame1AudioVolume = null;
       }
       break;
     case 2:
@@ -750,9 +830,9 @@ angular.module('storyBoard.createStory', [])
         $scope.audioAct2ButtonLabel = "Remove Audio";
       } else {
         $scope.audioAct2ButtonLabel = "Add Audio Track";
-        $scope.frame2audioUrl = null;
-        $scope.frame2audioStart = null;
-        $scope.frame2audioVolume = null;
+        $scope.frame2AudioUrl = null;
+        $scope.frame1AudioStartTime = null;
+        $scope.frame2AudioVolume = null;
       }
       break;
     case 3:
@@ -761,9 +841,9 @@ angular.module('storyBoard.createStory', [])
         $scope.audioAct3ButtonLabel = "Remove Audio";
       } else {
         $scope.audioAct3ButtonLabel = "Add Audio Track";
-        $scope.frame3audioUrl = null;
-        $scope.frame3audioStart = null;
-        $scope.frame3audioVolume = null;
+        $scope.frame3AudioUrl = null;
+        $scope.frame1AudioStartTime = null;
+        $scope.frame3AudioVolume = null;
       }
       break;
     }
@@ -777,8 +857,8 @@ angular.module('storyBoard.createStory', [])
         $scope.narration1ButtonLabel = "Remove Narration";
       } else {
         $scope.narration1ButtonLabel = "Add Narration";
-        $scope.frame1narrationText = null;
-        $scope.frame1narrationDelay = 0;
+        $scope.frame1NarrationText = null;
+        $scope.frame1NarrationDelay = 0;
       }
       break;
     case 2:
@@ -787,8 +867,8 @@ angular.module('storyBoard.createStory', [])
         $scope.narration2ButtonLabel = "Remove Narration";
       } else {
         $scope.narration2ButtonLabel = "Add Narration";
-        $scope.frame2narrationText = null;
-        $scope.frame2narrationDelay = 0;
+        $scope.frame2NarrationText = null;
+        $scope.frame2NarrationDelay = 0;
       }
       break;
     case 3:
@@ -797,8 +877,8 @@ angular.module('storyBoard.createStory', [])
         $scope.narration3ButtonLabel = "Remove Narration";
       } else {
         $scope.narration3ButtonLabel = "Add Narration";
-        $scope.frame3narrationText = null;
-        $scope.frame3narrationDelay = 0;
+        $scope.frame3NarrationText = null;
+        $scope.frame3NarrationDelay = 0;
       }
       break;
     }
