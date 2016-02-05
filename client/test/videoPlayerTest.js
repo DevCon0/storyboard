@@ -7,18 +7,13 @@ describe('VideoPlayerTest', function(){
   var endCallback = function(){};
   var playingCallback = function(){};
 
-  // Fake Youtube variables
-  window.youtubeApiLoadedAndReady = true;
-  window.YT = {
-    Player: function(){
-      this.mockName = "Mock Youtube Player";
-    }
-  };
-
   beforeEach(module('storyBoard.videoPlayer'));
+  beforeEach(module('storyBoard.mockYoutubePlayer'));
 
-  beforeEach(inject(function(VideoPlayer){
+  beforeEach(inject(function(VideoPlayer, MockYoutubePlayer){
     newVideoPlayer = new VideoPlayer();
+    window.YT = {};
+    window.YT.Player = MockYoutubePlayer;
   }));
 
   beforeEach(function(){
@@ -43,6 +38,8 @@ describe('VideoPlayerTest', function(){
 
   afterEach(inject(function(){
     newVideoPlayer = null;
+    window.YT.Player = null;
+    window.YT = null;
   }));
 
   it('should have a create method', function(){
@@ -64,5 +61,21 @@ describe('VideoPlayerTest', function(){
         endCallback,
         playingCallback);
     expect(testStoryFrame.player).not.toBeNull();
+  });
+
+  it('should call the end callback only once', function(){
+    var testEndCallbackCount = 0;
+    var testEndCallback = function() {
+      testEndCallbackCount++;
+    }
+
+    newVideoPlayer.create(
+        testStoryFrame,
+        readyCallback,
+        testEndCallback,
+        playingCallback);
+
+    newVideoPlayer.play();
+    expect(testEndCallbackCount).toEqual(1);
   });
 });
