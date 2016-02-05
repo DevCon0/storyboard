@@ -9,9 +9,7 @@ angular.module('storyBoard.pageInfo', [])
       return (key !== undefined) ? pageInfo[key] : pageInfo;
     },
     set: function(newPageInfo) {
-      for (var key in newPageInfo) {
-        pageInfo[key] = newPageInfo[key];
-      }
+      pageInfo.title = newPageInfo.title;
     }
   };
 });
