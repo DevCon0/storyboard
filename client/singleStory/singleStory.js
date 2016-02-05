@@ -1,6 +1,6 @@
 angular.module('storyBoard.singleStory', [])
 
-.controller('singleStoryCtrl', function ($scope, StoryStorage, StoryStateMachine, $stateParams, localStorageService) {
+.controller('singleStoryCtrl', function ($scope, StoryStorage, StoryStateMachine, $stateParams, localStorageService, PageInfo) {
   $scope.storyTitle = null;
   $scope.storyUsername = null;
   $scope.act1divclass = '';
@@ -21,6 +21,7 @@ angular.module('storyBoard.singleStory', [])
     $scope.storyDescription = story.data.description;
     $scope.storyCreatedAt = createdAtString;
     var isSingleStoryView = true;
+    PageInfo.set({'title': $scope.storyTitle});
     StoryStateMachine.setStory(story.data, isSingleStoryView, $scope);
   });
 
