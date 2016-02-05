@@ -106,7 +106,7 @@ angular.module('storyBoard.createStory', [])
       $scope.frame0mediaType)
 
     // // frame0 AUDIO
-    if ($scope.frame0youtubeUrl !== "") {
+    if ($scope.frame0youtubeUrl !== "https://www.youtube.com/watch?v=") {
       $scope.addSoundtrack = true;
       $scope.audioButtonLabel = 'Remove Soundtrack';
     } else {
