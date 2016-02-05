@@ -110,7 +110,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype._onEventListener = function (event) {
-    if (!this.alreadyStopped) {
+    if ( ! this.alreadyStopped) {
       switch (event.data) {
         case YT.PlayerState.PAUSED:
         case YT.PlayerState.ENDED:
