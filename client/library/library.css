@@ -1,0 +1,245 @@
+.libraryStoryFrame {
+  display: inline-block;
+  float: left;
+  margin: 1em;
+  overflow: hidden;
+  position: relative;
+  font-size: 1rem;
+  word-wrap: break-word;
+  white-space: initial;
+  height: 35.5em;
+  width: 28em;
+  padding: 0;
+}
+
+.libraryStoryFrame a {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  height: auto;
+  padding: 0;
+}
+
+.libraryStoryFrame a .imagesContainer {
+  overflow: hidden;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.libraryStoryFrame a .imagesContainer
+.imagesContainerBackground {
+  fill: #151515;
+  display: inline;
+  float: left;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin:auto;
+}
+
+.libraryStoryFrame a .imagesContainer
+.storySnapshots {
+  position: absolute;
+  margin-top: 5em;
+  margin-bottom: 5em;
+  margin-left: 1em;
+  margin-right: 0;
+  border:0;
+  border-radius:0;
+  box-shadow: 0;
+}
+
+.libraryStoryFrame a .imagesContainer .storySnapshots
+.storySnapshotContainer {
+  display: inline-block;
+  position: relative;
+  width: 6.5em;
+  height: 6.5em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  margin-left: 1.625em;
+  margin-right: 0;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.libraryStoryFrame a .imagesContainer .storySnapshots
+.storySnapshotContainer img,
+
+.libraryStoryFrame a .imagesContainer .storySnapshots
+.storySnapshotContainer svg {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  top: 0;
+}
+
+.libraryStoryFrame a .imagesContainer .storySnapshots
+img[src*="/api/images/text-to-speech.svg"]{
+  fill: #E0E0E0;
+}
+
+.libraryStoryFrame a .caption {
+  background-color: rgba(0, 0, 0, 0);
+  display: inline-block;
+  overflow: hidden;
+  padding: 1.5em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 21em;
+  transition-property: top;
+  transition-duration: 0.2s;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  border-top: hidden;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.libraryStoryFrame a .caption h2 {
+  color: #FAFAFA;
+  text-shadow: 1px 1px 5px rgba(250,250,250,.4);
+  font-size: 2.5em;
+  margin-bottom: 1em;
+}
+
+.libraryStoryFrame a .caption p {
+  color: #4285f4;
+  display: none;
+  position: absolute;
+  margin-top: .5em;
+  transition: all 0.2s;
+  width: 100%;
+  font-size: 1.5em;
+  text-shadow: 1px 1px 5px rgba(66,133,244,.54);
+
+  bottom: 0;
+  margin-bottom: 4em;
+}
+
+.libraryStoryFrame a .infoContainer {
+  display: block;
+  background: #151515;
+  top: 0;
+  padding: 0;
+  margin: 0;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #151515;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  max-height: 8.6em;
+}
+
+.libraryStoryFrame a .infoBackground {
+  display: block;
+  padding: 1.5em;
+  margin: 0;
+}
+
+.libraryStoryFrame a .infoContainer .storyInfo h2 {
+  font-size: 2.5em;
+  color: #FAFAFA;
+  text-shadow: 1px 1px 5px rgba(250,250,250,.4);
+  margin: 0;
+}
+
+.libraryStoryFrame a:hover {
+  text-decoration: none;
+}
+
+.libraryStoryFrame a:hover
+.imagesContainer {
+  overflow: hidden;
+}
+
+.libraryStoryFrame a:hover
+.imagesContainer .imagesContainerBackground {
+  border-width: 5px;
+  border-radius: 4px;
+  transition: all 1.25s;
+}
+
+.libraryStoryFrame a:hover
+.caption {
+  background-color: rgba(0, 0, 0, 0.95);
+  color: #FAFAFA;
+  top: 0;
+  transition: all 1.25s;
+  z-index: 10;
+  border-bottom: solid;
+  border-color: black;
+  border-width: 5px;
+  border-radius: 4px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,.87);
+}
+
+.libraryStoryFrame a:hover
+.caption p {
+  display: inline-block;
+}
+
+.libraryStoryFrame a:hover
+.caption p:last-child {
+  text-align: right;
+  right: 1em;
+  margin-bottom: 1em;
+}
+
+.libraryStoryFrame a:hover
+.infoContainer .storyInfo h2 {
+  color: rgba(0, 0, 0, 0);
+  text-shadow: none;
+  text-decoration: none;
+}
+
+.libraryStoryFrame a:hover
+.infoContainer .infoBackground .storyInfo span h2 {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0);
+}
+
+.libraryStoryFrame .modificationButtons
+.modificationButtonsContainer button iron-icon,
+
+.libraryStoryFrame .modificationButtons
+.modificationButtonsContainer .edit-button,
+
+.libraryStoryFrame .modificationButtons
+.modificationButtonsContainer .delete-button {
+  margin: 0;
+  border: 0;
+}
+
+.libraryStoryFrame .modificationButtons {
+  display: block;
+  margin-left: 7.5em;
+  margin-right: 7.5em;
+  width: auto;
+  padding: 0;
+  padding-top: .5em;
+}
+
+.libraryStoryFrame .modificationButtons .modificationButtonsContainer {
+  width: 100%;
+  margin: auto;
+  padding: 0;
+}
+
+.libraryStoryFrame .modificationButtons .modificationButtonsContainer .btn {
+  display: inline-block;
+  width: 3em;
+  height: 3em;
+  margin-left: .25em;
+  margin-right: .25em;
+  padding: 0;
+}

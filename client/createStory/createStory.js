@@ -456,12 +456,12 @@ angular.module('storyBoard.createStory', [])
     if (wasPassed) {
       StoryStorage.editStory(story, editStory.storyId, token)
         .then(function (data) {
-          $state.go('dashboard');
+          $state.go('library');
       });
     } else {
       StoryStorage.saveStory(story, token)
         .then(function (data) {
-          $state.go('dashboard');
+          $state.go('library');
         });
     }
   };
