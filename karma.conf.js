@@ -21,7 +21,7 @@ module.exports = function(config) {
       'client/auth/**/*.js',
       'client/navBar/**/*.js',
       'client/createStory/**/*.js',
-      'client/dashboard/**/*.js',
+      'client/library/**/*.js',
       'client/singleStory/**/*.js',
       'client/*.js',
       'client/test/*.js'

@@ -27,8 +27,8 @@ angular.module('storyBoard.navBar', ['storyBoard.pageInfo'])
     case 'createStory':
       return 'Create Story';
       break;
-    case 'dashboard':
-      return 'Dashboard';
+    case 'library':
+      return 'Library';
       break;
     default:
       return PageInfo.get('title');

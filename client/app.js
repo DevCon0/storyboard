@@ -6,7 +6,7 @@ var storyBoardApp = angular.module('storyBoardApp', [
                                    'storyBoard.navBar',
                                    'storyBoard.splash',
                                    'storyBoard.singleStory',
-                                   'storyBoard.dashboard',
+                                   'storyBoard.library',
                                    'storyBoard.onUrlErrorDirective',
                                    'storyBoard.createStory',
                                    'storyBoard.player',
@@ -63,16 +63,16 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
         }
       }
     })
-    .state('dashboard', {
-      url: "/dashboard",
+    .state('library', {
+      url: "/library",
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
           controller: 'navBarCtrl'
         },
         'content': {
-          templateUrl: '/dashboard/dashboard.html',
-          controller: 'dashboardCtrl'
+          templateUrl: '/library/library.html',
+          controller: 'libraryCtrl'
         }
       }
     })
