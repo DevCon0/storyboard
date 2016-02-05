@@ -36,6 +36,22 @@ The tech stack is MongoDB, Angular, and Go.
 ![alt tag](http://s18.postimg.org/st43pwo7d/MAG.jpg)
 
 #Release Notes
+#### 2/5/2016 - alpha v0.4.1
+A user can add audio to individual video tracks.
+
+User has breadcrumbs to know where they are on the site.
+
+A user can see a stories view count.
+
+A user can see the videos on the main page sorted by view.
+
+A user sees an animated speech bubble during narration.
+
+A user can add narration to images.
+
+A user can click on other users and see their created stories.
+
+
 ##### 1/29/2016 - alpha v0.3.6
 A user add an Image or GIF file and set a duration in a story.
 
