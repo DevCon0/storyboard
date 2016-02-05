@@ -72,7 +72,7 @@ angular.module('storyBoard.storyStateMachineService',
 
   storyStateMachine.restartStory = function () {
     this.storyRestartCallback();
-  }
+  };
 
   storyStateMachine.endStory = function(){
     closureStoryHasEnded = true;
@@ -92,15 +92,15 @@ angular.module('storyBoard.storyStateMachineService',
     parentControllerScope = null;
   };
 
-  storyStateMachine._createPlayer = function(storyFrame){
+  storyStateMachine._createPlayer = function (storyFrame) {
     var player = null;
     // TODO: Old story backwards compatibility
-    if(storyFrame.mediaType === undefined){
+    if (storyFrame.mediaType === undefined) {
       storyFrame.mediaType = 0;
     }
     // End backwards compatiblity
 
-    switch(storyFrame.mediaType){
+    switch (storyFrame.mediaType) {
       case 0:
         player = new VideoPlayer(storyFrame.audioId);
         break;
@@ -112,14 +112,14 @@ angular.module('storyBoard.storyStateMachineService',
         break;
       case 3:
         player = new VideoPlayer();  //Audio only version of VidPlayer
-      break;
+        break;
       default:
         throw "Unrecognized media type in storyStateMachine.js";
-        break;
+        //Unreachable break;
     }
 
     return player;
-  }
+  };
 
   storyStateMachine._determinePlayingCallback = function (frameNum) {
     var playingCallback = function () { };
@@ -130,7 +130,7 @@ angular.module('storyBoard.storyStateMachineService',
       playingCallback = this._firstFrameReady.bind(storyStateMachine.players[0]);
     }
     return playingCallback;
-  }
+  };
 
   storyStateMachine._determineReadyCallback = function (currentFrameNum, currentPlayer, hasSoundtrack) {
 
@@ -234,7 +234,7 @@ angular.module('storyBoard.storyStateMachineService',
         parentControllerScope.act1divclass = 'growact1';
       });
     }
-  };
+  }
 
   function _shrinkAct1AndGrowAct2() {
     if(_isAngularAlreadyMonitoringDOM()) {
@@ -247,7 +247,7 @@ angular.module('storyBoard.storyStateMachineService',
         parentControllerScope.act2divclass = 'growact2';
       });
     }
-  };
+  }
 
   function _shrinkAct2AndGrowAct3() {
     if(_isAngularAlreadyMonitoringDOM()) {
@@ -260,7 +260,7 @@ angular.module('storyBoard.storyStateMachineService',
         parentControllerScope.act3divclass = 'growact3';
       });
     }
-  };
+  }
 
   function _shrinkAct3() {
     if(_isAngularAlreadyMonitoringDOM()) {
@@ -273,7 +273,7 @@ angular.module('storyBoard.storyStateMachineService',
         parentControllerScope.replaybutton = 'single-story-replay-button-after';
       });
     }
-  };
+  }
 
   function _isAngularAlreadyMonitoringDOM() {
     return parentControllerScope.$$phase;

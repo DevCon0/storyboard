@@ -15,7 +15,7 @@ angular.module('storyBoard.authService', [])
       method: 'POST',
       url: '/api/users/signup',
       data: user
-    })
+    });
   };
 
   auth.isAuth = function () {
@@ -33,8 +33,8 @@ angular.module('storyBoard.authService', [])
     })
     .then(function () {
       $location.path('/');
-    })
+    });
   };
 
   return auth;
-})
+});

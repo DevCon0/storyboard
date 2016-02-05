@@ -3,7 +3,7 @@ angular.module('storyBoard.dashboard', [])
 .controller('dashboardCtrl', function ($scope, $state, StoryStorage, localStorageService, Auth, $stateParams) {
 
   if ( ! (Auth.isAuth()) ) {
-    $state.go('login')
+    $state.go('login');
   }
 
   $scope.username = localStorageService.get('username');
@@ -33,9 +33,9 @@ angular.module('storyBoard.dashboard', [])
       .then(function (library) {
         $scope.userLibrary = library;
       });
-    })
+    });
 
-  }
+  };
 
   StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))
   .then(function(library){

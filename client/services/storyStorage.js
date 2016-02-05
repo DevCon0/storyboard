@@ -1,6 +1,6 @@
 angular.module('storyBoard.storyStorageService', [])
 
-.factory('StoryStorage', function ($http, $rootScope, $location, $window ,$state) {
+.factory('StoryStorage', function ($http, $rootScope, $location, $window, $state) {
   var storyStorage = {};
 
   storyStorage.getShowcase = function () {
@@ -63,18 +63,18 @@ angular.module('storyBoard.storyStorageService', [])
   };
 
   storyStorage.getStory = function (id) {
-      return $http({
-        method: 'GET',
-        url: '/api/stories/story/' + id,
-        data: id
-      })
-      .catch(function (error) {
-        $state.go('errorPage');
-      })
+    return $http({
+      method: 'GET',
+      url: '/api/stories/story/' + id,
+      data: id
+    })
+    .catch(function (error) {
+      $state.go('errorPage');
+    });
   };
 
   storyStorage.editStory = function (story, storyId, token) {
-    story['storyId'] = storyId;
+    story.storyId = storyId;
     return $http({
       method: 'PUT',
       url: '/api/stories/story',
@@ -82,10 +82,10 @@ angular.module('storyBoard.storyStorageService', [])
         'token': token
       },
       data: story
-    })
+    });
   };
 
-  storyStorage.deleteStory = function (id,token) {
+  storyStorage.deleteStory = function (id, token) {
     return $http({
       method: 'DELETE',
       url: '/api/stories/story/' + id,
@@ -93,7 +93,7 @@ angular.module('storyBoard.storyStorageService', [])
         'token': token
       },
       data: id
-    })
+    });
   };
 
   storyStorage.voteStory = function (id, token, vote) {
@@ -102,13 +102,13 @@ angular.module('storyBoard.storyStorageService', [])
       url: '/api/stories/votes',
       headers: {
         'token': token
-    },
+      },
       data: {
         storyId: id,
         direction: vote
       }
-    })
+    });
   };
 
   return storyStorage;
-})
+});

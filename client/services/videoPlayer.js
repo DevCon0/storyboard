@@ -56,7 +56,7 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
   };
 
   VideoPlayer.prototype._createAudioPlayer = function(storyFrame, readyCallback, endPlaybackCallback, playingCallback){
-    storyFrame.audioEnd = storyFrame.audioStart + (storyFrame.end - storyFrame.start)
+    storyFrame.audioEnd = storyFrame.audioStart + (storyFrame.end - storyFrame.start);
     var audioStoryFrame = {
       mediaType: 0,
       videoId: storyFrame.audioId,
@@ -109,9 +109,9 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
     }
   };
 
-  VideoPlayer.prototype._onEventListener = function(event){
-    if( ! this.alreadyStopped) {
-      switch(event.data) {
+  VideoPlayer.prototype._onEventListener = function (event) {
+    if ( ! this.alreadyStopped) {
+      switch (event.data) {
         case YT.PlayerState.PAUSED:
         case YT.PlayerState.ENDED:
           this.endPlaybackCallback();
@@ -124,13 +124,13 @@ angular.module('storyBoard.videoPlayer', ['storyBoard.player'])
           this.alreadyStopped = true;
           break;
         case YT.PlayerState.PLAYING:
-          console.log('what is this',this.playingCallback);
+          console.log('what is this', this.playingCallback);
           this.playingCallback();
           break;
 
       }
     }
-  }
+  };
 
   return VideoPlayer;
 });
