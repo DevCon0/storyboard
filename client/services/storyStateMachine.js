@@ -51,7 +51,7 @@ angular.module('storyBoard.storyStateMachineService',
         endPlayBackCallback,
         playingCallback
       );
-  
+
       this.players.unshift(newFramePlayer);
     }
 
