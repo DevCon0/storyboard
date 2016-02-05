@@ -85,7 +85,7 @@
           <br />
         <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleNarration(1)">{{$parent.narration1ButtonLabel}} <span class="narration-icon glyphicon glyphicon-user" aria-hidden="true"></span></button>
         <div class="col-md-12 clean"></div>
-        <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1ImageUrl}}" class="frameImageUrlPreview"></div>
+        <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1imageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act I NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame1mediaType == 2 || (addNarration1 && frame1mediaType == 1)">
@@ -191,7 +191,7 @@
           <br />
           <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleNarration(2)">{{$parent.narration2ButtonLabel}} <span class="narration-icon glyphicon glyphicon-user" aria-hidden="true"></span></button>
         <div class="col-md-12 clean"></div>
-        <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2ImageUrl}}" class="frameImageUrlPreview"></div>
+        <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2imageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act II NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame2mediaType == 2 || (addNarration2 && frame2mediaType == 1)">
