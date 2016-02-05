@@ -2,9 +2,6 @@
 
 describe('StoryStateMachineTest', function(){
 
-  var storyStateMachine;
-  var originalVideoPlayer;
-
   beforeEach(module('storyBoard.storyStateMachineService'));
 
   it('should have a set story method', function(){
@@ -12,7 +9,6 @@ describe('StoryStateMachineTest', function(){
       expect(typeof StoryStateMachine.setStory).toBe('function');
     });
   });
-
 
   it('should create the right players for a story', function(){
     var dummyCreate = function(){};
