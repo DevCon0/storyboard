@@ -24,16 +24,6 @@ angular.module('storyBoard.singleStory', [])
     StoryStateMachine.setStory(story.data, isSingleStoryView, $scope);
   });
 
-  $scope.voteUp = function () {
-    console.log('Vote Up recieved');
-    StoryStorage.voteStory(storyID, token, 'up');
-  };
-
-  $scope.voteDown = function () {
-    console.log('Vote Down recieved');
-    StoryStorage.voteStory(storyID, token, 'down');
-  };
-
   $scope.replay = function () {
     StoryStateMachine.restartStory();
   };

@@ -20,10 +20,8 @@ angular.module('storyBoard.dashboard', [])
   };
 
   $scope.deleteStory = function (storyId) {
-    console.log('deleteStory function (controller) run with', storyId);
     StoryStorage.deleteStory(storyId, localStorageService.get('sessiontoken'))
     .then(function (resp) {
-      console.log('resp from deleteStory', resp);
     })
     .catch(function (error) {
       $state.go('errorPage');
