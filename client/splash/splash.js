@@ -24,7 +24,6 @@ angular.module('storyBoard.splash', ['ngAnimate'])
           }
         });
       });
-      console.log('$scope.showcase', $scope.showcase);
     });
   };
 
