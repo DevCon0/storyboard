@@ -1,7 +1,7 @@
 angular.module('storyBoard.player', [])
 
 .factory('Player', function(){
-  function Player(){};
+  function Player(){}
 
   Player.prototype.create = function(storyFrame, readyCallback, endPlaybackCallback){
   };
