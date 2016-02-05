@@ -126,7 +126,6 @@ angular.module('storyBoard.storyStateMachineService',
     var isAudioFrame = frameNum === AUDIO;
 
     if (isAudioFrame) {
-      console.log('isAUDIOFrame determinePlayingCallback conditonal run');
       playingCallback = this._firstFrameReady.bind(storyStateMachine.players[0]);
     }
     return playingCallback;

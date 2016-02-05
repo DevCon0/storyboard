@@ -4,7 +4,6 @@ angular.module('storyBoard.auth', [])
   $scope.user = {};
 
   $scope.signup = function () {
-    console.log('Sign Up requested for', $scope.user);
     Auth.signup($scope.user)
       .then(function (resp) {
         localStorageService.set('sessiontoken', resp.data.token);
@@ -14,7 +13,6 @@ angular.module('storyBoard.auth', [])
     .catch(function (error) {
       $scope.err = error.statusText;
       $scope.showErr = true;
-      console.log('incoming error', error);
     });
 
 
@@ -30,7 +28,6 @@ angular.module('storyBoard.auth', [])
       .catch(function (error) {
         $scope.err = 'Invalid Username/Password';
         $scope.showErr = true;
-        console.log('incoming error',error);
       });
   };
 
