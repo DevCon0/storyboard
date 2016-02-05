@@ -751,7 +751,7 @@ angular.module('storyBoard.createStory', [])
       } else {
         $scope.audioAct2ButtonLabel = "Add Audio Track";
         $scope.frame2audioUrl = null;
-        $scope.frame1audioStart = null;
+        $scope.frame2audioStart = null;
         $scope.frame2audioVolume = null;
       }
       break;
@@ -762,7 +762,7 @@ angular.module('storyBoard.createStory', [])
       } else {
         $scope.audioAct3ButtonLabel = "Add Audio Track";
         $scope.frame3audioUrl = null;
-        $scope.frame1audioStart = null;
+        $scope.frame3audioStart = null;
         $scope.frame3audioVolume = null;
       }
       break;
