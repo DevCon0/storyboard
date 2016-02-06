@@ -8,12 +8,9 @@ angular.module('storyBoard.navBar', ['storyBoard.pageInfo'])
     $scope.currentUserLoggedIn = true;
   }
 
-  const TOP_STORIES_LINK = $scope.TOP_STORIES_LINK = 'Top Stories';
-  const CREATE_STORY_LINK = $scope.CREATE_STORY_LINK = 'Create Story';
-  const LIBRARY_LINK = $scope.LIBRARY_LINK = 'Library';
-  $scope.TOP_STORIES_LINK = TOP_STORIES_LINK;
-  $scope.CREATE_STORY_LINK = CREATE_STORY_LINK;
-  $scope.LIBRARY_LINK = LIBRARY_LINK;
+  const TOP_STORIES_LINK = 'Top Stories';
+  const CREATE_STORY_LINK = 'Create Story';
+  const LIBRARY_LINK = 'Library';
 
   $scope.logout = function () {
     var token = localStorageService.get('sessiontoken');
