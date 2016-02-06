@@ -331,7 +331,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame1start ? parseFloat($scope.frame1start) : 0,
           end: $scope.frame1end ? parseFloat($scope.frame1end) : 0,
           volume: parseInt($scope.frame1volume),
-          previewUrl: (wasPassed)? $stateParams.story.frames[1].previewUrl: "",
+          previewUrl: (wasPassed)? $scope.story.frames[1].previewUrl: "",
           imageUrl: $scope.frame1imageUrl,
           imageDuration: $scope.frame1imageDuration ? parseFloat($scope.frame1imageDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame1audioUrl),
@@ -352,7 +352,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame2start ? parseFloat($scope.frame2start) : 0,
           end: $scope.frame2end ? parseFloat($scope.frame2end) : 0,
           volume: parseInt($scope.frame2volume),
-          previewUrl: (wasPassed)? $stateParams.story.frames[2].previewUrl: "",
+          previewUrl: (wasPassed)? $scope.story.frames[2].previewUrl: "",
           imageUrl: $scope.frame2imageUrl,
           imageDuration: $scope.frame2imageDuration ? parseFloat($scope.frame2imageDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame2audioUrl),
@@ -373,7 +373,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame3start ? parseFloat($scope.frame3start) : 0,
           end: $scope.frame3end ? parseFloat($scope.frame3end) : 0,
           volume: parseInt($scope.frame3volume),
-          previewUrl: (wasPassed)? $stateParams.story.frames[3].previewUrl: "",
+          previewUrl: (wasPassed)? $scope.story.frames[3].previewUrl: "",
           imageUrl: $scope.frame3imageUrl,
           imageDuration: $scope.frame3imageDuration ? parseFloat($scope.frame3imageDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame3audioUrl),
@@ -390,7 +390,7 @@ angular.module('storyBoard.createStory', [])
     };
 
     if (wasPassed) {
-      StoryStorage.editStory(story, editStory.storyId, token)
+      StoryStorage.editStory(story, $scope.story.storyId, token)
         .then(function (data) {
           $state.go('library');
       });
