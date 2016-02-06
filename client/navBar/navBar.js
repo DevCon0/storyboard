@@ -40,7 +40,15 @@ angular.module('storyBoard.navBar', ['storyBoard.pageInfo'])
     default:
       return PageInfo.get('title');
     }
-  }
+  };
+
+  $scope.isCreateStoryPage = function() {
+    return ($scope.pageTitle == CREATE_STORY_LINK);
+  };
+
+  $scope.isLibraryPage = function() {
+    return ($scope.pageTitle == LIBRARY_LINK);
+  };
 
   $scope.$watch($scope.setPageTitle, function(newTitle) {
     if (newTitle !== $scope.pageTitle) {
