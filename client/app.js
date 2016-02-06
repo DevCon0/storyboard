@@ -119,10 +119,7 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
       }
     })
   .state('editStory', {
-      params: {
-        story: {}
-      },
-      url: "/editStory",
+      url: "/editStory/{storyId}",
       views: {
         'navBar': {
           templateUrl: '/navBar/navBar.html',
