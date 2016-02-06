@@ -9,7 +9,8 @@ angular.module('storyBoard.createStory', [])
                                          Auth,
                                          $stateParams,
                                          TextToSpeechPlayer,
-                                         VideoPlayer) {
+                                         VideoPlayer,
+                                         PageInfo) {
 
   if ( ! (Auth.isAuth()) ) {
     $state.go('login');
@@ -71,6 +72,7 @@ angular.module('storyBoard.createStory', [])
 
   if (wasPassed) {
     var editStory = $stateParams.story;
+    PageInfo.set({ 'title': 'Edit "' + editStory.title + '"' });
     var frames = editStory.frames;
 
     $scope.storyTitle = editStory.title;
