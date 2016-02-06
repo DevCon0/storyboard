@@ -118,6 +118,22 @@ storyBoardApp.config(function ($stateProvider, $urlRouterProvider) {
         }
       }
     })
+  .state('editStory', {
+      params: {
+        story: {}
+      },
+      url: "/editStory",
+      views: {
+        'navBar': {
+          templateUrl: '/navBar/navBar.html',
+          controller: 'navBarCtrl'
+        },
+        'content': {
+          templateUrl: '/createStory/createStory.html',
+          controller: 'createStoryCtrl'
+        }
+      }
+    })
   .state('errorPage', {
     url: "/errorPage",
     views: {

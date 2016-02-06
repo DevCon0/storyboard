@@ -21,7 +21,7 @@ angular.module('storyBoard.singleStory', [])
     $scope.storyDescription = story.data.description;
     $scope.storyCreatedAt = createdAtString;
     var isSingleStoryView = true;
-    PageInfo.set({'title': $scope.storyTitle});
+    PageInfo.set({'title': '"' + $scope.storyTitle + '"'});
     StoryStateMachine.setStory(story.data, isSingleStoryView, $scope);
   });
 
