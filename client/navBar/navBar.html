@@ -10,8 +10,8 @@
         </div>
         <nav class="navbar-collapse" ng-class="{collapse: isCollapsed}">
           <ul class="nav navbar-nav navbar-right">
-            <li><a ng-show="currentUserLoggedIn && (pageTitle != 'Create Story')" ng-href="/#/createStory" class="nav-link-text nav-text-color">Create Story</a></li>
-            <li><a ng-show="currentUserLoggedIn && (pageTitle != 'Library')" ng-href="/#/library" class="nav-link-text nav-text-color">Library</a></li>
+            <li><a ng-show="currentUserLoggedIn && (pageTitle != CREATE_STORY_LINK)" ng-href="/#/createStory" class="nav-link-text nav-text-color">Create Story</a></li>
+            <li><a ng-show="currentUserLoggedIn && (pageTitle != LIBRARY_LINK)" ng-href="/#/library" class="nav-link-text nav-text-color">Library</a></li>
             <li ng-hide="currentUserLoggedIn"><a ng-href="/#/login" class="nav-link-text nav-text-color">Log In</a></li>
             <li><a ng-show="currentUserLoggedIn" ng-href="/#/" ng-click="logout()" class="nav-link-text nav-text-color">Log Out</a></li>
           </ul>
