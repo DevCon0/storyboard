@@ -1,9 +1,9 @@
 angular.module('storyBoard.splash', ['ngAnimate'])
 
-.controller('splashCtrl', function ($rootScope, $scope, $state, StoryStorage, $stateParams) {
+.controller('splashCtrl', function ($rootScope, $scope, $state, StoryStorage, $stateParams, PageInfo) {
 
-  // Set a bool to indicate whether this is the signed-in user's dashboard
-  //   or another user's dashboard.
+  // Set a bool to indicate whether this is the signed-in user's library
+  //   or another user's library.
   $scope.isProfilePage = (!!$stateParams.username);
 
   $scope.username = $stateParams.username || '';
@@ -35,6 +35,7 @@ angular.module('storyBoard.splash', ['ngAnimate'])
   };
 
   if ($scope.isProfilePage) {
+    PageInfo.set({ 'title': $scope.username });
     $scope.getUserProfile();
   } else {
     $scope.getShowcase();

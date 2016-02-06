@@ -1,6 +1,6 @@
-angular.module('storyBoard.dashboard', [])
+angular.module('storyBoard.library', [])
 
-.controller('dashboardCtrl', function ($scope, $state, StoryStorage, localStorageService, Auth, $stateParams) {
+.controller('libraryCtrl', function ($scope, $state, StoryStorage, localStorageService, Auth, $stateParams) {
 
   if ( ! (Auth.isAuth()) ) {
     $state.go('login');

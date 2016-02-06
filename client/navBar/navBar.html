@@ -1,14 +1,19 @@
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand nav-text-color nav-header-text" href="#">StoryBoard</a>
+            <a class="navbar-brand nav-text-color nav-header-text" ng-href="#">StoryBoard</a>
+            <div class="navbar-subheader">
+                <div class="nav-subheader-container">
+                    <h2 class="nav-text-color nav-subheader-text">{{pageTitle}}</h2>
+                </div>
+            </div>
         </div>
         <nav class="navbar-collapse" ng-class="{collapse: isCollapsed}">
           <ul class="nav navbar-nav navbar-right">
-            <li><a ng-show="currentUserLoggedIn" href="/#/createStory" class="nav-link-text nav-text-color">Create Story</a></li>
-            <li><a ng-show="currentUserLoggedIn" href="/#/dashboard" class="nav-link-text nav-text-color">Library</a></li>
-            <li ng-hide="currentUserLoggedIn"><a href="/#/login" class="nav-link-text nav-text-color">Log In</a></li>
-            <li><a ng-show="currentUserLoggedIn" href="/#/" ng-click="logout()" class="nav-link-text nav-text-color">Log Out</a></li>
+            <li><a ng-show="currentUserLoggedIn" ng-href="/#/createStory" class="nav-link-text nav-text-color">Create Story</a></li>
+            <li><a ng-show="currentUserLoggedIn" ng-href="/#/library" class="nav-link-text nav-text-color">Library</a></li>
+            <li ng-hide="currentUserLoggedIn"><a ng-href="/#/login" class="nav-link-text nav-text-color">Log In</a></li>
+            <li><a ng-show="currentUserLoggedIn" ng-href="/#/" ng-click="logout()" class="nav-link-text nav-text-color">Log Out</a></li>
           </ul>
         </nav><!--/.nav-collapse -->
     </div>
