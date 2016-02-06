@@ -31,7 +31,7 @@ module.exports = function(grunt) {
           './client/min/auth.annotated.js': ['./client/auth/auth.js'],
           './client/min/createStory.annotated.js': ['./client/createStory/createStory.js'],
           './client/min/createStoryURL.annotated.js': ['./client/createStory/onUrlErrorDirective.js'],
-          './client/min/dashboard.annotated.js': ['./client/dashboard/dashboard.js'],
+          './client/min/library.annotated.js': ['./client/library/library.js'],
           './client/min/navBar.annotated.js': ['./client/navBar/navBar.js'],
           './client/min/authServices.annotated.js': ['./client/services/authServices.js'],
           './client/min/imagePlayer.annotated.js': ['./client/services/imagePlayer.js'],
@@ -60,7 +60,7 @@ module.exports = function(grunt) {
         seperator: ';',
       },
       dist: {
-        src: ['./client/min/authServices.annotated.js', './client/min/imagePlayer.annotated.js', './client/min/player.annotated.js', './client/min/storyStateMachine.annotated.js', './client/min/storyStorage.annotated.js', './client/min/textToSpeechPlayer.annotated.js', './client/min/textToSpeechPlayer.annotated.js', './client/min/videoPlayer.annotated.js', './client/min/auth.annotated.js', './client/min/navBar.annotated.js', './client/min/splash.annotated.js', './client/min/createStoryURL.annotated.js', './client/min/createStory.annotated.js', './client/min/dashboard.annotated.js', './client/min/singleStory.annotated.js', './client/min/errorPage.annotated.js', './client/min/app.annotated.js'],
+        src: ['./client/min/authServices.annotated.js', './client/min/imagePlayer.annotated.js', './client/min/player.annotated.js', './client/min/storyStateMachine.annotated.js', './client/min/storyStorage.annotated.js', './client/min/textToSpeechPlayer.annotated.js', './client/min/textToSpeechPlayer.annotated.js', './client/min/videoPlayer.annotated.js', './client/min/auth.annotated.js', './client/min/navBar.annotated.js', './client/min/splash.annotated.js', './client/min/createStoryURL.annotated.js', './client/min/createStory.annotated.js', './client/min/library.annotated.js', './client/min/singleStory.annotated.js', './client/min/errorPage.annotated.js', './client/min/app.annotated.js'],
         dest: './client/min/alljs.js',
       },
     },
