@@ -105,10 +105,6 @@ angular.module('storyBoard.createStory', [])
 
       frames.forEach(loadFrame);
       // loadFrame(frames[1], 1);
-      console.log($scope.frame1mediaType,
-        $scope.frame2mediaType,
-        $scope.frame3mediaType,
-        $scope.frame0mediaType)
 
       // // frame0 AUDIO
       if ($scope.frame0youtubeUrl !== "https://www.youtube.com/watch?v=") {
