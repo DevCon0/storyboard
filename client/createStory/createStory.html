@@ -67,7 +67,7 @@
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[1].showVideoSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame1Preview" class="col-md-12"></div>
+        <div id="frame1preview" class="col-md-12"></div>
       </div>
  <!-- Act I IMAGE  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame1mediaType == 1">
@@ -85,7 +85,7 @@
           <br />
         <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleNarration(1)">{{$parent.narration1ButtonLabel}} <span class="narration-icon glyphicon glyphicon-user" aria-hidden="true"></span></button>
         <div class="col-md-12 clean"></div>
-        <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1ImageUrl}}" class="frameImageUrlPreview"></div>
+        <div class="frameImagePreviewDiv" ng-show="addFrame1ImagePreview"><img ng-src="{{$parent.frame1imageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act I NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame1mediaType == 2 || (addNarration1 && frame1mediaType == 1)">
@@ -130,7 +130,7 @@
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[1].showAudioSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame1PreviewAudio" class="col-md-12"></div>
+        <div id="frame1previewAudio" class="col-md-12"></div>
       </div>
     </paper-card>
   </div>
@@ -173,7 +173,7 @@
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[2].showVideoSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame2Preview" class="col-md-12"></div>
+        <div id="frame2preview" class="col-md-12"></div>
       </div>
  <!-- Act II IMAGE  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame2mediaType == 1">
@@ -191,7 +191,7 @@
           <br />
           <button type="button" class="btn btn-success single-story-button" ng-click="$parent.toggleNarration(2)">{{$parent.narration2ButtonLabel}} <span class="narration-icon glyphicon glyphicon-user" aria-hidden="true"></span></button>
         <div class="col-md-12 clean"></div>
-        <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2ImageUrl}}" class="frameImageUrlPreview"></div>
+        <div class="frameImagePreviewDiv" ng-show="addFrame2ImagePreview"><img ng-src="{{$parent.frame2imageUrl}}" class="frameImageUrlPreview"></div>
       </div>
  <!-- Act II NARRATION  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame2mediaType == 2 || (addNarration2 && frame2mediaType == 1)">
@@ -236,7 +236,7 @@
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[2].showAudioSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame2PreviewAudio" class="col-md-12"></div>
+        <div id="frame2previewAudio" class="col-md-12"></div>
       </div>
     </paper-card>
   </div>
@@ -272,14 +272,14 @@
             <div class="volume-controls">
               <div class= "volume-down glyphicon glyphicon-volume-down" aria-hidden="true"></div>
               <div class="volume-up glyphicon glyphicon-volume-up" aria-hidden="true"></div>
-              <input type="range" min="0" max="100" ng-model="$parent.frame1volume"></input>
+              <input type="range" min="0" max="100" ng-model="$parent.frame3volume"></input>
             </div>
           </div>
           <button ng-hide="$parent.framePreviewOptions[3].videoPlaying" type="submit" class="btn btn-success single-story-button">Preview Act<iron-icon icon="av:movie" class="icon-margin-left"></iron-icon></button>
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[3].showVideoSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame3Preview" class="col-md-12"></div>
+        <div id="frame3preview" class="col-md-12"></div>
       </div>
  <!-- Act III IMAGE  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
       <div ng-if="frame3mediaType == 1">
@@ -342,7 +342,7 @@
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[3].showAudioSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame3PreviewAudio" class="col-md-12"></div>
+        <div id="frame3previewAudio" class="col-md-12"></div>
       </div>
     </paper-card>
   </div>
@@ -378,7 +378,7 @@
           <span class="blueSpinnerContainer"><paper-spinner-lite ng-if="$parent.framePreviewOptions[0].showVideoSpinner" class="blueSpinner" active></paper-spinner-lite></span>
         </form>
         <div class="col-md-12 clean"></div>
-        <div id="frame0Preview" class="col-md-12"></div>
+        <div id="frame0preview" class="col-md-12"></div>
     </paper-card>
   </div>
 </div>
