@@ -11,7 +11,7 @@ angular.module('storyBoard.library', [])
   $scope.editStory = function (storyId) {
     StoryStorage.getStory(storyId)
     .then(function (resp) {
-      $state.go('createStory', { story: resp.data });
+      $state.go('editStory', { story: resp.data });
     })
     .catch(function (error) {
       $state.go('errorPage');
