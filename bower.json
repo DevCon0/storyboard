@@ -25,7 +25,6 @@
     "paper-card": "PolymerElements/paper-card#~1.0.9",
     "paper-spinner": "PolymerElements/paper-spinner#~1.1.0",
     "iron-icons": "PolymerElements/iron-icons#~1.1.1",
-    "ng-polymer-elements": "~0.3.0",
     "angular-animate": "~1.4.9"
   }
 }
