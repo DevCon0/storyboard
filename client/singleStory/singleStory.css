@@ -4,6 +4,15 @@
     margin-left: 20%;
 }
 
+.panel-primary {
+  border-color: #204074;
+}
+
+.panel .panel-heading {
+  background-color: #204074;
+  border-color: #204074;
+}
+
 .panel .panel-heading .panel-title .username {
   color: white;
 }

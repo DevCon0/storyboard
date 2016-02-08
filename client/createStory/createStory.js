@@ -68,109 +68,119 @@ angular.module('storyBoard.createStory', [])
 
   $scope.user = localStorageService.get('username');
   var token = localStorageService.get('sessiontoken');
-  var wasPassed = Object.keys($stateParams.story).length !== 0;
+  var wasPassed = ( !! $stateParams.storyId );
 
   if (wasPassed) {
-    var editStory = $stateParams.story;
-    PageInfo.set({ 'title': 'Edit "' + editStory.title + '"' });
-    var frames = editStory.frames;
+    getUserLibrary($stateParams.storyId)
+    .then(function() {
 
-    $scope.storyTitle = editStory.title;
-    $scope.storyDescription = editStory.description;
-    $scope.storyThumbnailUrl = editStory.thumbnail;
+      var editStory = $scope.story;
+      PageInfo.set({ 'title': 'Edit "' + editStory.title + '"' });
+      var frames = editStory.frames;
 
-    var loadFrame = function(frame, index, collection) {
-      for (var key in frame) {
-        var name = 'frame' + index + key;
-        $scope[name] = frame[key];
-        // we should change mediatype to a string
-        if (key === 'mediaType') {
-          $scope[name] = frame[key] + "";
-        }
+      $scope.storyTitle = editStory.title;
+      $scope.storyDescription = editStory.description;
+      $scope.storyThumbnailUrl = editStory.thumbnail;
 
-        if (key === 'videoId' || key === 'audioId' && key !== "") {
-          if (key === 'videoId') {
-            name = 'frame' + index + 'youtubeUrl';
-            $scope[name] = recreateVideoUrl(frame[key]);
-          } else if (key === 'audioId') {
-            name = 'frame' + index + 'audioUrl';
-            $scope[name] = recreateVideoUrl(frame[key]);
+      var loadFrame = function(frame, index, collection) {
+        for (var key in frame) {
+          var name = 'frame' + index + key;
+          $scope[name] = frame[key];
+          // we should change mediatype to a string
+          if (key === 'mediaType') {
+            $scope[name] = frame[key] + "";
+          }
+
+          if (key === 'videoId' || key === 'audioId' && key !== "") {
+            if (key === 'videoId') {
+              name = 'frame' + index + 'youtubeUrl';
+              $scope[name] = recreateVideoUrl(frame[key]);
+            } else if (key === 'audioId') {
+              name = 'frame' + index + 'audioUrl';
+              $scope[name] = recreateVideoUrl(frame[key]);
+            }
           }
         }
       }
-    }
 
-    frames.forEach(loadFrame);
-    // loadFrame(frames[1], 1);
-    console.log($scope.frame1mediaType,
-      $scope.frame2mediaType,
-      $scope.frame3mediaType,
-      $scope.frame0mediaType)
+      frames.forEach(loadFrame);
+      // loadFrame(frames[1], 1);
 
-    // // frame0 AUDIO
-    if ($scope.frame0youtubeUrl !== "https://www.youtube.com/watch?v=") {
-      $scope.addSoundtrack = true;
-      $scope.audioButtonLabel = 'Remove Soundtrack';
-    } else {
-      $scope.frame0youtubeUrl = "";
-      $scope.addSoundtrack = false;
-      $scope.audioButtonLabel = "Add Soundtrack";
-    }
-    // frame1
+      // // frame0 AUDIO
+      if ($scope.frame0youtubeUrl !== "https://www.youtube.com/watch?v=") {
+        $scope.addSoundtrack = true;
+        $scope.audioButtonLabel = 'Remove Soundtrack';
+      } else {
+        $scope.frame0youtubeUrl = "";
+        $scope.addSoundtrack = false;
+        $scope.audioButtonLabel = "Add Soundtrack";
+      }
+      // frame1
 
-    if ($scope.frame1narrationText !== "") {
-      $scope.addNarration1 = true;
-      $scope.narration1ButtonLabel = "Remove Narration";
-     }
+      if ($scope.frame1narrationText !== "") {
+        $scope.addNarration1 = true;
+        $scope.narration1ButtonLabel = "Remove Narration";
+       }
 
-    if ($scope.frame1audioUrl !== 'https://www.youtube.com/watch?v=') {
-      $scope.addAudio1 = true;
-      $scope.audioAct1ButtonLabel = "Remove Audio Track";
-    } else {
-      // clear frame audio, needs function
-      $scope.frame1audioUrl = ""
-      $scope.addAudio1 = false;
-      $scope.audioAct1ButtonLabel = "Add Audio Track";
-      $scope.frame1audioStart = "0";
-      $scope.frame1audioVolume = "100";
-    }
+      if ($scope.frame1audioUrl !== 'https://www.youtube.com/watch?v=') {
+        $scope.addAudio1 = true;
+        $scope.audioAct1ButtonLabel = "Remove Audio Track";
+      } else {
+        // clear frame audio, needs function
+        $scope.frame1audioUrl = ""
+        $scope.addAudio1 = false;
+        $scope.audioAct1ButtonLabel = "Add Audio Track";
+        $scope.frame1audioStart = "0";
+        $scope.frame1audioVolume = "100";
+      }
 
-    // frame 2
-    if ($scope.frame2narrationText !== "") {
-      $scope.addNarration2 = true;
-      $scope.narration2ButtonLabel = "Remove Narration";
-     }
+      // frame 2
+      if ($scope.frame2narrationText !== "") {
+        $scope.addNarration2 = true;
+        $scope.narration2ButtonLabel = "Remove Narration";
+       }
 
-    if ($scope.frame2audioUrl !== 'https://www.youtube.com/watch?v=') {
-      $scope.addAudio2 = true;
-      $scope.audioAct2ButtonLabel = "Remove Audio Track";
-    } else {
-      // clear frame audio, needs function
-      $scope.frame2audioUrl = ""
-      $scope.addAudio2 = false;
-      $scope.audioAct2ButtonLabel = "Add Audio Track";
-      $scope.frame2audioStart = "0";
-      $scope.frame2audioVolume = "100";
-    }
+      if ($scope.frame2audioUrl !== 'https://www.youtube.com/watch?v=') {
+        $scope.addAudio2 = true;
+        $scope.audioAct2ButtonLabel = "Remove Audio Track";
+      } else {
+        // clear frame audio, needs function
+        $scope.frame2audioUrl = ""
+        $scope.addAudio2 = false;
+        $scope.audioAct2ButtonLabel = "Add Audio Track";
+        $scope.frame2audioStart = "0";
+        $scope.frame2audioVolume = "100";
+      }
 
-    // frame 3
-    if ($scope.frame3narrationText !== "") {
-      $scope.addNarration3 = true;
-      $scope.narration3ButtonLabel = "Remove Narration";
-     }
+      // frame 3
+      if ($scope.frame3narrationText !== "") {
+        $scope.addNarration3 = true;
+        $scope.narration3ButtonLabel = "Remove Narration";
+       }
 
-    if ($scope.frame3audioUrl !== 'https://www.youtube.com/watch?v=') {
-      $scope.addAudio3 = true;
-      $scope.audioAct3ButtonLabel = "Remove Audio Track";
-    } else {
-      // clear frame audio, needs function
-      $scope.frame3audioUrl = ""
-      $scope.addAudio3 = false;
-      $scope.audioAct3ButtonLabel = "Add Audio Track";
-      $scope.frame3audioStart = "0";
-      $scope.frame3audioVolume = "100";
-    }
- }
+      if ($scope.frame3audioUrl !== 'https://www.youtube.com/watch?v=') {
+        $scope.addAudio3 = true;
+        $scope.audioAct3ButtonLabel = "Remove Audio Track";
+      } else {
+        // clear frame audio, needs function
+        $scope.frame3audioUrl = ""
+        $scope.addAudio3 = false;
+        $scope.audioAct3ButtonLabel = "Add Audio Track";
+        $scope.frame3audioStart = "0";
+        $scope.frame3audioVolume = "100";
+      }
+    });
+  }
+
+  function getUserLibrary(storyId) {
+    return StoryStorage.getStory(storyId)
+    .then(function(resp) {
+      $scope.story = resp.data;
+    })
+    .catch(function(error) {
+      $state.go('errorPage');
+    });
+  }
 
   $scope.prepopulateInputs = function(){
     //TODO: remove once done with development
@@ -317,7 +327,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame1start ? parseFloat($scope.frame1start) : 0,
           end: $scope.frame1end ? parseFloat($scope.frame1end) : 0,
           volume: parseInt($scope.frame1volume),
-          previewUrl: (wasPassed)? $stateParams.story.frames[1].previewUrl: "",
+          previewUrl: (wasPassed)? $scope.story.frames[1].previewUrl: "",
           imageUrl: $scope.frame1imageUrl,
           imageDuration: $scope.frame1imageDuration ? parseFloat($scope.frame1imageDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame1audioUrl),
@@ -338,7 +348,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame2start ? parseFloat($scope.frame2start) : 0,
           end: $scope.frame2end ? parseFloat($scope.frame2end) : 0,
           volume: parseInt($scope.frame2volume),
-          previewUrl: (wasPassed)? $stateParams.story.frames[2].previewUrl: "",
+          previewUrl: (wasPassed)? $scope.story.frames[2].previewUrl: "",
           imageUrl: $scope.frame2imageUrl,
           imageDuration: $scope.frame2imageDuration ? parseFloat($scope.frame2imageDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame2audioUrl),
@@ -359,7 +369,7 @@ angular.module('storyBoard.createStory', [])
           start: $scope.frame3start ? parseFloat($scope.frame3start) : 0,
           end: $scope.frame3end ? parseFloat($scope.frame3end) : 0,
           volume: parseInt($scope.frame3volume),
-          previewUrl: (wasPassed)? $stateParams.story.frames[3].previewUrl: "",
+          previewUrl: (wasPassed)? $scope.story.frames[3].previewUrl: "",
           imageUrl: $scope.frame3imageUrl,
           imageDuration: $scope.frame3imageDuration ? parseFloat($scope.frame3imageDuration) : 0,
           audioId: stripOutVideoIdFromUrl($scope.frame3audioUrl),
@@ -376,7 +386,7 @@ angular.module('storyBoard.createStory', [])
     };
 
     if (wasPassed) {
-      StoryStorage.editStory(story, editStory.storyId, token)
+      StoryStorage.editStory(story, $scope.story.storyId, token)
         .then(function (data) {
           $state.go('library');
       });

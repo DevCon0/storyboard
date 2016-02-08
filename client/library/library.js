@@ -9,14 +9,7 @@ angular.module('storyBoard.library', [])
   $scope.username = localStorageService.get('username');
 
   $scope.editStory = function (storyId) {
-    StoryStorage.getStory(storyId)
-    .then(function (resp) {
-      $state.go('editStory', { story: resp.data });
-    })
-    .catch(function (error) {
-      $state.go('errorPage');
-    });
-
+    $state.go('editStory', {storyId: storyId});
   };
 
   $scope.deleteStory = function (storyId) {
@@ -32,7 +25,6 @@ angular.module('storyBoard.library', [])
         $scope.userLibrary = library;
       });
     });
-
   };
 
   StoryStorage.getUserLibrary(localStorageService.get('sessiontoken'))
