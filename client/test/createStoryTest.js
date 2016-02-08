@@ -5,18 +5,7 @@ describe('CreateStoryTest', function(){
   var scope;
   var stateParams;
   var controller;
-
-  beforeEach(module('storyBoard.storyStorageService'));
-  beforeEach(module('storyBoard.storyStateMachineService'));
-  // We will mock the following dependency:
-  // beforeEach(module('storyBoard.authService'));
-  beforeEach(module('storyBoard.pageInfo'));
-  beforeEach(module('LocalStorageModule'));
-  beforeEach(module('ui.router'));
-  beforeEach(module('storyBoard.createStory'));
-
-  it('should have a function called', function() {
-    var createStoryCtrl = controller;
+  var loadController = function(test) {
     var mockAuth = {
       isAuth: function() { return true;}
     };
@@ -35,9 +24,24 @@ describe('CreateStoryTest', function(){
           '$scope': scope,
           '$stateParams': stateParams
       });
-      expect(true).toEqual(true);
-    });
 
+      test();
+    });
+  };
+
+  beforeEach(module('storyBoard.storyStorageService'));
+  beforeEach(module('storyBoard.storyStateMachineService'));
+  // We will mock the following dependency:
+  // beforeEach(module('storyBoard.authService'));
+  beforeEach(module('storyBoard.pageInfo'));
+  beforeEach(module('LocalStorageModule'));
+  beforeEach(module('ui.router'));
+  beforeEach(module('storyBoard.createStory'));
+
+  it('should have a function called checkRequiredFields', function() {
+    loadController(function(){
+      expect(typeof scope.checkRequiredFields).toBe('function');
+    });
   });
 
 });
