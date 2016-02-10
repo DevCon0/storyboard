@@ -69,10 +69,14 @@ angular.module('storyBoard.textToSpeechPlayer', ['storyBoard.player'])
       'Google UK English Male',
       'Google US English'];
     var voice;
+    var voicePreference;
+    var matchPreference = function (voice) {
+      return voice.name === voicePreference;
+    };
 
     for (var i = 0; i < voicePreferences.length; i++) {
-      var voicePreference = voicePreferences[i];
-      voice = window.voices.filter(function (voice) { return voice.name == voicePreference; })[0];
+      voicePreference = voicePreferences[i];
+      voice = window.voices.filter(matchPreference)[0];
       if (voice !== undefined) {
         break;
       }

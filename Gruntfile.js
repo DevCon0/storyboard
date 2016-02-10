@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint']
     },
-    
+
     ngAnnotate: {
       options: {
         singleQuotes: true,
@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         }
       },
     },
-    
+
     uglify: {
       my_target: {
         files: {
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
     concat: {
       options: {
         seperator: ';',
