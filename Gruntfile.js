@@ -4,7 +4,6 @@ module.exports = function(grunt) {
     jshint: {
       files: ['Gruntfile.js', 'client/**/*.js', '!client/test/*.js', '!client/lib/**/*.*', '!client/min/**/*.js'],
       options: {
-        force: true,
         globals: {
           jQuery: true
         }
