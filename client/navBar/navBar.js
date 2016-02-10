@@ -48,5 +48,5 @@ angular.module('storyBoard.navBar', ['storyBoard.pageInfo'])
     if (newTitle !== $scope.pageTitle) {
       $scope.pageTitle = newTitle;
     }
-  })
+  });
 });

@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     jshint: {
       files: ['Gruntfile.js', 'client/**/*.js', '!client/test/*.js', '!client/lib/**/*.*', '!client/min/**/*.js'],
       options: {
+        force: true,
         globals: {
           jQuery: true
         }
@@ -20,7 +21,7 @@ module.exports = function(grunt) {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint']
     },
-    
+
     ngAnnotate: {
       options: {
         singleQuotes: true,
@@ -47,7 +48,7 @@ module.exports = function(grunt) {
         }
       },
     },
-    
+
     uglify: {
       my_target: {
         files: {
@@ -55,7 +56,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
     concat: {
       options: {
         seperator: ';',
