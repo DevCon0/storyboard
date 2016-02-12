@@ -574,50 +574,6 @@ func TestEditStory(t *testing.T) {
 	}
 }
 
-func TestStoryVote(t *testing.T) {
-	t.Log("Testing story voting...")
-
-	url := "http://localhost:8020/api/stories/votes"
-
-	jsonStr := concat(`{
-		"storyId": "`, BobTheTester.Stories[0], `",
-		"direction": "up"
-	}`)
-
-	expectedStatus := http.StatusCreated
-	res, err := request("POST", url, jsonStr)
-	if err != nil {
-		t.Errorf(
-			"Failed to send request to %v\n%v\n",
-			url, err,
-		)
-		return
-	} else if res.StatusCode != expectedStatus {
-		t.Errorf(
-			"Expected status code %v, got %v\n",
-			expectedStatus, res.StatusCode,
-		)
-		return
-	}
-
-	t.Logf("Response received\n")
-
-	// content, _ := ioutil.ReadAll(res.Body)
-	// t.Logf("res.Body/content:\n%#v\n", string(content))
-
-	// stories := []Story{}
-	// err = json.NewDecoder(res.Body).Decode(&stories)
-	// if err != nil {
-	// 	t.Errorf("Invalid JSON object in response body \n%v\n", err)
-	// } else if len(stories) != 1 {
-	// 	t.Errorf("Did not receive any stories from the search request\n")
-	// }
-
-	// t.Logf("stories:\n%#v\n", stories)
-
-	// res.Body.Close()
-}
-
 func TestRemoveStory(t *testing.T) {
 	t.Log("Testing story removal...")
 

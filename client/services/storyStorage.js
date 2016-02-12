@@ -96,19 +96,5 @@ angular.module('storyBoard.storyStorageService', [])
     });
   };
 
-  storyStorage.voteStory = function (id, token, vote) {
-    return $http({
-      method: 'POST',
-      url: '/api/stories/votes',
-      headers: {
-        'token': token
-      },
-      data: {
-        storyId: id,
-        direction: vote
-      }
-    });
-  };
-
   return storyStorage;
 });
