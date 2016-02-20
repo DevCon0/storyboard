@@ -8,6 +8,10 @@ angular.module('storyBoard.navBar', ['storyBoard.pageInfo'])
     $scope.currentUserLoggedIn = true;
   }
 
+  var TOP_STORIES_STR = 'Top Stories';
+  var CREATE_STORY_STR = 'Create Story';
+  var LIBRARY_STR = 'Library';
+
   $scope.logout = function () {
     var token = localStorageService.get('sessiontoken');
     $scope.currentUserLoggedIn = false;
@@ -18,26 +22,31 @@ angular.module('storyBoard.navBar', ['storyBoard.pageInfo'])
   };
 
   $scope.setPageTitle = function() {
-    var state = $location.url()
-    var endpoint = state.split('/')[1]
+    var state = $location.url();
+    var endpoint = state.split('/')[1];
     switch (endpoint) {
     case '':
-      return 'Top Stories';
-      break;
+      return TOP_STORIES_STR;
     case 'createStory':
-      return 'Create Story';
-      break;
+      return CREATE_STORY_STR;
     case 'library':
-      return 'Library';
-      break;
+      return LIBRARY_STR;
     default:
       return PageInfo.get('title');
     }
-  }
+  };
+
+  $scope.isCreateStoryPage = function() {
+    return ($scope.pageTitle == CREATE_STORY_STR);
+  };
+
+  $scope.isLibraryPage = function() {
+    return ($scope.pageTitle == LIBRARY_STR);
+  };
 
   $scope.$watch($scope.setPageTitle, function(newTitle) {
     if (newTitle !== $scope.pageTitle) {
       $scope.pageTitle = newTitle;
     }
-  })
+  });
 });

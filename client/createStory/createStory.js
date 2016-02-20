@@ -39,7 +39,7 @@ angular.module('storyBoard.createStory', [])
       audioPlaying: false,
       showAudioSpinner: false
     }
-  ]
+  ];
 
   $scope.addFrame0ImagePreview = false;
 
@@ -101,7 +101,7 @@ angular.module('storyBoard.createStory', [])
             }
           }
         }
-      }
+      };
 
       frames.forEach(loadFrame);
       // loadFrame(frames[1], 1);
@@ -127,7 +127,7 @@ angular.module('storyBoard.createStory', [])
         $scope.audioAct1ButtonLabel = "Remove Audio Track";
       } else {
         // clear frame audio, needs function
-        $scope.frame1audioUrl = ""
+        $scope.frame1audioUrl = "";
         $scope.addAudio1 = false;
         $scope.audioAct1ButtonLabel = "Add Audio Track";
         $scope.frame1audioStart = "0";
@@ -145,7 +145,7 @@ angular.module('storyBoard.createStory', [])
         $scope.audioAct2ButtonLabel = "Remove Audio Track";
       } else {
         // clear frame audio, needs function
-        $scope.frame2audioUrl = ""
+        $scope.frame2audioUrl = "";
         $scope.addAudio2 = false;
         $scope.audioAct2ButtonLabel = "Add Audio Track";
         $scope.frame2audioStart = "0";
@@ -163,7 +163,7 @@ angular.module('storyBoard.createStory', [])
         $scope.audioAct3ButtonLabel = "Remove Audio Track";
       } else {
         // clear frame audio, needs function
-        $scope.frame3audioUrl = ""
+        $scope.frame3audioUrl = "";
         $scope.addAudio3 = false;
         $scope.audioAct3ButtonLabel = "Add Audio Track";
         $scope.frame3audioStart = "0";

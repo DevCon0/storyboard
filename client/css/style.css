@@ -71,7 +71,7 @@ body {
   height: 34px;
   display: flex;
   align-items: flex-end;
-  justify-content: center
+  justify-content: center;
 }
 
 .nav-subheader-text {
