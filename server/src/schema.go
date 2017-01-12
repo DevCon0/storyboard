@@ -29,8 +29,6 @@ type Story struct {
 	Author        string        `json:"author"`
 	Views         int           `json:"views"`
 	Tags          []string      `json:"tags"`
-	Votes         []Vote        `json:"votes"`
-	VoteCount     int           `json:"voteCount" bson:"voteCount"`
 	Frames        []Frame       `json:"frames"`
 	FRAME1        int
 	FRAME2        int
@@ -55,13 +53,6 @@ type Frame struct {
 	AudioId        string   `json:"audioId"`
 	AudioStart     float32  `json:"audioStart"`
 	AudioVolume    float32  `json:"audioVolume"`
-}
-
-// Vote Model - separate collection
-type Vote struct {
-	StoryId   string `json:"storyId" bson:"-"`
-	Username  string `json:"username"`
-	Direction string `json:"direction"`
 }
 
 // JSON object

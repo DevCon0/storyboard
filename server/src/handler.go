@@ -102,8 +102,6 @@ func storyHandler(w http.ResponseWriter, r *http.Request) {
 				switch directory {
 					case "story":
 						return saveStory(w, r)
-					case "votes":
-						return postVote(w, r)
 					default:
 						return errBadLocation,
 							http.StatusBadRequest
